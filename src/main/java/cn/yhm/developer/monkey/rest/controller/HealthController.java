@@ -1,0 +1,29 @@
+package cn.yhm.developer.monkey.rest.controller;
+
+import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandleAdapter;
+import cn.yhm.developer.kuca.ecology.model.response.SuccessResponse;
+import cn.yhm.developer.monkey.common.constant.ApiPath;
+import cn.yhm.developer.monkey.model.request.HealthCheckRequest;
+import cn.yhm.developer.monkey.model.response.HealthCheckResponse;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 健康检查前端控制器
+ *
+ * @author victor2015yhm@gmail.com
+ * @since 2023-03-09 00:09:37
+ */
+@Validated
+@RestController
+@RequestMapping(path = ApiPath.Module.HEALTH, produces = {MediaType.APPLICATION_JSON_VALUE})
+public class HealthController extends EcologyRequestHandleAdapter {
+
+    @GetMapping(path = "/v1/check")
+    public SuccessResponse<HealthCheckResponse> v1() throws Exception {
+        return handle(new HealthCheckRequest());
+    }
+}

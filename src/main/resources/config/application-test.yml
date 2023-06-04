@@ -1,0 +1,61 @@
+# application-test.yml
+server:
+  # 访问IP
+  #address: monkey-test.developer.yhm.cn
+  address: 127.0.0.1
+  # 访问端口号
+  port: 8443
+  # SSL配置
+  ssl:
+    # 开启SSL
+    enabled: on
+    # 证书类型
+    key-store-type: JKS
+    # 证书路径
+    key-store: classpath:certificate/TestSSL.keystore
+    # 证书别名
+    key-alias: SSL-Certificate
+    # 证书密码
+    key-store-password: 123456
+# 日志
+logging:
+  level:
+    root: info
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

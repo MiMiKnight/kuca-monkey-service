@@ -1,0 +1,9 @@
+# application-prod.yml
+server:
+  address: monkey.developer.yhm.cn
+  port: 8443
+# 日志
+logging:
+  level:
+    root: info
+#
