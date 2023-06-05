@@ -51,16 +51,17 @@ public class BaseGeneratorTest {
     protected static final Consumer<PackageConfig.Builder> BUILD_PACKAGE_CONFIG = (builder) -> {
         // 当前项目文件夹
         String projectPath = System.getProperty("user.dir");
+        String xmlOutputDir = projectPath + "/.code-generate/mapperXml";
 
         String parent = "cn.yhm.developer";
         String moduleName = "monkey";
-        String entityPackageName = "entity";
+        String entityPackageName = "model.entity";
         String servicePackageName = "service.standard";
         String serviceImplPackageName = "service.impl";
         String mapperPackageName = "mapper";
-        String mapperXmlPackageName = "mapper.xml";
+        String mapperXmlPackageName = "mapper";
         String controllerPackageName = "controller";
-        String xmlOutputDir = projectPath + "/.code-generate/mapperXml";
+
         builder.parent(parent)
                 .moduleName(moduleName)
                 .entity(entityPackageName)

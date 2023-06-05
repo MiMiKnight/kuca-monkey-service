@@ -21,11 +21,11 @@ public class MariaDBGeneratorTest extends BaseGeneratorTest {
      * @return {@link DataSourceConfig}
      */
     private static DataSourceConfig.Builder buildDataSourceConfig() {
-        String url = "jdbc:mariadb://127.0.0.1:3306/db_monkey";
+        String schema = "db_monkey";
+        String url = "jdbc:mariadb://127.0.0.1:3306/";
         String username = "root";
         String password = "123456";
-        String schema = "db_monkey";
-        return new DataSourceConfig.Builder(url, username, password)
+        return new DataSourceConfig.Builder(url + schema, username, password)
                 .dbQuery(new MariadbQuery())
                 .schema(schema)
                 .typeConvert(new MySqlTypeConvert())

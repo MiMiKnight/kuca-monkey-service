@@ -1,6 +1,6 @@
 package cn.yhm.developer.monkey.model.entity;
 
-import cn.yhm.developer.monkey.common.typehandler.MyZoneDateTimeTypeHandler;
+import cn.yhm.developer.monkey.common.typehandler.MyZonedDateTimeTypeHandler;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -59,13 +59,13 @@ public class ContentEntity extends Model<ContentEntity> {
     /**
      * 创建时间
      */
-    @TableField(value = "created_time", fill = FieldFill.INSERT, typeHandler = MyZoneDateTimeTypeHandler.class)
+    @TableField(value = "created_time", fill = FieldFill.INSERT, typeHandler = MyZonedDateTimeTypeHandler.class)
     private ZonedDateTime createdTime;
 
     /**
      * 更新时间
      */
-    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE, typeHandler = MyZoneDateTimeTypeHandler.class)
+    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE, typeHandler = MyZonedDateTimeTypeHandler.class)
     private ZonedDateTime updatedTime;
 
 

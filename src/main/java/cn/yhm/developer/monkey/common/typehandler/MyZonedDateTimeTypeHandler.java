@@ -23,7 +23,7 @@ import java.util.Locale;
  */
 @MappedJdbcTypes(JdbcType.VARCHAR)
 @MappedTypes(ZonedDateTime.class)
-public class MyZoneDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
+public class MyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
 
 
     private final static String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss.SSSSSSSSS";
