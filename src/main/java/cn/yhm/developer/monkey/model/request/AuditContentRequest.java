@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
 /**
@@ -25,6 +27,8 @@ public class AuditContentRequest implements EcologyRequest {
      * <p>
      * 2：审核不通过
      */
+    @NotNull(message = "AuditContentRequest.auditResult.NotNull", payload = NotNullPayload.class)
+    @Range(min = 1, max = 2, message = "AuditContentRequest.auditResult.Range")
     @JsonProperty(value = "audit_result")
     private Integer auditResult;
 

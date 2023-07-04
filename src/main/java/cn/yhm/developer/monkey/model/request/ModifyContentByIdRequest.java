@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 /**
  * 修改内容请求参数
  *
@@ -18,12 +21,16 @@ public class ModifyContentByIdRequest implements EcologyRequest {
     /**
      * 主键
      */
+    @NotBlank(message = "ModifyContentByIdRequest.id.NotBlank")
+    @Size(min = 18, max = 64, message = "ModifyContentByIdRequest.id.Size")
     @JsonProperty(value = "id")
     private String id;
 
     /**
      * 内容
      */
+    @NotBlank(message = "ModifyContentByIdRequest.content.NotBlank")
+    @Size(min = 5, max = 20000, message = "ModifyContentByIdRequest.content.Size")
     @JsonProperty(value = "content")
     private String content;
 }

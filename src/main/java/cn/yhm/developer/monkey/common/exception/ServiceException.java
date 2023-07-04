@@ -14,6 +14,10 @@ public class ServiceException extends RuntimeException {
 
     private final ErrorReturn errorReturn;
 
+    private String errorCode;
+
+    private String errorMsg;
+
 
     public ServiceException(ErrorReturn errorReturn) {
         this.errorReturn = errorReturn;

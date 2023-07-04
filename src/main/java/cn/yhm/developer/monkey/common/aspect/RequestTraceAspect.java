@@ -64,6 +64,6 @@ public class RequestTraceAspect implements Ordered {
 
     @Override
     public int getOrder() {
-        return AspectRule.Rule001.Order.ORDER_001;
+        return AspectRule.Rule001.Order.ORDER_500;
     }
 }

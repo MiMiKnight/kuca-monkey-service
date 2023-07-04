@@ -33,7 +33,6 @@ public class HealthCheckHandler implements EcologyRequestHandler<HealthCheckRequ
     public void handle(HealthCheckRequest request, HealthCheckResponse response) throws Exception {
         log.info("health check");
         response.setServiceName(serviceName);
-        response.setRunStatus("up");
     }
 
 }

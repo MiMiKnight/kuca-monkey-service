@@ -2,6 +2,7 @@ package cn.yhm.developer.monkey.model.response;
 
 import cn.yhm.developer.kuca.common.constant.DateTimeFormatStandard;
 import cn.yhm.developer.kuca.ecology.model.response.EcologyResponse;
+import cn.yhm.developer.kuca.ecology.model.response.PaginationResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import java.time.ZonedDateTime;
 @Setter
 public class AuditContentResponse implements EcologyResponse {
 
-    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_4, timezone = "UTC")
+    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_4,timezone = "GMT")
     @JsonProperty(value = "audit_time")
     private ZonedDateTime auditTime;
 }

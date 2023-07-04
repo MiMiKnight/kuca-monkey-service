@@ -1,7 +1,5 @@
 package cn.yhm.developer.monkey.common.constant;
 
-import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler;
-
 /**
  * 切面规则定义类
  *
@@ -28,8 +26,8 @@ public interface AspectRule {
          * 切面顺序
          */
         interface Order {
-            int ORDER_001 = 500;
-            int ORDER_002 = 501;
+            int ORDER_500 = 500;
+            int ORDER_501 = 501;
         }
     }
 
@@ -41,8 +39,26 @@ public interface AspectRule {
                 "..))";
 
         interface Order {
-            int ORDER_001 = 500;
-            int ORDER_002 = 501;
+            int ORDER_500 = 500;
+            int ORDER_501 = 501;
+        }
+    }
+
+    /**
+     * 003切面规则
+     */
+    interface Rule003 {
+
+        String RULE_PATTERN = "execution(public cn.yhm.developer.kuca.ecology.model.response.SuccessResponse " +
+                "cn.yhm.developer.kuca.ecology.core.HandlerExecutor.execute(cn.yhm.developer.kuca.ecology.model.request.EcologyRequest) " +
+                "throws java.lang.Exception) " +
+                "|| execution(public cn.yhm.developer.kuca.ecology.model.response.SuccessResponse " +
+                "cn.yhm.developer.kuca.ecology.core.HandlerExecutor.execute(cn.yhm.developer.kuca.ecology.model.request.EcologyRequest,cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler) " +
+                "throws java.lang.Exception)\n";
+
+        interface Order {
+            int ORDER_500 = 500;
+            int ORDER_501 = 501;
         }
     }
 }

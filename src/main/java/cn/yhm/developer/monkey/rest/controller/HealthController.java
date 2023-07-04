@@ -4,7 +4,6 @@ import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandleAdapter;
 import cn.yhm.developer.kuca.ecology.model.response.SuccessResponse;
 import cn.yhm.developer.monkey.common.constant.ApiPath;
 import cn.yhm.developer.monkey.model.request.HealthCheckRequest;
-import cn.yhm.developer.monkey.model.response.HealthCheckResponse;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController extends EcologyRequestHandleAdapter {
 
     @GetMapping(path = "/v1/check")
-    public SuccessResponse<HealthCheckResponse> v1() throws Exception {
+    public SuccessResponse v1() throws Exception {
         return handle(new HealthCheckRequest());
     }
 }
