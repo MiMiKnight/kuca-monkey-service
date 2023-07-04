@@ -1,0 +1,12 @@
+####################################
+##  目的：新建表 t_monkey_content
+####################################
+CREATE TABLE IF NOT EXISTS `t_monkey_content`  (
+                                     `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键',
+                                     `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
+                                     `version` int UNSIGNED NULL DEFAULT 0 COMMENT '乐观锁',
+                                     `deleted` tinyint NULL DEFAULT 0 COMMENT '逻辑删除',
+                                     `created_time` datetime(6) NULL DEFAULT NULL COMMENT '创建时间',
+                                     `updated_time` datetime(6) NULL DEFAULT NULL COMMENT '更新时间',
+                                     PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '内容表' ROW_FORMAT = Dynamic;
