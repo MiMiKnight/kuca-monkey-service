@@ -29,6 +29,6 @@ public class QueryContentByIdRequest implements EcologyRequest {
     @Past
     @NotBlank(message = "QueryContentByIdRequest.id.NotBlank")
     @Size(min = 32, max = 64, message = "QueryContentByIdRequest.id.Size")
-    @JsonProperty(value = "id_2")
+    @JsonProperty(value = "id")
     private String id;
 }

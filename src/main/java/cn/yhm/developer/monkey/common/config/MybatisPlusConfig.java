@@ -19,6 +19,11 @@ import java.time.ZonedDateTime;
 @Configuration
 public class MybatisPlusConfig {
 
+    /**
+     * MybatisPlus 创建时间、更新时间自动填充
+     *
+     * @return {@link MetaObjectHandler}
+     */
     @Bean
     public MetaObjectHandler myMetaObjectHandler() {
         return new MetaObjectHandler() {
@@ -41,6 +46,11 @@ public class MybatisPlusConfig {
     }
 
 
+    /**
+     * MyabtisPlus拦截器配置
+     *
+     * @return {@link MybatisPlusInterceptor}
+     */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();

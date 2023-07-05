@@ -2,7 +2,6 @@ package cn.yhm.developer.monkey.common.typehandler;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
 import java.sql.CallableStatement;
@@ -21,13 +20,22 @@ import java.util.Locale;
  * @author victor2015yhm@gmail.com
  * @since 2023-05-25 23:04:56
  */
-@MappedJdbcTypes(JdbcType.VARCHAR)
 @MappedTypes(ZonedDateTime.class)
 public class MyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
 
 
-    private final static String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss.SSSSSSSSS";
+    /**
+     * 数据库日期格式
+     * <p>
+     * yyyy-MM-dd HH:mm:ss.SSS          此处时间精确到毫秒，对应数据库 datetime时间精确到3位
+     * yyyy-MM-dd HH:mm:ss.SSSSS        此处时间精确到微秒，对应数据库 datetime时间精确到6位
+     * yyyy-MM-dd HH:mm:ss.SSSSSSSSS    此处时间精确到纳秒，对应数据库 datetime时间精确到9位
+     */
+    private final static String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss.SSSSSS";
 
+    /**
+     * 入数据库的日期默认时区
+     */
     private final static String DATABASE_TIMEZONE = "UTC";
 
     @Override
