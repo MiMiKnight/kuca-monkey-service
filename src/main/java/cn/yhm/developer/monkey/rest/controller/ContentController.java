@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -42,7 +43,9 @@ public class ContentController extends EcologyRequestHandleAdapter {
     }
 
     @GetMapping(value = "/v1/query")
-    public SuccessResponse v1(QueryContentByIdRequest request) throws Exception {
+    public SuccessResponse v1(@RequestParam(name = "id") String id) throws Exception {
+        QueryContentByIdRequest request = new QueryContentByIdRequest();
+        request.setId(id);
         return handle(request);
     }
 }

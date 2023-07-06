@@ -16,11 +16,7 @@ public interface AspectRule {
         /**
          * 切面规则
          */
-        String RULE_PATTERN = "@annotation(org.springframework.web.bind.annotation.RequestMapping) || " +
-                "@annotation(org.springframework.web.bind.annotation.GetMapping) || " +
-                "@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
-                "@annotation(org.springframework.web.bind.annotation.PutMapping) || " +
-                "@annotation(org.springframework.web.bind.annotation.DeleteMapping)";
+        String RULE_PATTERN = "@annotation(org.springframework.web.bind.annotation.RequestMapping) || @annotation(org.springframework.web.bind.annotation.GetMapping) || @annotation(org.springframework.web.bind.annotation.PostMapping) || @annotation(org.springframework.web.bind.annotation.PutMapping) || @annotation(org.springframework.web.bind.annotation.DeleteMapping)";
 
         /**
          * 切面顺序
@@ -35,8 +31,7 @@ public interface AspectRule {
      * 002切面规则
      */
     interface Rule002 {
-        String RULE_PATTERN = "execution(public void cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler.handle(" +
-                "..))";
+        String RULE_PATTERN = "execution(public void cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler.handle(..))";
 
         interface Order {
             int ORDER_500 = 500;
@@ -49,12 +44,7 @@ public interface AspectRule {
      */
     interface Rule003 {
 
-        String RULE_PATTERN = "execution(public cn.yhm.developer.kuca.ecology.model.response.SuccessResponse " +
-                "cn.yhm.developer.kuca.ecology.core.HandlerExecutor.execute(cn.yhm.developer.kuca.ecology.model.request.EcologyRequest) " +
-                "throws java.lang.Exception) " +
-                "|| execution(public cn.yhm.developer.kuca.ecology.model.response.SuccessResponse " +
-                "cn.yhm.developer.kuca.ecology.core.HandlerExecutor.execute(cn.yhm.developer.kuca.ecology.model.request.EcologyRequest,cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler) " +
-                "throws java.lang.Exception)\n";
+        String RULE_PATTERN = "execution(public cn.yhm.developer.kuca.ecology.model.response.SuccessResponse cn.yhm.developer.kuca.ecology.core.HandlerExecutor.execute(cn.yhm.developer.kuca.ecology.model.request.EcologyRequest) throws java.lang.Exception) || execution(public cn.yhm.developer.kuca.ecology.model.response.SuccessResponse cn.yhm.developer.kuca.ecology.core.HandlerExecutor.execute(cn.yhm.developer.kuca.ecology.model.request.EcologyRequest,cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler) throws java.lang.Exception)";
 
         interface Order {
             int ORDER_500 = 500;

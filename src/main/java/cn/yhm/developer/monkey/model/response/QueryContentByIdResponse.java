@@ -3,8 +3,10 @@ package cn.yhm.developer.monkey.model.response;
 import cn.yhm.developer.kuca.ecology.model.response.EcologyResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
 
@@ -14,8 +16,8 @@ import java.time.ZonedDateTime;
  * @author victor2015yhm@gmail.com
  * @since 2023-05-07 16:22:42
  */
-@Getter
-@Setter
+@Accessors(chain = true)
+@Data
 public class QueryContentByIdResponse implements EcologyResponse {
 
     /**
@@ -46,14 +48,14 @@ public class QueryContentByIdResponse implements EcologyResponse {
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS z", timezone = "UTC")
-    @JsonProperty(value = "create_time", index = 5)
-    private ZonedDateTime createTime;
+    @JsonProperty(value = "created_time", index = 5)
+    private ZonedDateTime createdTime;
 
     /**
      * 更新时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS z", timezone = "UTC")
-    @JsonProperty(value = "update_time", index = 6)
-    private ZonedDateTime updateTime;
+    @JsonProperty(value = "updated_time", index = 6)
+    private ZonedDateTime updatedTime;
 
 }

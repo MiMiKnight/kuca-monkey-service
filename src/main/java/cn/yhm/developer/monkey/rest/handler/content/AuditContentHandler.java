@@ -19,8 +19,12 @@ import java.time.ZonedDateTime;
 @Component
 public class AuditContentHandler implements EcologyRequestHandler<AuditContentRequest, AuditContentResponse> {
 
-    @Autowired
     private ContentService contentService;
+
+    @Autowired
+    public void setContentService(ContentService contentService) {
+        this.contentService = contentService;
+    }
 
     @Override
     public void handle(AuditContentRequest request, AuditContentResponse response) throws Exception {

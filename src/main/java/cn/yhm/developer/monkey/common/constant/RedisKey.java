@@ -36,7 +36,7 @@ public interface RedisKey {
      * 缓存键
      */
     interface Cache {
-
+        String CONTENT_TABLE_CACHE =    buildCache("ContentTable");
     }
 
 

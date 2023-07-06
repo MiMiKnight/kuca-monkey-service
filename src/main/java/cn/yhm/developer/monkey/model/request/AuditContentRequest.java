@@ -27,7 +27,7 @@ public class AuditContentRequest implements EcologyRequest {
      * <p>
      * 2：审核不通过
      */
-    @NotNull(message = "AuditContentRequest.auditResult.NotNull", payload = NotNullPayload.class)
+    @NotNull(message = "AuditContentRequest.auditResult.NotNull")
     @Range(min = 1, max = 2, message = "AuditContentRequest.auditResult.Range")
     @JsonProperty(value = "audit_result")
     private Integer auditResult;
