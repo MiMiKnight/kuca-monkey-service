@@ -12,14 +12,28 @@ import lombok.Getter;
 @Getter
 public class ServiceException extends RuntimeException {
 
+    /**
+     * 错误返回
+     */
     private final ErrorReturn errorReturn;
 
-    private String errorCode;
-
-    private String errorMsg;
-
-
+    /**
+     * 自定义服务异常 构造方法
+     *
+     * @param errorReturn 错误返回
+     */
     public ServiceException(ErrorReturn errorReturn) {
+        this.errorReturn = errorReturn;
+    }
+
+    /**
+     * 自定义服务异常 构造方法
+     *
+     * @param errorReturn 错误返回
+     * @param cause       原因
+     */
+    public ServiceException(ErrorReturn errorReturn, Throwable cause) {
+        super(cause);
         this.errorReturn = errorReturn;
     }
 
