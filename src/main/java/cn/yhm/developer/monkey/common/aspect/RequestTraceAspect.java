@@ -5,7 +5,6 @@ import cn.yhm.developer.monkey.common.constant.AspectRule;
 import cn.yhm.developer.monkey.common.constant.ProjectConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -54,13 +53,6 @@ public class RequestTraceAspect implements Ordered {
         MDC.clear();
         return proceed;
     }
-
-    @After("pointcut()")
-    public void doAfter() throws Throwable {
-        // 清除当前请求线程中的跟踪ID
-        MDC.clear();
-    }
-
 
     @Override
     public int getOrder() {

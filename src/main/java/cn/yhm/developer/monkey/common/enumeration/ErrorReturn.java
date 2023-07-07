@@ -31,18 +31,40 @@ import lombok.Getter;
 public enum ErrorReturn {
 
     //************************************系统异常*************************************//
-    DEFAULT_EXCEPTION(ErrorCode.SYSTEM_CODE_001, ErrorType.DEFAULT_EXCEPTION, ErrorTip.build("系统发生未知错误")),
-    RESOURCE_NOT_FOUND(ErrorCode.SYSTEM_CODE_002, ErrorType.RESOURCE_NOT_FOUND, ErrorTip.build("接口路径不存在")),
-    METHOD_NOT_ALLOWED(ErrorCode.SYSTEM_CODE_003, ErrorType.METHOD_NOT_ALLOWED, ErrorTip.build("请求方法错误")),
+    /**
+     * 系统发生未知错误
+     */
+    DEFAULT_EXCEPTION(ErrorCode.SYSTEM_CODE_001, ErrorType.DEFAULT_EXCEPTION),
+    /**
+     * 接口路径不存在
+     */
+    RESOURCE_NOT_FOUND(ErrorCode.SYSTEM_CODE_002, ErrorType.RESOURCE_NOT_FOUND),
+    /**
+     * 请求方法错误
+     */
+    METHOD_NOT_ALLOWED(ErrorCode.SYSTEM_CODE_003, ErrorType.METHOD_NOT_ALLOWED),
 
     //********************************注解参数校验异常***********************************//
 
     //********************************手动参数校验异常***********************************//
-    PARAMETER_MANUAL_VALID_ERROR_001(ErrorCode.MANUAL_VALID_CODE_001, ErrorType.PARAMETER_VALID_FAILED,
-            ErrorFieldTip.build("page_size", "page_size大于等于1小于等于100")),
+    PARAMETER_MANUAL_VALID_ERROR_001(ErrorCode.MANUAL_VALID_CODE_001, ErrorType.PARAMETER_VALID_FAILED),
 
     //************************************业务异常*************************************//
-    SERVICE_ERROR_001(ErrorCode.SERVICE_CODE_001, ErrorType.SERVICE_EXCEPTION, ErrorTip.build("用户未成年"));
+
+    /**
+     * 用户未成年
+     */
+    SERVICE_ERROR_001(ErrorCode.SERVICE_CODE_001),
+
+    /**
+     * 内容数据库记录不存在
+     */
+    CONTENT_DO_NOT_EXIST(ErrorCode.SERVICE_CODE_002),
+
+    /**
+     * 获取“修改内容表Redis锁”失败
+     */
+    GET_MODIFY_CONTENT_TABLE_LOCK_FAILED(ErrorCode.SERVICE_CODE_003);
 
     /**
      * 错误码
@@ -54,27 +76,25 @@ public enum ErrorReturn {
      */
     private final ErrorType errorType;
 
-    /**
-     * 错误提示信息
-     * <p>
-     * 仅限传入以下类型参数，项目启动时会扫描检测，检测不符合要求则项目启动失败并报错给出提示信息
-     * <p>
-     * 错误提示类：{@link ErrorTip}
-     * <p>
-     * 错误字段提示类：{@link ErrorFieldTip}
-     */
-    private final ErrorTip errorTip;
-
 
     /**
+     * 错误返回
+     *
      * @param errorCode 错误码
      * @param errorType 错误类型
-     * @param errorTip  错误提示信息
      */
-    ErrorReturn(String errorCode, ErrorType errorType, ErrorTip errorTip) {
+    ErrorReturn(String errorCode, ErrorType errorType) {
         this.errorCode = errorCode;
         this.errorType = errorType;
-        this.errorTip = errorTip;
     }
 
+    /**
+     * 错误返回
+     *
+     * @param errorCode 错误代码
+     */
+    ErrorReturn(String errorCode) {
+        this.errorCode = errorCode;
+        this.errorType = ErrorType.SERVICE_EXCEPTION;
+    }
 }

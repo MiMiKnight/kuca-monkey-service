@@ -2,6 +2,8 @@ package cn.yhm.developer.monkey.rest.handler.content;
 
 import cn.yhm.developer.kuca.common.utils.standard.RedisLockService;
 import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler;
+import cn.yhm.developer.monkey.common.enumeration.ErrorReturn;
+import cn.yhm.developer.monkey.common.exception.ServiceException;
 import cn.yhm.developer.monkey.model.entity.ContentEntity;
 import cn.yhm.developer.monkey.model.request.ModifyContentByIdRequest;
 import cn.yhm.developer.monkey.model.response.ModifyContentByIdResponse;
@@ -42,14 +44,16 @@ public class ModifyContentByIdHandler implements EcologyRequestHandler<ModifyCon
         ContentEntity entity = contentService.getById(id);
 
         if (null == entity) {
-            throw new RuntimeException("Content is not exist");
+            String tip = String.format("id = %s ,content is not exist.", id);
+            throw new ServiceException(ErrorReturn.CONTENT_DO_NOT_EXIST, tip);
         }
         // 为业务逻辑加锁
         String lockName = "MonkeyService:Lock:ModifyContentTable:" + id;
-        boolean isLock = redisLockService.tryLock(lockName, TimeUnit.SECONDS, 3L);
+        boolean isLock = redisLockService.tryLock(lockName, 3L, TimeUnit.SECONDS);
         // 未获取到锁则抛出异常
         if (!isLock) {
-            throw new RuntimeException("Get redis lock failed");
+            String tip = String.format("Get redis lock failed,lock name = %s.", lockName);
+            throw new ServiceException(ErrorReturn.GET_MODIFY_CONTENT_TABLE_LOCK_FAILED, tip);
         }
         try {
             entity.setContent(content);

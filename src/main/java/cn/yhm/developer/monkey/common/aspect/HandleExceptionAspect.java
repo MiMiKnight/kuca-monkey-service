@@ -5,32 +5,28 @@ import cn.yhm.developer.monkey.common.enumeration.ErrorReturn;
 import cn.yhm.developer.monkey.common.exception.ServiceException;
 import cn.yhm.developer.monkey.common.tip.ErrorFieldTip;
 import cn.yhm.developer.monkey.common.tip.ErrorTip;
+import cn.yhm.developer.monkey.common.util.standard.LogUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
-import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.time.ZonedDateTime;
-import java.util.Set;
 
 /**
  * 全局异常处理切面
@@ -43,11 +39,34 @@ import java.util.Set;
 @RestControllerAdvice
 public class HandleExceptionAspect {
 
+    private HttpServletRequest servletRequest;
+
+    @Autowired
+    public void setServletRequest(HttpServletRequest servletRequest) {
+        this.servletRequest = servletRequest;
+    }
+
     private HttpServletResponse servletResponse;
 
     @Autowired
     public void setServletResponse(HttpServletResponse servletResponse) {
         this.servletResponse = servletResponse;
+    }
+
+    private LogUtils logUtils;
+
+    @Autowired
+    public void setLogUtils(LogUtils logUtils) {
+        this.logUtils = logUtils;
+    }
+
+    /**
+     * 提示信息常量
+     */
+    interface Tip {
+        String TIP_001 = "System unknown error.";
+        String TIP_002 = "Request method is not allowed.";
+        String TIP_003 = "The api path does not exist";
     }
 
     /**
@@ -63,9 +82,13 @@ public class HandleExceptionAspect {
     public ExceptionResponse handle(Exception e) {
         // 错误返回信息
         ErrorReturn errorReturn = ErrorReturn.DEFAULT_EXCEPTION;
+        // 设置ErrorTip
+        ErrorTip errorTip = ErrorTip.build(Tip.TIP_001);
+        // 获取状态码
         int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
+        // 设置状态码
         servletResponse.setStatus(httpStatusCode);
-        return buildExceptionResponse(errorReturn);
+        return buildExceptionResponse(errorReturn, errorTip);
     }
 
 
@@ -79,9 +102,13 @@ public class HandleExceptionAspect {
     public ExceptionResponse handle(HttpRequestMethodNotSupportedException e) {
         // 错误返回信息
         ErrorReturn errorReturn = ErrorReturn.METHOD_NOT_ALLOWED;
+        // 设置ErrorTip
+        ErrorTip errorTip = ErrorTip.build(Tip.TIP_002);
+        // 获取状态码
         int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
+        // 设置状态码
         servletResponse.setStatus(httpStatusCode);
-        return buildExceptionResponse(errorReturn);
+        return buildExceptionResponse(errorReturn, errorTip);
     }
 
     /**
@@ -94,9 +121,13 @@ public class HandleExceptionAspect {
     public ExceptionResponse handle(NoHandlerFoundException e) {
         // 错误返回信息
         ErrorReturn errorReturn = ErrorReturn.RESOURCE_NOT_FOUND;
+        // 设置ErrorTip
+        ErrorTip errorTip = ErrorTip.build(Tip.TIP_003);
+        // 获取状态码
         int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
+        // 设置状态码
         servletResponse.setStatus(httpStatusCode);
-        return buildExceptionResponse(errorReturn);
+        return buildExceptionResponse(errorReturn, errorTip);
     }
 
     /**
@@ -109,58 +140,13 @@ public class HandleExceptionAspect {
     public ExceptionResponse handle(ServiceException e) {
         // 错误返回信息
         ErrorReturn errorReturn = e.getErrorReturn();
+        // 获取ErrorTip
+        ErrorTip errorTip = e.getErrorTip();
+        // 获取状态码
         int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
+        // 设置状态码
         servletResponse.setStatus(httpStatusCode);
-        return buildExceptionResponse(errorReturn);
-    }
-
-    /**
-     * 处理表单类型请求的复杂参数校验失败导致的异常
-     *
-     * @param e 校验异常
-     * @return {@link ExceptionResponse}
-     */
-    @ExceptionHandler(BindException.class)
-    public ExceptionResponse handle(BindException e) {
-        return null;
-    }
-
-    /**
-     * 处理表单类型请求普通参数缺失导致的异常
-     *
-     * @param e 校验异常
-     * @return {@link ExceptionResponse}
-     */
-    @ExceptionHandler(ServletRequestBindingException.class)
-    public ExceptionResponse handle(ServletRequestBindingException e) {
-        return null;
-    }
-
-    /**
-     * 处理标注了 @Validated 的类的方法调用参数校验失败导致的异常
-     *
-     * @param e 校验异常
-     * @return {@link ExceptionResponse}<{@link ?}>
-     */
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = ConstraintViolationException.class)
-    public ExceptionResponse handle(ConstraintViolationException e) {
-        Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-        violations.forEach(v -> {
-            String message = v.getMessage();
-            Class<?> rootBeanClass = v.getRootBeanClass();
-            Object invalidValue = v.getInvalidValue();
-            ConstraintDescriptor<?> descriptor = v.getConstraintDescriptor();
-            String messageTemplate = v.getMessageTemplate();
-            Path propertyPath = v.getPropertyPath();
-            Object[] executableParameters = v.getExecutableParameters();
-            Object executableReturnValue = v.getExecutableReturnValue();
-            Object leafBean = v.getLeafBean();
-            log.info("test");
-        });
-        // 错误返回信息
-        ErrorReturn defaultException = ErrorReturn.DEFAULT_EXCEPTION;
-        return buildExceptionResponse(defaultException);
+        return buildExceptionResponse(errorReturn, errorTip);
     }
 
     /**
@@ -181,7 +167,6 @@ public class HandleExceptionAspect {
         String errorMsg = "参数校验";
         return buildExceptionResponse(httpStatusCode, errorCode, errorMsg, errorFieldTip);
     }
-
 
     /**
      * 获取注解校验消息
@@ -234,7 +219,7 @@ public class HandleExceptionAspect {
      * @return {@link ExceptionResponse}
      */
     private ExceptionResponse buildExceptionResponse(int httpStatusCode, String errorCode, String errorType, ErrorTip tip) {
-        return ExceptionResponse.builder()
+        ExceptionResponse response = ExceptionResponse.builder()
                 // HTTP状态码
                 .statusCode(httpStatusCode)
                 // 设置错误码
@@ -245,6 +230,9 @@ public class HandleExceptionAspect {
                 .data(tip)
                 // 设置响应时间戳
                 .timestamp(ZonedDateTime.now()).build();
+        // 跟踪响应和清除TraceID
+        traceResponseAndCleanTraceId(response);
+        return response;
     }
 
     /**
@@ -253,12 +241,27 @@ public class HandleExceptionAspect {
      * @param errorReturn 错误返回信息对象 {@link ErrorReturn}
      * @return {@link ExceptionResponse}<{@link ?}>
      */
-    private ExceptionResponse buildExceptionResponse(ErrorReturn errorReturn) {
+    private ExceptionResponse buildExceptionResponse(ErrorReturn errorReturn, ErrorTip tip) {
         int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
         String errorType = errorReturn.getErrorType().getName();
         String errorCode = errorReturn.getErrorCode();
-        ErrorTip tip = errorReturn.getErrorTip();
         return buildExceptionResponse(httpStatusCode, errorCode, errorType, tip);
+    }
+
+    /**
+     * 跟踪响应和清除TraceID
+     *
+     * @param response 响应
+     */
+    private void traceResponseAndCleanTraceId(ExceptionResponse response) {
+        try {
+            // 打印异常响应日志
+            logUtils.traceResponse(servletRequest, servletResponse, response);
+            // 清除TraceID
+            MDC.clear();
+        } catch (Exception ignored) {
+            // 此处拦截异常，防止上面的代码存在异常影响实际业务逻辑
+        }
     }
 
 }

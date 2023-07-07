@@ -1,7 +1,7 @@
 package cn.yhm.developer.monkey.common.aspect;
 
-import cn.yhm.developer.kuca.common.utils.standard.JsonService;
 import cn.yhm.developer.monkey.common.constant.AspectRule;
+import cn.yhm.developer.monkey.common.util.standard.LogUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,9 +13,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.TreeMap;
 
 /**
  * 请求入参日志切面
@@ -27,13 +24,6 @@ import java.util.TreeMap;
 @Component
 @Aspect
 public class ApiLogAspect implements Ordered {
-
-    private JsonService jsonService;
-
-    @Autowired
-    public void setJsonService(JsonService jsonService) {
-        this.jsonService = jsonService;
-    }
 
     private HttpServletRequest httpServletRequest;
 
@@ -47,6 +37,13 @@ public class ApiLogAspect implements Ordered {
     @Autowired
     public void setHttpServletResponse(HttpServletResponse httpServletResponse) {
         this.httpServletResponse = httpServletResponse;
+    }
+
+    private LogUtils logUtils;
+
+    @Autowired
+    public void setLogUtils(LogUtils logUtils) {
+        this.logUtils = logUtils;
     }
 
     /**
@@ -63,64 +60,12 @@ public class ApiLogAspect implements Ordered {
     public Object doAround(ProceedingJoinPoint point) throws Throwable {
         Object requestParam = point.getArgs()[0];
         // 打印接口请求参数日志
-        traceRequest(httpServletRequest, requestParam);
+        logUtils.traceRequest(httpServletRequest, requestParam);
         // 执行被代理的业务逻辑
         Object proceed = point.proceed();
         // 打印接口正常响应参数日志
-        traceResponse(httpServletRequest, httpServletResponse, proceed);
+        logUtils.traceResponse(httpServletRequest, httpServletResponse, proceed);
         return proceed;
-    }
-
-    /**
-     * 跟踪请求
-     */
-    private void traceRequest(HttpServletRequest servletRequest, Object requestParam) {
-        String uri = servletRequest.getRequestURI();
-        String method = servletRequest.getMethod();
-
-        TreeMap<String, String> requestHeaderMap = new TreeMap<>();
-        Enumeration<String> headerNames = servletRequest.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String name = headerNames.nextElement();
-            String value = httpServletRequest.getHeader(name);
-            requestHeaderMap.put(name, value);
-        }
-
-        String headers = jsonService.toJson(requestHeaderMap);
-        String requestBodyJson = jsonService.toJson(requestParam);
-        log.info("===============================Request Begin===============================");
-        log.info("URI          : {}", uri);
-        log.info("Method       : {}", method);
-        log.info("Headers      : {}", headers);
-        log.info("Request Param: {}", requestBodyJson);
-        log.info("===============================Request End=================================");
-    }
-
-    /**
-     * 跟踪响应
-     */
-    private void traceResponse(HttpServletRequest servletRequest, HttpServletResponse servletResponse,
-                               Object responseBody) {
-        Integer httpStatusCode = servletResponse.getStatus();
-        String uri = servletRequest.getRequestURI();
-        String method = servletRequest.getMethod();
-
-        TreeMap<String, String> responseHeaderMap = new TreeMap<>();
-        Collection<String> headerNames = servletResponse.getHeaderNames();
-        for (String name : headerNames) {
-            String value = servletResponse.getHeader(name);
-            responseHeaderMap.put(name, value);
-        }
-
-        String headers = jsonService.toJson(responseHeaderMap);
-        String responseBodyJson = jsonService.toJson(responseBody);
-        log.info("===============================Response Begin==============================");
-        log.info("URI          : {}", uri);
-        log.info("Method       : {}", method);
-        log.info("Status code  : {}", httpStatusCode);
-        log.info("Headers      : {}", headers);
-        log.info("Response body: {}", responseBodyJson);
-        log.info("===============================Response End================================");
     }
 
     @Override

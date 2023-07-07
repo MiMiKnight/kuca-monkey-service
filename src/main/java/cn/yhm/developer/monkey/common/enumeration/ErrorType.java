@@ -18,40 +18,40 @@ public enum ErrorType {
      * <p>
      * 500
      */
-    DEFAULT_EXCEPTION("系统默认异常", HttpStatus.INTERNAL_SERVER_ERROR),
+    DEFAULT_EXCEPTION("System Default Exception", HttpStatus.INTERNAL_SERVER_ERROR),
 
     /**
      * 参数校验异常
      * <p>
      * 400
      */
-    PARAMETER_VALID_FAILED("参数校验异常", HttpStatus.BAD_REQUEST),
+    PARAMETER_VALID_FAILED("Parameter Validate Failed", HttpStatus.BAD_REQUEST),
 
     /**
      * 资源未找到异常
      * <p>
      * 404
      */
-    RESOURCE_NOT_FOUND("资源未找到异常", HttpStatus.NOT_FOUND),
+    RESOURCE_NOT_FOUND("404 Not Found", HttpStatus.NOT_FOUND),
 
     /**
      * 请求方法不允许异常
      * <p>
      * 405
      */
-    METHOD_NOT_ALLOWED("请求方法不允许异常", HttpStatus.METHOD_NOT_ALLOWED),
+    METHOD_NOT_ALLOWED("Method Not Allowed", HttpStatus.METHOD_NOT_ALLOWED),
 
     /**
      * 业务异常
      * <p>
      * 500
      */
-    SERVICE_EXCEPTION("业务异常", HttpStatus.INTERNAL_SERVER_ERROR),
+    SERVICE_EXCEPTION("Service Exception", HttpStatus.INTERNAL_SERVER_ERROR),
 
     /**
      * 调用第三方接口（类库）异常
      */
-    CALL_THIRD_PARTY_EXCEPTION("调用第三方接口异常", HttpStatus.NOT_IMPLEMENTED);
+    CALL_THIRD_PARTY_EXCEPTION("Call third-party API Exception", HttpStatus.NOT_IMPLEMENTED);
 
 
     /**

@@ -1,6 +1,7 @@
 package cn.yhm.developer.monkey.common.exception;
 
 import cn.yhm.developer.monkey.common.enumeration.ErrorReturn;
+import cn.yhm.developer.monkey.common.tip.ErrorTip;
 import lombok.Getter;
 
 /**
@@ -18,13 +19,29 @@ public class ServiceException extends RuntimeException {
     private final ErrorReturn errorReturn;
 
     /**
+     * 错误提示
+     */
+    private final transient ErrorTip errorTip;
+
+    /**
      * 服务异常 构造方法
      *
      * @param errorReturn 错误返回
      */
-    public ServiceException(ErrorReturn errorReturn) {
-        super(errorReturn.getErrorTip().getTip());
+    public ServiceException(ErrorReturn errorReturn, ErrorTip errorTip) {
+        super(errorTip.getTip());
         this.errorReturn = errorReturn;
+        this.errorTip = errorTip;
+    }
+
+    /**
+     * 服务异常
+     *
+     * @param errorReturn 错误返回
+     * @param message     消息
+     */
+    public ServiceException(ErrorReturn errorReturn, String message) {
+        this(errorReturn, ErrorTip.build(message));
     }
 
     /**
@@ -33,9 +50,21 @@ public class ServiceException extends RuntimeException {
      * @param errorReturn 错误返回
      * @param cause       原因
      */
-    public ServiceException(ErrorReturn errorReturn, Throwable cause) {
-        super(errorReturn.getErrorTip().getTip(), cause);
+    public ServiceException(ErrorReturn errorReturn, ErrorTip errorTip, Throwable cause) {
+        super(errorTip.getTip(), cause);
         this.errorReturn = errorReturn;
+        this.errorTip = errorTip;
+    }
+
+    /**
+     * 服务异常
+     *
+     * @param errorReturn 错误返回
+     * @param message     消息
+     * @param cause       原因
+     */
+    public ServiceException(ErrorReturn errorReturn, String message, Throwable cause) {
+        this(errorReturn, ErrorTip.build(message), cause);
     }
 
 }

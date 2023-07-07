@@ -28,17 +28,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContentController extends EcologyRequestHandleAdapter {
 
     @PostMapping(value = "/v1/audit")
-    public SuccessResponse v1(@RequestBody @Validated AuditContentRequest request) throws Exception {
+    public SuccessResponse v1(@RequestBody AuditContentRequest request) throws Exception {
         return handle(request);
     }
 
     @PostMapping(value = "/v1/save")
-    public SuccessResponse v1(@RequestBody @Validated SaveContentRequest request) throws Exception {
+    public SuccessResponse v1(@RequestBody SaveContentRequest request) throws Exception {
         return handle(request);
     }
 
     @PostMapping(value = "/v1/modify")
-    public SuccessResponse v1(@RequestBody @Validated ModifyContentByIdRequest request) throws Exception {
+    public SuccessResponse v1(@RequestBody ModifyContentByIdRequest request) throws Exception {
         return handle(request);
     }
 

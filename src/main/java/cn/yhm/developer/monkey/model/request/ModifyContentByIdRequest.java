@@ -1,6 +1,7 @@
 package cn.yhm.developer.monkey.model.request;
 
 import cn.yhm.developer.kuca.ecology.model.request.EcologyRequest;
+import cn.yhm.developer.kuca.validation.annotation.validation.ValidateNotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;

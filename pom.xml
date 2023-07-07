@@ -35,6 +35,8 @@
         <kuca-ecology-spring-boot-starter.version>1.0.0-SNAPSHOT</kuca-ecology-spring-boot-starter.version>
         <!--kuca-common-->
         <kuca-common-spring-boot-starter.version>1.0.0-SNAPSHOT</kuca-common-spring-boot-starter.version>
+        <!--kuca-validation-->
+        <kuca-validation-spring-boot-starter.version>1.0.0-SNAPSHOT</kuca-validation-spring-boot-starter.version>
     </properties>
 
     <!--引入依赖-->
@@ -48,6 +50,11 @@
             <groupId>cn.yhm.developer</groupId>
             <artifactId>kuca-common-spring-boot-starter</artifactId>
             <version>${kuca-common-spring-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.yhm.developer</groupId>
+            <artifactId>kuca-validation-spring-boot-starter</artifactId>
+            <version>${kuca-validation-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
