@@ -1,5 +1,6 @@
 package cn.yhm.developer.monkey.common.enumeration;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
  * @author victor2015yhm@gmail.com
  * @since 2023-03-10 07:47:36
  */
+@Getter
 public enum ErrorType {
 
 
@@ -16,7 +18,7 @@ public enum ErrorType {
      * <p>
      * 500
      */
-    DEFAULT_EXCEPTION("默认异常", HttpStatus.INTERNAL_SERVER_ERROR),
+    DEFAULT_EXCEPTION("系统默认异常", HttpStatus.INTERNAL_SERVER_ERROR),
 
     /**
      * 参数校验异常
@@ -90,23 +92,5 @@ public enum ErrorType {
      */
     ErrorType(String name, HttpStatus httpStatus) {
         this(name, httpStatus.value());
-    }
-
-    /**
-     * 获取异常类型名称
-     *
-     * @return {@link String}
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * 获取HTTP状态码
-     *
-     * @return int
-     */
-    public int getHttpStatusCode() {
-        return httpStatusCode;
     }
 }

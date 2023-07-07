@@ -1,6 +1,7 @@
 package cn.yhm.developer.monkey.common.tip;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 /**
  * 字段校验错误提示类
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author victor2015yhm@gmail.com
  * @since 2023-03-11 00:02:03
  */
+@Data
 public class ErrorFieldTip extends ErrorTip {
 
     @JsonProperty(value = "field")
@@ -28,23 +30,5 @@ public class ErrorFieldTip extends ErrorTip {
      */
     public static ErrorFieldTip build(String field, String tip) {
         return new ErrorFieldTip(field, tip);
-    }
-
-    @Override
-    public void setTip(String tip) {
-        super.setTip(tip);
-    }
-
-    @Override
-    public String getTip() {
-        return super.getTip();
-    }
-
-    public void setField(String field) {
-        this.field = field;
-    }
-
-    public String getField() {
-        return field;
     }
 }

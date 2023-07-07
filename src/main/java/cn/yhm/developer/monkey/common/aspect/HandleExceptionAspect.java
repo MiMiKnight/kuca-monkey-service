@@ -2,7 +2,6 @@ package cn.yhm.developer.monkey.common.aspect;
 
 import cn.yhm.developer.kuca.ecology.model.response.ExceptionResponse;
 import cn.yhm.developer.monkey.common.enumeration.ErrorReturn;
-import cn.yhm.developer.monkey.common.enumeration.ErrorType;
 import cn.yhm.developer.monkey.common.exception.ServiceException;
 import cn.yhm.developer.monkey.common.tip.ErrorFieldTip;
 import cn.yhm.developer.monkey.common.tip.ErrorTip;
@@ -31,7 +30,6 @@ import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.time.ZonedDateTime;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -162,7 +160,7 @@ public class HandleExceptionAspect {
         });
         // 错误返回信息
         ErrorReturn defaultException = ErrorReturn.DEFAULT_EXCEPTION;
-        return buildExceptionResponse(defaultException, defaultException.getTip());
+        return buildExceptionResponse(defaultException);
     }
 
     /**
@@ -227,26 +225,6 @@ public class HandleExceptionAspect {
     }
 
     /**
-     * 包装Tip字段
-     *
-     * @param tip 提示字段
-     * @return {@link Object}
-     */
-    private <T> Object packTip(T tip) {
-        if (tip instanceof String) {
-            return ErrorTip.build((String) tip);
-        }
-        if (tip instanceof ErrorTip) {
-            return tip;
-        }
-        if (tip instanceof Map) {
-            return tip;
-        }
-        log.warn("Tip field data type is illegal.");
-        return tip;
-    }
-
-    /**
      * 构建异常响应信息对象
      *
      * @param httpStatusCode HTTP状态码
@@ -255,7 +233,7 @@ public class HandleExceptionAspect {
      * @param tip            提示信息
      * @return {@link ExceptionResponse}
      */
-    private <T> ExceptionResponse buildExceptionResponse(int httpStatusCode, String errorCode, String errorType, T tip) {
+    private ExceptionResponse buildExceptionResponse(int httpStatusCode, String errorCode, String errorType, ErrorTip tip) {
         return ExceptionResponse.builder()
                 // HTTP状态码
                 .statusCode(httpStatusCode)
@@ -264,25 +242,9 @@ public class HandleExceptionAspect {
                 // 设置错误类型
                 .errorType(errorType)
                 // 设置错误 提示信息
-                .data(packTip(tip))
+                .data(tip)
                 // 设置响应时间戳
-                .timestamp(ZonedDateTime.now())
-                .build();
-    }
-
-    /**
-     * 构建异常响应信息对象
-     *
-     * @param errorReturn 错误返回信息对象 {@link ErrorReturn}
-     * @param tip         提示信息
-     * @return {@link ExceptionResponse}<{@link ?}>
-     */
-    private <T> ExceptionResponse buildExceptionResponse(ErrorReturn errorReturn, T tip) {
-        String errorCode = errorReturn.getErrorCode();
-        ErrorType errorType = errorReturn.getErrorType();
-        int httpStatusCode = errorType.getHttpStatusCode();
-        String errorTypeName = errorType.getName();
-        return buildExceptionResponse(httpStatusCode, errorCode, errorTypeName, tip);
+                .timestamp(ZonedDateTime.now()).build();
     }
 
     /**
@@ -292,7 +254,11 @@ public class HandleExceptionAspect {
      * @return {@link ExceptionResponse}<{@link ?}>
      */
     private ExceptionResponse buildExceptionResponse(ErrorReturn errorReturn) {
-        return buildExceptionResponse(errorReturn, errorReturn.getTip());
+        int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
+        String errorType = errorReturn.getErrorType().getName();
+        String errorCode = errorReturn.getErrorCode();
+        ErrorTip tip = errorReturn.getErrorTip();
+        return buildExceptionResponse(httpStatusCode, errorCode, errorType, tip);
     }
 
 }

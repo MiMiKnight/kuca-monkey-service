@@ -18,22 +18,23 @@ public class ServiceException extends RuntimeException {
     private final ErrorReturn errorReturn;
 
     /**
-     * 自定义服务异常 构造方法
+     * 服务异常 构造方法
      *
      * @param errorReturn 错误返回
      */
     public ServiceException(ErrorReturn errorReturn) {
+        super(errorReturn.getErrorTip().getTip());
         this.errorReturn = errorReturn;
     }
 
     /**
-     * 自定义服务异常 构造方法
+     * 服务异常  构造方法
      *
      * @param errorReturn 错误返回
      * @param cause       原因
      */
     public ServiceException(ErrorReturn errorReturn, Throwable cause) {
-        super(cause);
+        super(errorReturn.getErrorTip().getTip(), cause);
         this.errorReturn = errorReturn;
     }
 

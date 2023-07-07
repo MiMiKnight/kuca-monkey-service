@@ -1,6 +1,7 @@
 package cn.yhm.developer.monkey.common.tip;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 /**
  * 错误提示类
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author victor2015yhm@gmail.com
  * @since 2023-03-11 00:08:41
  */
+@Data
 public class ErrorTip {
 
     @JsonProperty(value = "tip")
@@ -27,11 +29,4 @@ public class ErrorTip {
         return new ErrorTip(tip);
     }
 
-    public void setTip(String tip) {
-        this.tip = tip;
-    }
-
-    public String getTip() {
-        return tip;
-    }
 }
