@@ -3,22 +3,27 @@ package cn.yhm.developer.monkey.common.aspect;
 import cn.yhm.developer.kuca.ecology.model.response.ExceptionResponse;
 import cn.yhm.developer.monkey.common.enumeration.ErrorReturn;
 import cn.yhm.developer.monkey.common.enumeration.ErrorType;
+import cn.yhm.developer.monkey.common.exception.ServiceException;
 import cn.yhm.developer.monkey.common.tip.ErrorFieldTip;
 import cn.yhm.developer.monkey.common.tip.ErrorTip;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
@@ -40,8 +45,17 @@ import java.util.Set;
 @RestControllerAdvice
 public class HandleExceptionAspect {
 
+    private HttpServletResponse servletResponse;
+
+    @Autowired
+    public void setServletResponse(HttpServletResponse servletResponse) {
+        this.servletResponse = servletResponse;
+    }
+
     /**
      * 默认异常处理
+     * <p>
+     * 500
      *
      * @param e 异常类型 {@link Exception}
      * @return {@link ExceptionResponse}<{@link ?}>
@@ -50,8 +64,56 @@ public class HandleExceptionAspect {
     @ExceptionHandler(value = Exception.class)
     public ExceptionResponse handle(Exception e) {
         // 错误返回信息
-        ErrorReturn defaultException = ErrorReturn.DEFAULT_EXCEPTION;
-        return buildExceptionResponse(defaultException, defaultException.getTip());
+        ErrorReturn errorReturn = ErrorReturn.DEFAULT_EXCEPTION;
+        int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
+        servletResponse.setStatus(httpStatusCode);
+        return buildExceptionResponse(errorReturn);
+    }
+
+
+    /**
+     * 接口请求方法不允许异常
+     *
+     * @param e 异常类型 {@link HttpRequestMethodNotSupportedException}
+     * @return {@link ExceptionResponse}
+     */
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    public ExceptionResponse handle(HttpRequestMethodNotSupportedException e) {
+        // 错误返回信息
+        ErrorReturn errorReturn = ErrorReturn.METHOD_NOT_ALLOWED;
+        int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
+        servletResponse.setStatus(httpStatusCode);
+        return buildExceptionResponse(errorReturn);
+    }
+
+    /**
+     * 资源未找到异常
+     *
+     * @param e 异常类型 {@link NoHandlerFoundException}
+     * @return {@link ExceptionResponse}
+     */
+    @ExceptionHandler(value = NoHandlerFoundException.class)
+    public ExceptionResponse handle(NoHandlerFoundException e) {
+        // 错误返回信息
+        ErrorReturn errorReturn = ErrorReturn.RESOURCE_NOT_FOUND;
+        int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
+        servletResponse.setStatus(httpStatusCode);
+        return buildExceptionResponse(errorReturn);
+    }
+
+    /**
+     * 自定义服务异常
+     *
+     * @param e 异常类型 {@link ServiceException}
+     * @return {@link ExceptionResponse}
+     */
+    @ExceptionHandler(value = ServiceException.class)
+    public ExceptionResponse handle(ServiceException e) {
+        // 错误返回信息
+        ErrorReturn errorReturn = e.getErrorReturn();
+        int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
+        servletResponse.setStatus(httpStatusCode);
+        return buildExceptionResponse(errorReturn);
     }
 
     /**
