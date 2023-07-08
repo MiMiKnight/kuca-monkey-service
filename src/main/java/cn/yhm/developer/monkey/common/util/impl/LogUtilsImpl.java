@@ -3,13 +3,17 @@ package cn.yhm.developer.monkey.common.util.impl;
 import cn.yhm.developer.kuca.common.utils.standard.JsonService;
 import cn.yhm.developer.monkey.common.util.standard.LogUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.TreeMap;
@@ -32,9 +36,20 @@ public class LogUtilsImpl implements LogUtils {
     }
 
     @Override
-    public void traceRequest(HttpServletRequest servletRequest, Object requestParam) {
+    public void traceRequest(HttpServletRequest servletRequest, Object requestParam) throws IOException {
         String uri = servletRequest.getRequestURI();
         String method = servletRequest.getMethod();
+        String queryString = servletRequest.getQueryString();
+        String characterEncoding = servletRequest.getCharacterEncoding();
+
+        HttpServletRequestWrapper servletRequestWrapper = new HttpServletRequestWrapper(servletRequest);
+
+
+
+
+        ServletInputStream inputStream = servletRequest.getInputStream();
+        byte[] requestBodyBytes = IOUtils.toByteArray(inputStream);
+
 
         TreeMap<String, String> requestHeaderMap = new TreeMap<>();
         Enumeration<String> headerNames = servletRequest.getHeaderNames();
@@ -46,11 +61,13 @@ public class LogUtilsImpl implements LogUtils {
 
         String headers = jsonService.toJson(requestHeaderMap);
         String requestBodyJson = jsonService.toJson(requestParam);
+        String requestParamJson = "";
         log.info("===============================Request Begin===============================");
         log.info("URI          : {}", uri);
         log.info("Method       : {}", method);
         log.info("Headers      : {}", headers);
-        log.info("Request Param: {}", requestBodyJson);
+        log.info("Request Query: {}", requestParamJson);
+        log.info("Request Body : {}", requestBodyJson);
         log.info("===============================Request End=================================");
     }
 

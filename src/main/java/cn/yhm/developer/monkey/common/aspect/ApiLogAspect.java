@@ -49,7 +49,7 @@ public class ApiLogAspect implements Ordered {
     /**
      * 切入点
      */
-    @Pointcut(value = AspectRule.Rule003.RULE_PATTERN)
+    @Pointcut(value = AspectRule.Rule001.RULE_PATTERN)
     public void pointcut() {
     }
 
@@ -70,6 +70,6 @@ public class ApiLogAspect implements Ordered {
 
     @Override
     public int getOrder() {
-        return AspectRule.Rule003.Order.ORDER_500;
+        return AspectRule.Rule001.Order.ORDER_501;
     }
 }

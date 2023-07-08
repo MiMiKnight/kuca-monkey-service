@@ -2,6 +2,7 @@ package cn.yhm.developer.monkey.common.util.standard;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 日志工具类
@@ -17,7 +18,7 @@ public interface LogUtils {
      * @param servletRequest servlet请求
      * @param requestParam   请求参数
      */
-    void traceRequest(HttpServletRequest servletRequest, Object requestParam);
+    void traceRequest(HttpServletRequest servletRequest, Object requestParam) throws IOException;
 
     /**
      * 跟踪响应
