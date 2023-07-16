@@ -98,4 +98,9 @@ mybatis-plus:
 logging:
   level:
     root: info
-#
+# spring-doc
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /api

@@ -40,17 +40,6 @@ public class
     public void traceRequest(HttpServletRequest servletRequest, Object requestParam) throws IOException {
         String uri = servletRequest.getRequestURI();
         String method = servletRequest.getMethod();
-        String queryString = servletRequest.getQueryString();
-        String characterEncoding = servletRequest.getCharacterEncoding();
-
-        HttpServletRequestWrapper servletRequestWrapper = new HttpServletRequestWrapper(servletRequest);
-
-
-
-
-        ServletInputStream inputStream = servletRequest.getInputStream();
-        byte[] requestBodyBytes = IOUtils.toByteArray(inputStream);
-
 
         TreeMap<String, String> requestHeaderMap = new TreeMap<>();
         Enumeration<String> headerNames = servletRequest.getHeaderNames();
