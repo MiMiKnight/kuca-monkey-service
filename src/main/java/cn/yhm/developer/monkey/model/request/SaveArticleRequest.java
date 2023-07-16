@@ -6,18 +6,24 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 保存内容请求参数
+ * 保存文章内容请求参数
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-03-09 20:26:22
  */
 @Getter
 @Setter
-public class SaveContentRequest implements EcologyRequest {
+public class SaveArticleRequest implements EcologyRequest {
 
     /**
-     * 内容
+     * 文章标题
      */
-    @JsonProperty(value = "content")
-    private String content;
+    @JsonProperty(value = "title")
+    private String title;
+
+    /**
+     * 文章内容
+     */
+    @JsonProperty(value = "article")
+    private String article;
 }

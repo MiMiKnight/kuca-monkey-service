@@ -13,12 +13,14 @@ import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
 /**
+ * 审核文章
+ *
  * @author victor2015yhm@gmail.com
  * @since 2023-03-09 20:26:22
  */
 @Getter
 @Setter
-public class AuditContentRequest implements EcologyRequest {
+public class AuditArticleRequest implements EcologyRequest {
 
     /**
      * 审核结果

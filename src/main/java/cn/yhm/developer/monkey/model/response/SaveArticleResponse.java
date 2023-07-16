@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 保存内容响应参数
+ * 保存文章响应参数
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-05-07 16:22:42
  */
 @Getter
 @Setter
-public class SaveContentResponse implements EcologyResponse {
+public class SaveArticleResponse implements EcologyResponse {
 
 }

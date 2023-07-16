@@ -3,10 +3,9 @@ package cn.yhm.developer.monkey.rest.controller;
 import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandleAdapter;
 import cn.yhm.developer.kuca.ecology.model.response.SuccessResponse;
 import cn.yhm.developer.monkey.common.constant.ApiPath;
-import cn.yhm.developer.monkey.model.request.AuditContentRequest;
-import cn.yhm.developer.monkey.model.request.ModifyContentByIdRequest;
-import cn.yhm.developer.monkey.model.request.QueryContentByIdRequest;
-import cn.yhm.developer.monkey.model.request.SaveContentRequest;
+import cn.yhm.developer.monkey.model.request.ModifyArticleByIdRequest;
+import cn.yhm.developer.monkey.model.request.QueryArticleByIdRequest;
+import cn.yhm.developer.monkey.model.request.SaveArticleRequest;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,27 +23,22 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Validated
 @RestController
-@RequestMapping(path = ApiPath.Module.CONTENT, produces = {MediaType.APPLICATION_JSON_VALUE})
-public class ContentController extends EcologyRequestHandleAdapter {
-
-    @PostMapping(value = "/v1/audit")
-    public SuccessResponse v1(@RequestBody AuditContentRequest request) throws Exception {
-        return handle(request);
-    }
+@RequestMapping(path = ApiPath.Module.ARTICLE, produces = {MediaType.APPLICATION_JSON_VALUE})
+public class ArticleController extends EcologyRequestHandleAdapter {
 
     @PostMapping(value = "/v1/save")
-    public SuccessResponse v1(@RequestBody SaveContentRequest request) throws Exception {
+    public SuccessResponse v1(@RequestBody SaveArticleRequest request) throws Exception {
         return handle(request);
     }
 
     @PostMapping(value = "/v1/modify")
-    public SuccessResponse v1(@RequestBody ModifyContentByIdRequest request) throws Exception {
+    public SuccessResponse v1(@RequestBody ModifyArticleByIdRequest request) throws Exception {
         return handle(request);
     }
 
     @GetMapping(value = "/v1/query")
-    public SuccessResponse v1(@RequestParam(name = "id") String id) throws Exception {
-        QueryContentByIdRequest request = new QueryContentByIdRequest();
+    public SuccessResponse v1(@RequestParam("id") String id) throws Exception {
+        QueryArticleByIdRequest request = new QueryArticleByIdRequest();
         request.setId(id);
         return handle(request);
     }

@@ -26,7 +26,8 @@ import java.util.TreeMap;
  */
 @Slf4j
 @Component
-public class LogUtilsImpl implements LogUtils {
+public class
+  LogUtilsImpl implements LogUtils {
 
     private JsonService jsonService;
 

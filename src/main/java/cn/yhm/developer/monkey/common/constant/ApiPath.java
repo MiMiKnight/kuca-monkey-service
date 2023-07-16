@@ -24,9 +24,9 @@ public interface ApiPath {
         String HEALTH = TOP_PREFIX + "/health";
 
         /**
-         * 内容模块
+         * 文章模块
          */
-        String CONTENT = TOP_PREFIX + "/content";
+        String ARTICLE = TOP_PREFIX + "/article";
 
     }
 }

@@ -87,7 +87,7 @@ public class BaseGeneratorTest {
     protected static final Consumer<StrategyConfig.Builder> BUILD_STRATEGY_CONFIG = (builder) -> {
         // 数据库表集合
         ArrayList<String> dbTableList = new ArrayList<>();
-        dbTableList.add("t_monkey_content");
+        dbTableList.add("t_monkey_article");
 
         builder.enableCapitalMode()
                 .enableSkipView() // 跳过视图

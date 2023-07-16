@@ -1,12 +1,12 @@
 package cn.yhm.developer.monkey.mapper;
 
-import cn.yhm.developer.monkey.model.entity.ContentEntity;
+import cn.yhm.developer.monkey.model.entity.ArticleEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
- * 内容表持久化类
+ * 文章表持久化类
  * <p>
  * query：查询
  * remove：删除
@@ -16,6 +16,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Mapper
-public interface ContentMapper extends BaseMapper<ContentEntity> {
+public interface ArticleMapper extends BaseMapper<ArticleEntity> {
 
 }

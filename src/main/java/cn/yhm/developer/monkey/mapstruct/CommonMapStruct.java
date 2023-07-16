@@ -1,7 +1,7 @@
 package cn.yhm.developer.monkey.mapstruct;
 
-import cn.yhm.developer.monkey.model.entity.ContentEntity;
-import cn.yhm.developer.monkey.model.response.QueryContentByIdResponse;
+import cn.yhm.developer.monkey.model.entity.ArticleEntity;
+import cn.yhm.developer.monkey.model.response.QueryArticleByIdResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -18,17 +18,18 @@ public interface CommonMapStruct {
     CommonMapStruct INSTANCE = Mappers.getMapper(CommonMapStruct.class);
 
     /**
-     * ContentEntity转QueryContentByIdResponse
+     * ArticleEntity转QueryContentByIdResponse
      *
-     * @param contentEntity 内容表实体类
-     * @return {@link QueryContentByIdResponse}
+     * @param articleEntity 文章表实体类
+     * @return {@link QueryArticleByIdResponse}
      */
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "content", target = "content")
+    @Mapping(source = "title", target = "title")
+    @Mapping(source = "article", target = "article")
     @Mapping(source = "version", target = "version")
     @Mapping(source = "deleted", target = "deleted")
     @Mapping(source = "createdTime", target = "createdTime")
     @Mapping(source = "updatedTime", target = "updatedTime")
-    QueryContentByIdResponse convert(ContentEntity contentEntity);
+    QueryArticleByIdResponse convert(ArticleEntity articleEntity);
 
 }

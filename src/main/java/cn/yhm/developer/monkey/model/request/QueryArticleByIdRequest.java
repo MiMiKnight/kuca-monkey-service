@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 @Validated
 @Getter
 @Setter
-public class QueryContentByIdRequest implements EcologyRequest {
+public class QueryArticleByIdRequest implements EcologyRequest {
 
     /**
      * 主键

@@ -31,12 +31,12 @@ public class MyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
      * yyyy-MM-dd HH:mm:ss.SSSSS        此处时间精确到微秒，对应数据库 datetime时间精确到6位
      * yyyy-MM-dd HH:mm:ss.SSSSSSSSS    此处时间精确到纳秒，对应数据库 datetime时间精确到9位
      */
-    private final static String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss.SSSSSS";
+    private static final String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss.SSSSSS";
 
     /**
      * 入数据库的日期默认时区
      */
-    private final static String DATABASE_TIMEZONE = "UTC";
+    private static final String DATABASE_TIMEZONE = "UTC";
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int index, ZonedDateTime dateTime,

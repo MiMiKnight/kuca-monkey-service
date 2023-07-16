@@ -1,6 +1,6 @@
 package cn.yhm.developer.monkey.service.standard;
 
-import cn.yhm.developer.monkey.model.entity.ContentEntity;
+import cn.yhm.developer.monkey.model.entity.ArticleEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,5 +9,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author victor2015yhm@gmail.com
  * @since 2023-05-21 17:54:32
  */
-public interface ContentService extends IService<ContentEntity> {
+public interface ArticleService extends IService<ArticleEntity> {
 }

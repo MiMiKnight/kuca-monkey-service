@@ -24,9 +24,12 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.time.ZonedDateTime;
+import java.util.Set;
 
 /**
  * 全局异常处理切面
@@ -147,6 +150,15 @@ public class HandleExceptionAspect {
         // 设置状态码
         servletResponse.setStatus(httpStatusCode);
         return buildExceptionResponse(errorReturn, errorTip);
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    public ExceptionResponse handle(ConstraintViolationException e) {
+        String localizedMessage = e.getLocalizedMessage();
+        Throwable cause = e.getCause();
+        Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+        return null;
     }
 
     /**

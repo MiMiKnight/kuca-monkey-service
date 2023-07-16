@@ -12,12 +12,11 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
  * <p>
- * 内容表
+ * 文章表
  * </p>
  *
  * @author victor2015yhm@gmail.com
@@ -25,10 +24,10 @@ import java.time.ZonedDateTime;
  */
 @Getter
 @Setter
-@TableName("t_monkey_content")
-public class ContentEntity extends Model<ContentEntity> {
+@TableName("t_monkey_article")
+public class ArticleEntity extends Model<ArticleEntity> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 123080239902732129L;
 
     /**
      * 主键
@@ -37,10 +36,16 @@ public class ContentEntity extends Model<ContentEntity> {
     private String id;
 
     /**
-     * 内容
+     * 标题
      */
-    @TableField("content")
-    private String content;
+    @TableField("title")
+    private String title;
+
+    /**
+     * 文章内容
+     */
+    @TableField("article")
+    private String article;
 
     /**
      * 乐观锁
@@ -68,22 +73,5 @@ public class ContentEntity extends Model<ContentEntity> {
     @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE, typeHandler = MyZonedDateTimeTypeHandler.class)
     private ZonedDateTime updatedTime;
 
-
-    public static final String ID = "id";
-
-    public static final String CONTENT = "content";
-
-    public static final String VERSION = "version";
-
-    public static final String DELETED = "deleted";
-
-    public static final String CREATED_TIME = "created_time";
-
-    public static final String UPDATED_TIME = "updated_time";
-
-    @Override
-    public Serializable pkVal() {
-        return this.id;
-    }
 
 }

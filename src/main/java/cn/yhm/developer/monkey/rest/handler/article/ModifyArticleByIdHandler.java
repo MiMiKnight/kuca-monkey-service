@@ -1,33 +1,33 @@
-package cn.yhm.developer.monkey.rest.handler.content;
+package cn.yhm.developer.monkey.rest.handler.article;
 
 import cn.yhm.developer.kuca.common.utils.standard.RedisLockService;
 import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler;
 import cn.yhm.developer.monkey.common.enumeration.ErrorReturn;
 import cn.yhm.developer.monkey.common.exception.ServiceException;
-import cn.yhm.developer.monkey.model.entity.ContentEntity;
-import cn.yhm.developer.monkey.model.request.ModifyContentByIdRequest;
-import cn.yhm.developer.monkey.model.response.ModifyContentByIdResponse;
-import cn.yhm.developer.monkey.service.standard.ContentService;
+import cn.yhm.developer.monkey.model.entity.ArticleEntity;
+import cn.yhm.developer.monkey.model.request.ModifyArticleByIdRequest;
+import cn.yhm.developer.monkey.model.response.ModifyArticleByIdResponse;
+import cn.yhm.developer.monkey.service.standard.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * 保存内容处理器类
+ * 保存文章处理器类
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-03-09 20:32:18
  */
 @Component
-public class ModifyContentByIdHandler implements EcologyRequestHandler<ModifyContentByIdRequest, ModifyContentByIdResponse> {
+public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArticleByIdRequest, ModifyArticleByIdResponse> {
 
 
-    private ContentService contentService;
+    private ArticleService articleService;
 
     @Autowired
-    public void setContentService(ContentService contentService) {
-        this.contentService = contentService;
+    public void setContentService(ArticleService contentService) {
+        this.articleService = contentService;
     }
 
     private RedisLockService redisLockService;
@@ -38,10 +38,11 @@ public class ModifyContentByIdHandler implements EcologyRequestHandler<ModifyCon
     }
 
     @Override
-    public void handle(ModifyContentByIdRequest request, ModifyContentByIdResponse response) {
+    public void handle(ModifyArticleByIdRequest request, ModifyArticleByIdResponse response) {
         String id = request.getId();
-        String content = request.getContent();
-        ContentEntity entity = contentService.getById(id);
+        String title = request.getTitle();
+        String article = request.getArticle();
+        ArticleEntity entity = articleService.getById(id);
 
         if (null == entity) {
             String tip = String.format("id = %s ,content is not exist.", id);
@@ -56,8 +57,9 @@ public class ModifyContentByIdHandler implements EcologyRequestHandler<ModifyCon
             throw new ServiceException(ErrorReturn.GET_MODIFY_CONTENT_TABLE_LOCK_FAILED, tip);
         }
         try {
-            entity.setContent(content);
-            contentService.updateById(entity);
+            entity.setTitle(title);
+            entity.setArticle(article);
+            articleService.updateById(entity);
         } finally {
             // 释放锁
             redisLockService.unlock(lockName);
