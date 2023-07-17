@@ -1,4 +1,4 @@
-package cn.yhm.developer.monkey.common.util.standard;
+package cn.yhm.developer.monkey.common.utils.standard;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +10,7 @@ import java.io.IOException;
  * @author victor2015yhm@gmail.com
  * @date 2023-07-07 22:05:38
  */
-public interface LogUtils {
+public interface LogUtil {
 
     /**
      * 跟踪请求

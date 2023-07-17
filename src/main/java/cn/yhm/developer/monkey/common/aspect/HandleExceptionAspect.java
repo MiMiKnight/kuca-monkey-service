@@ -5,7 +5,7 @@ import cn.yhm.developer.monkey.common.enumeration.ErrorReturn;
 import cn.yhm.developer.monkey.common.exception.ServiceException;
 import cn.yhm.developer.monkey.common.tip.ErrorFieldTip;
 import cn.yhm.developer.monkey.common.tip.ErrorTip;
-import cn.yhm.developer.monkey.common.util.standard.LogUtils;
+import cn.yhm.developer.monkey.common.utils.standard.LogUtil;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -56,10 +56,10 @@ public class HandleExceptionAspect {
         this.servletResponse = servletResponse;
     }
 
-    private LogUtils logUtils;
+    private LogUtil logUtils;
 
     @Autowired
-    public void setLogUtils(LogUtils logUtils) {
+    public void setLogUtils(LogUtil logUtils) {
         this.logUtils = logUtils;
     }
 

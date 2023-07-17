@@ -1,17 +1,4 @@
 # application-dev.yml
-# 自定义配置
-##################################
-## 数据库配置
-##################################
-database:
-  type: mariadb
-  ip: 127.0.0.1
-  port: 3306
-  username: root
-  password: 123456
-  schema: db_monkey
-  encoding: utf8mb4
-  timezone: Asia/Shanghai
 ##################################
 ## Redis配置
 ##################################
@@ -31,8 +18,8 @@ server:
     key-store: classpath:certificate/DevSSL.keystore
     # 证书别名
     key-alias: SSL-Certificate
-    # 证书密码
-    key-store-password: 123456
+    # 证书密码 123456
+    key-store-password: ENC(KUknEt/4IGB0LGZ3jsXRhA==)
 # Spring配置
 spring:
   # 数据源配置
@@ -40,8 +27,10 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://127.0.0.1:3306/db_monkey?useUnicode=true&characterEncoding=utf8mb4&serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true
-    username: root
-    password: 123456
+    # 数据库用户名 root
+    username: ENC(iEXyvT7bYi0AZsRjwSV7Dw==)
+    # 数据库密码 123456
+    password: ENC(KUknEt/4IGB0LGZ3jsXRhA==)
     hikari:
       # 连接池名称
       pool-name: HikariCP-Pool
@@ -61,7 +50,8 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    password: 123456
+    # redis密码 123456
+    password: ENC(KUknEt/4IGB0LGZ3jsXRhA==)
     database: 0
     connect-timeout: 5000
   # 线程配置

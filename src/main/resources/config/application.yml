@@ -41,3 +41,9 @@ spring:
 #    out-of-order: false
 #    # 执行前初始化执行的SQL脚本
 #    init-sqls: DELETE FROM `flyway_schema_history` WHERE success = 0
+
+# jasypt配置
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator

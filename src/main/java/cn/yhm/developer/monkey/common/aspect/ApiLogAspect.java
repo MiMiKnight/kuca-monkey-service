@@ -1,7 +1,7 @@
 package cn.yhm.developer.monkey.common.aspect;
 
 import cn.yhm.developer.monkey.common.constant.AspectRule;
-import cn.yhm.developer.monkey.common.util.standard.LogUtils;
+import cn.yhm.developer.monkey.common.utils.standard.LogUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -39,10 +39,10 @@ public class ApiLogAspect implements Ordered {
         this.httpServletResponse = httpServletResponse;
     }
 
-    private LogUtils logUtils;
+    private LogUtil logUtils;
 
     @Autowired
-    public void setLogUtils(LogUtils logUtils) {
+    public void setLogUtils(LogUtil logUtils) {
         this.logUtils = logUtils;
     }
 

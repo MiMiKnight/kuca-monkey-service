@@ -1,17 +1,14 @@
-package cn.yhm.developer.monkey.common.util.impl;
+package cn.yhm.developer.monkey.common.utils.impl;
 
 import cn.yhm.developer.kuca.common.utils.standard.JsonService;
-import cn.yhm.developer.monkey.common.util.standard.LogUtils;
+import cn.yhm.developer.monkey.common.utils.standard.LogUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
@@ -27,7 +24,7 @@ import java.util.TreeMap;
 @Slf4j
 @Component
 public class
-  LogUtilsImpl implements LogUtils {
+LogUtilImpl implements LogUtil {
 
     private JsonService jsonService;
 
