@@ -14,7 +14,6 @@ import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.fill.Property;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Consumer;
 
@@ -86,13 +85,13 @@ public class BaseGeneratorTest {
      */
     protected static final Consumer<StrategyConfig.Builder> BUILD_STRATEGY_CONFIG = (builder) -> {
         // 数据库表集合
-        ArrayList<String> dbTableList = new ArrayList<>();
-        dbTableList.add("t_monkey_article");
+//        ArrayList<String> dbTableList = new ArrayList<>();
+//        dbTableList.add("t_monkey_article");
 
         builder.enableCapitalMode()
                 .enableSkipView() // 跳过视图
                 .disableSqlFilter() // 禁用过滤
-                .addInclude(dbTableList) // 数据表匹配
+                //.addInclude(dbTableList) // 数据表匹配
                 .addTablePrefix("t_monkey_"); // 表前缀
         // 构建Entity
         builder.entityBuilder()

@@ -1,6 +1,6 @@
 package cn.yhm.developer.monkey.model.entity;
 
-import cn.yhm.developer.monkey.common.typehandler.MyZonedDateTimeTypeHandler;
+import cn.yhm.developer.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
@@ -72,6 +73,25 @@ public class ArticleEntity extends Model<ArticleEntity> {
      */
     @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE, typeHandler = MyZonedDateTimeTypeHandler.class)
     private ZonedDateTime updatedTime;
+
+    public static final String ID = "id";
+
+    public static final String TITLE = "title";
+
+    public static final String ARTICLE = "article";
+
+    public static final String VERSION = "version";
+
+    public static final String DELETED = "deleted";
+
+    public static final String CREATED_TIME = "created_time";
+
+    public static final String UPDATED_TIME = "updated_time";
+
+    @Override
+    public Serializable pkVal() {
+        return this.id;
+    }
 
 
 }

@@ -1,4 +1,4 @@
-package cn.yhm.developer.monkey.common.typehandler;
+package cn.yhm.developer.monkey.common.mybatis.typehandler;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;

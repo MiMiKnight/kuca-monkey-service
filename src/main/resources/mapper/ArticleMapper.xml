@@ -10,9 +10,9 @@
         <result column="version" property="version"/>
         <result column="deleted" property="deleted"/>
         <result column="created_time" property="createdTime"
-                typeHandler="cn.yhm.developer.monkey.common.typehandler.MyZonedDateTimeTypeHandler"/>
+                typeHandler="cn.yhm.developer.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler"/>
         <result column="updated_time" property="updatedTime"
-                typeHandler="cn.yhm.developer.monkey.common.typehandler.MyZonedDateTimeTypeHandler"/>
+                typeHandler="cn.yhm.developer.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
