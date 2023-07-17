@@ -102,5 +102,7 @@ logging:
 springdoc:
   api-docs:
     enabled: true
+    path: /api-docs
   swagger-ui:
-    path: /api
+    enabled: true
+    path: /swagger-ui.html
