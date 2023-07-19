@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.yhm.developer.monkey.mapper.ArticleMapper">
+<mapper namespace="com.github.mimiknight.monkey.mapper.ArticleMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.yhm.developer.monkey.model.entity.ArticleEntity">
+    <resultMap id="BaseResultMap" type="com.github.mimiknight.monkey.model.entity.ArticleEntity">
         <id column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="article" property="article"/>
         <result column="version" property="version"/>
         <result column="deleted" property="deleted"/>
         <result column="created_time" property="createdTime"
-                typeHandler="cn.yhm.developer.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler"/>
+                typeHandler="com.github.mimiknight.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler"/>
         <result column="updated_time" property="updatedTime"
-                typeHandler="cn.yhm.developer.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler"/>
+                typeHandler="com.github.mimiknight.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
