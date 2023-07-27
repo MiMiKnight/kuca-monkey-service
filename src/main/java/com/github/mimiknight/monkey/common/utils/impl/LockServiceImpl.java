@@ -40,9 +40,8 @@ public class LockServiceImpl implements LockService {
     private <T> T execute(String lockName, Predicate<String> getLock, Supplier<T> lockedCode) {
         // 如果获取锁失败则抛出异常
         if (!getLock.test(lockName)) {
-            String tip = String.format("Failed to get the lock,lock = %s", lockName);
-            log.info(tip);
-            throw new ServiceException(ErrorReturn.GET_LOCK_FAILED, tip);
+            log.info("Failed to get the lock,lock = {}", lockName);
+            throw new ServiceException(ErrorReturn.GET_LOCK_FAILED, "Failed to get the lock.");
         }
         try {
             return lockedCode.get();
