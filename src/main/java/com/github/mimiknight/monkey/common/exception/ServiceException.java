@@ -38,10 +38,20 @@ public class ServiceException extends RuntimeException {
      * 服务异常
      *
      * @param errorReturn 错误返回
-     * @param message     消息
+     * @param message     异常消息
      */
     public ServiceException(ErrorReturn errorReturn, String message) {
         this(errorReturn, ErrorTip.build(message));
+    }
+
+
+    /**
+     * 服务异常
+     *
+     * @param errorReturn 错误返回
+     */
+    public ServiceException(ErrorReturn errorReturn) {
+        this(errorReturn, ErrorTip.build(errorReturn.getMessage()));
     }
 
     /**
@@ -65,6 +75,16 @@ public class ServiceException extends RuntimeException {
      */
     public ServiceException(ErrorReturn errorReturn, String message, Throwable cause) {
         this(errorReturn, ErrorTip.build(message), cause);
+    }
+
+    /**
+     * 服务异常
+     *
+     * @param errorReturn 错误返回
+     * @param cause       原因
+     */
+    public ServiceException(ErrorReturn errorReturn, Throwable cause) {
+        this(errorReturn, ErrorTip.build(errorReturn.getMessage()), cause);
     }
 
 }

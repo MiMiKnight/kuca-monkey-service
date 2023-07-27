@@ -54,17 +54,12 @@ public enum ErrorReturn {
     /**
      * 获取锁失败
      */
-    GET_LOCK_FAILED(ErrorCode.SERVICE_CODE_001),
+    GET_LOCK_FAILED(ErrorCode.SERVICE_CODE_001, "Failed to get the lock."),
 
     /**
-     * 用户未成年
+     * 文章记录不存在
      */
-    SERVICE_ERROR_001(ErrorCode.SERVICE_CODE_002),
-
-    /**
-     * 内容数据库记录不存在
-     */
-    CONTENT_DO_NOT_EXIST(ErrorCode.SERVICE_CODE_003);
+    ARTICLE_DO_NOT_EXIST(ErrorCode.SERVICE_CODE_002, "Article do not exist.");
 
     /**
      * 错误码
@@ -78,14 +73,31 @@ public enum ErrorReturn {
 
 
     /**
+     * 错误提示消息
+     */
+    private final String message;
+
+    /**
+     * 错误返回
+     *
+     * @param errorCode 错误代码
+     * @param errorType 错误类型
+     * @param message   错误提示消息
+     */
+    ErrorReturn(String errorCode, ErrorType errorType, String message) {
+        this.errorCode = errorCode;
+        this.errorType = errorType;
+        this.message = message;
+    }
+
+    /**
      * 错误返回
      *
      * @param errorCode 错误码
      * @param errorType 错误类型
      */
     ErrorReturn(String errorCode, ErrorType errorType) {
-        this.errorCode = errorCode;
-        this.errorType = errorType;
+        this(errorCode, errorType, "");
     }
 
     /**
@@ -94,7 +106,16 @@ public enum ErrorReturn {
      * @param errorCode 错误代码
      */
     ErrorReturn(String errorCode) {
-        this.errorCode = errorCode;
-        this.errorType = ErrorType.SERVICE_EXCEPTION;
+        this(errorCode, ErrorType.SERVICE_EXCEPTION);
+    }
+
+    /**
+     * 错误返回
+     *
+     * @param errorCode 错误代码
+     * @param message   错误提示消息
+     */
+    ErrorReturn(String errorCode, String message) {
+        this(errorCode, ErrorType.SERVICE_EXCEPTION, message);
     }
 }

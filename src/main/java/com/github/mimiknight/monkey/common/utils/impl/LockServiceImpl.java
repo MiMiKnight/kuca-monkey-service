@@ -41,7 +41,7 @@ public class LockServiceImpl implements LockService {
         // 如果获取锁失败则抛出异常
         if (!getLock.test(lockName)) {
             log.info("Failed to get the lock,lock = {}", lockName);
-            throw new ServiceException(ErrorReturn.GET_LOCK_FAILED, "Failed to get the lock.");
+            throw new ServiceException(ErrorReturn.GET_LOCK_FAILED);
         }
         try {
             return lockedCode.get();

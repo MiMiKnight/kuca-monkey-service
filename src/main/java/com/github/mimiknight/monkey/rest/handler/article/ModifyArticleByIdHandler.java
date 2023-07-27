@@ -55,7 +55,7 @@ public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArt
 
         if (null == entity) {
             String tip = String.format("id = %s ,content is not exist.", id);
-            throw new ServiceException(ErrorReturn.CONTENT_DO_NOT_EXIST, tip);
+            throw new ServiceException(ErrorReturn.ARTICLE_DO_NOT_EXIST, tip);
         }
         // 为业务逻辑加锁
         String lockName = "MonkeyService:Lock:ModifyContentTable:" + id;
