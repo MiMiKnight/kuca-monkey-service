@@ -57,13 +57,13 @@ public class LockServiceImpl implements LockService {
 
     @Override
     public <T> T doTryLock(String lockName, long waitTime, TimeUnit unit, Supplier<T> lockedCode) {
-        Predicate<String> getLock = lock -> redisLockService.tryLock(lockName, waitTime, unit);
+        Predicate<String> getLock = key -> redisLockService.tryLock(key, waitTime, unit);
         return execute(lockName, getLock, lockedCode);
     }
 
     @Override
     public <T> T doLock(String lockName, Supplier<T> lockedCode) {
-        Predicate<String> getLock = lock -> redisLockService.lock(lockName);
+        Predicate<String> getLock = key -> redisLockService.lock(key);
         return execute(lockName, getLock, lockedCode);
     }
 }

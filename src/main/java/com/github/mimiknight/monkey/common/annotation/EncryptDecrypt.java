@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 加密解密注解
+ * 加密解密拦截注解
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-07-27 20:25:43
