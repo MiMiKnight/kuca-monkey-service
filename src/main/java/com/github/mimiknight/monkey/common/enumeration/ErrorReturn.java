@@ -52,19 +52,19 @@ public enum ErrorReturn {
     //************************************业务异常*************************************//
 
     /**
+     * 获取锁失败
+     */
+    GET_LOCK_FAILED(ErrorCode.SERVICE_CODE_001),
+
+    /**
      * 用户未成年
      */
-    SERVICE_ERROR_001(ErrorCode.SERVICE_CODE_001),
+    SERVICE_ERROR_001(ErrorCode.SERVICE_CODE_002),
 
     /**
      * 内容数据库记录不存在
      */
-    CONTENT_DO_NOT_EXIST(ErrorCode.SERVICE_CODE_002),
-
-    /**
-     * 获取“修改内容表Redis锁”失败
-     */
-    GET_MODIFY_CONTENT_TABLE_LOCK_FAILED(ErrorCode.SERVICE_CODE_003);
+    CONTENT_DO_NOT_EXIST(ErrorCode.SERVICE_CODE_003);
 
     /**
      * 错误码

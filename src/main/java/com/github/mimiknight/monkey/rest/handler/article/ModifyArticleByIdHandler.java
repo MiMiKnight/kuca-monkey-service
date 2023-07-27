@@ -4,6 +4,7 @@ import cn.yhm.developer.kuca.common.utils.standard.RedisLockService;
 import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
+import com.github.mimiknight.monkey.common.utils.standard.LockService;
 import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import com.github.mimiknight.monkey.model.request.ModifyArticleByIdRequest;
 import com.github.mimiknight.monkey.model.response.ModifyArticleByIdResponse;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * 保存文章处理器类
@@ -37,6 +39,13 @@ public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArt
         this.redisLockService = redisLockService;
     }
 
+    private LockService lockService;
+
+    @Autowired
+    public void setLockService(LockService lockService) {
+        this.lockService = lockService;
+    }
+
     @Override
     public void handle(ModifyArticleByIdRequest request, ModifyArticleByIdResponse response) {
         String id = request.getId();
@@ -50,19 +59,13 @@ public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArt
         }
         // 为业务逻辑加锁
         String lockName = "MonkeyService:Lock:ModifyContentTable:" + id;
-        boolean isLock = redisLockService.tryLock(lockName, 3L, TimeUnit.SECONDS);
-        // 未获取到锁则抛出异常
-        if (!isLock) {
-            String tip = String.format("Get redis lock failed,lock name = %s.", lockName);
-            throw new ServiceException(ErrorReturn.GET_MODIFY_CONTENT_TABLE_LOCK_FAILED, tip);
-        }
-        try {
+        // 被锁的代码
+        Supplier<Boolean> lockedCode = () -> {
             entity.setTitle(title);
             entity.setArticle(article);
             articleService.updateById(entity);
-        } finally {
-            // 释放锁
-            redisLockService.unlock(lockName);
-        }
+            return true;
+        };
+        lockService.doTryLock(lockName, 3L, TimeUnit.SECONDS, lockedCode);
     }
 }
