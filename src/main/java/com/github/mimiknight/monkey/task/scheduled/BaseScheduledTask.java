@@ -44,6 +44,7 @@ public abstract class BaseScheduledTask implements Runnable {
      * 被跟踪代码
      */
     private final Runnable trackedCode = () -> {
+        log.info("The scheduled task starts running,task name = {}", this.getTaskName());
         try {
             String lockName = "MonkeyService:Lock:Task:" + this.getTaskName();
             /*
@@ -51,9 +52,11 @@ public abstract class BaseScheduledTask implements Runnable {
              * 如果当前存在一个正在执行的定时任务，则本定时人物执行到此处时，不等待获取锁，直接退出执行定时任务；
              */
             lockService.doTryLock(lockName, 0L, TimeUnit.MILLISECONDS, this::doTask);
-        } catch (Exception ignore) {
+        } catch (Exception e) {
             // 因为定时任务中的异常没有全局异常处理类统一处理，故在此拦截定时任务中所有抛出的异常，避免污染日志
+            log.error("The scheduled task ends abnormally,task name = {},error = {}", this.getTaskName(), e.getMessage());
         }
+        log.info("The scheduled task ends normally,task name = {}", this.getTaskName());
     };
 
     /**
