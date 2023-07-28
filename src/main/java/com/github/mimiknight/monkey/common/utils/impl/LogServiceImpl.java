@@ -1,9 +1,11 @@
 package com.github.mimiknight.monkey.common.utils.impl;
 
 import com.github.mimiknight.kuca.common.utils.standard.JsonService;
-import com.github.mimiknight.monkey.common.utils.standard.LogUtil;
+import com.github.mimiknight.monkey.common.constant.ProjectConstant;
+import com.github.mimiknight.monkey.common.utils.standard.LogService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.TreeMap;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * 日志工具类
@@ -24,13 +28,41 @@ import java.util.TreeMap;
 @Slf4j
 @Component
 public class
-LogUtilImpl implements LogUtil {
+LogServiceImpl implements LogService {
 
     private JsonService jsonService;
 
     @Autowired
     public void setJsonService(JsonService jsonService) {
         this.jsonService = jsonService;
+    }
+
+    /**
+     * 日志跟踪方法
+     *
+     * @param trackedCode 被跟踪的代码逻辑
+     */
+    @Override
+    public void logTrace(Runnable trackedCode) {
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        // 设置当前请求线程中的跟踪ID
+        MDC.put(ProjectConstant.Log.MDC_TRACE_ID_KEY, uuid);
+        // 执行被跟踪的代码逻辑
+        trackedCode.run();
+        // 清除当前请求线程中的跟踪ID
+        MDC.clear();
+    }
+
+    @Override
+    public <T> T logTrace(Supplier<T> trackedCode) {
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        // 设置当前请求线程中的跟踪ID
+        MDC.put(ProjectConstant.Log.MDC_TRACE_ID_KEY, uuid);
+        // 执行被跟踪的代码逻辑
+        T result = trackedCode.get();
+        // 清除当前请求线程中的跟踪ID
+        MDC.clear();
+        return result;
     }
 
     @Override

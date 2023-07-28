@@ -1,7 +1,7 @@
 package com.github.mimiknight.monkey.common.aspect;
 
 import com.github.mimiknight.monkey.common.constant.AspectRule;
-import com.github.mimiknight.monkey.common.utils.standard.LogUtil;
+import com.github.mimiknight.monkey.common.utils.standard.LogService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -39,10 +39,10 @@ public class ApiLogAspect implements Ordered {
         this.httpServletResponse = httpServletResponse;
     }
 
-    private LogUtil logUtils;
+    private LogService logUtils;
 
     @Autowired
-    public void setLogUtils(LogUtil logUtils) {
+    public void setLogUtils(LogService logUtils) {
         this.logUtils = logUtils;
     }
 
