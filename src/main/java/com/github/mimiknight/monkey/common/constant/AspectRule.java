@@ -31,7 +31,7 @@ public interface AspectRule {
      * 002切面规则
      */
     interface Rule002 {
-        String RULE_PATTERN = "execution(public void cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler.handle(..))";
+        String RULE_PATTERN = "execution(public void com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler.handle(..))";
 
         interface Order {
             int ORDER_500 = 500;
@@ -44,7 +44,7 @@ public interface AspectRule {
      */
     interface Rule003 {
 
-        String RULE_PATTERN = "execution(public cn.yhm.developer.kuca.ecology.model.response.SuccessResponse cn.yhm.developer.kuca.ecology.core.HandlerExecutor.execute(cn.yhm.developer.kuca.ecology.model.request.EcologyRequest) throws java.lang.Exception) || execution(public cn.yhm.developer.kuca.ecology.model.response.SuccessResponse cn.yhm.developer.kuca.ecology.core.HandlerExecutor.execute(cn.yhm.developer.kuca.ecology.model.request.EcologyRequest,cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler) throws java.lang.Exception)";
+        String RULE_PATTERN = "execution(public com.github.mimiknight.kuca.ecology.model.response.SuccessResponse com.github.mimiknight.kuca.ecology.core.HandlerExecutor.execute(com.github.mimiknight.kuca.ecology.model.request.EcologyRequest) throws java.lang.Exception) || execution(public com.github.mimiknight.kuca.ecology.model.response.SuccessResponse com.github.mimiknight.kuca.ecology.core.HandlerExecutor.execute(com.github.mimiknight.kuca.ecology.model.request.EcologyRequest,com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler) throws java.lang.Exception)";
 
         interface Order {
             int ORDER_500 = 500;

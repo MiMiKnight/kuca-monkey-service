@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.model.response;
 
-import cn.yhm.developer.kuca.ecology.model.response.EcologyResponse;
+import com.github.mimiknight.kuca.ecology.model.response.EcologyResponse;
 import lombok.Getter;
 import lombok.Setter;
 

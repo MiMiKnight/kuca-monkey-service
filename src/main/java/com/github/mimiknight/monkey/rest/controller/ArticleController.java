@@ -1,7 +1,7 @@
 package com.github.mimiknight.monkey.rest.controller;
 
-import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandleAdapter;
-import cn.yhm.developer.kuca.ecology.model.response.SuccessResponse;
+import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandleAdapter;
+import com.github.mimiknight.kuca.ecology.model.response.SuccessResponse;
 import com.github.mimiknight.monkey.common.constant.ApiPath;
 import com.github.mimiknight.monkey.model.request.ModifyArticleByIdRequest;
 import com.github.mimiknight.monkey.model.request.QueryArticleByIdRequest;

@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.rest.handler.health;
 
-import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler;
+import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler;
 import com.github.mimiknight.monkey.model.request.HealthCheckRequest;
 import com.github.mimiknight.monkey.model.response.HealthCheckResponse;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.common.utils.impl;
 
-import cn.yhm.developer.kuca.common.utils.standard.RedisLockService;
+import com.github.mimiknight.kuca.common.utils.standard.RedisLockService;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.common.utils.standard.LockService;

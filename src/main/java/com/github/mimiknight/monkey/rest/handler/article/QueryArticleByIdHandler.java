@@ -1,7 +1,7 @@
 package com.github.mimiknight.monkey.rest.handler.article;
 
-import cn.yhm.developer.kuca.common.utils.standard.RedisService;
-import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler;
+import com.github.mimiknight.kuca.common.utils.standard.RedisService;
+import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler;
 import com.github.mimiknight.monkey.common.constant.RedisKey;
 import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import com.github.mimiknight.monkey.model.request.QueryArticleByIdRequest;

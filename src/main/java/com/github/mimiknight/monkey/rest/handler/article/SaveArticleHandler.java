@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.rest.handler.article;
 
-import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandler;
+import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler;
 import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import com.github.mimiknight.monkey.model.request.SaveArticleRequest;
 import com.github.mimiknight.monkey.model.response.SaveArticleResponse;

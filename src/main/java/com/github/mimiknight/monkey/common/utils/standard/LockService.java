@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
- * 锁服务类
+ * 锁服务类接口
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-07-27 19:39:10

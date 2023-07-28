@@ -40,12 +40,12 @@
     <!--引入依赖-->
     <dependencies>
         <dependency>
-            <groupId>cn.yhm.developer</groupId>
+            <groupId>com.github.mimiknight</groupId>
             <artifactId>kuca-ecology-spring-boot-starter</artifactId>
             <version>${kuca-ecology-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
-            <groupId>cn.yhm.developer</groupId>
+            <groupId>com.github.mimiknight</groupId>
             <artifactId>kuca-common-spring-boot-starter</artifactId>
             <version>${kuca-common-spring-boot-starter.version}</version>
         </dependency>

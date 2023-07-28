@@ -1,6 +1,7 @@
 package com.github.mimiknight.monkey.model.request;
 
-import cn.yhm.developer.kuca.ecology.model.request.EcologyRequest;
+
+import com.github.mimiknight.kuca.ecology.model.request.EcologyRequest;
 
 /**
  * 健康检查请求参数

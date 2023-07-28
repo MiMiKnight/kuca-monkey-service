@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.common.utils.impl;
 
-import cn.yhm.developer.kuca.common.utils.standard.JsonService;
+import com.github.mimiknight.kuca.common.utils.standard.JsonService;
 import com.github.mimiknight.monkey.common.utils.standard.LogUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

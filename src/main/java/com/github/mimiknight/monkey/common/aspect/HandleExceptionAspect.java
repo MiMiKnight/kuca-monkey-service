@@ -1,12 +1,12 @@
 package com.github.mimiknight.monkey.common.aspect;
 
-import cn.yhm.developer.kuca.ecology.model.response.ExceptionResponse;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.mimiknight.kuca.ecology.model.response.ExceptionResponse;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.common.tip.ErrorFieldTip;
 import com.github.mimiknight.monkey.common.tip.ErrorTip;
 import com.github.mimiknight.monkey.common.utils.standard.LogUtil;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
 package com.github.mimiknight.monkey.model.request;
 
-import cn.yhm.developer.kuca.common.constant.DateTimeFormatStandard;
-import cn.yhm.developer.kuca.ecology.model.request.EcologyRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.mimiknight.kuca.common.constant.DateTimeFormatStandard;
+import com.github.mimiknight.kuca.ecology.model.request.EcologyRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
