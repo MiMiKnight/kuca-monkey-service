@@ -37,10 +37,28 @@ public interface ProjectConstant {
      */
     interface Lock {
         /**
-         * 获取锁的等待时间
+         * 项目默认获取锁的等待时间
          * <p>
          * 时间单位：秒
          */
         long GET_LOCK_WAITE_TIME = 3L;
+    }
+
+    /**
+     * 缓存 相关常量
+     */
+    interface Cache {
+        /**
+         * 项目默认缓存过期时间
+         * <p>
+         * 时间单位：小时
+         */
+        long EXPIRE_TIME = 24L;
+
+
+        /**
+         * 分隔符
+         */
+        String SEPARATOR = ":";
     }
 }

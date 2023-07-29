@@ -2,6 +2,9 @@ package com.github.mimiknight.monkey.rest.handler.article;
 
 import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler;
 import com.github.mimiknight.kuca.utils.service.standard.RedisLockService;
+import com.github.mimiknight.kuca.utils.service.standard.RedisService;
+import com.github.mimiknight.monkey.common.constant.RedisCacheKey;
+import com.github.mimiknight.monkey.common.constant.RedisLockKey;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.common.utils.standard.LockService;
@@ -9,6 +12,7 @@ import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import com.github.mimiknight.monkey.model.request.ModifyArticleByIdRequest;
 import com.github.mimiknight.monkey.model.response.ModifyArticleByIdResponse;
 import com.github.mimiknight.monkey.service.standard.ArticleService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Component;
  * @author victor2015yhm@gmail.com
  * @since 2023-03-09 20:32:18
  */
+@Slf4j
 @Component
 public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArticleByIdRequest, ModifyArticleByIdResponse> {
 
@@ -43,23 +48,33 @@ public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArt
         this.lockService = lockService;
     }
 
+    private RedisService redisService;
+
+    @Autowired
+    public void setRedisService(RedisService redisService) {
+        this.redisService = redisService;
+    }
+
     @Override
     public void handle(ModifyArticleByIdRequest request, ModifyArticleByIdResponse response) {
-        String id = request.getId();
-        String title = request.getTitle();
-        String article = request.getArticle();
-        ArticleEntity entity = articleService.getById(id);
-
-        if (null == entity) {
-            String tip = String.format("id = %s ,content is not exist.", id);
-            throw new ServiceException(ErrorReturn.ARTICLE_DO_NOT_EXIST, tip);
-        }
         // 为业务逻辑加锁
-        String lockName = "MonkeyService:Lock:ModifyContentTable:" + id;
+        String lockName = RedisLockKey.ARTICLE_TABLE_LOCK_KEY_PREFIX + request.getId();
         lockService.doTryLock(lockName, () -> {
+            String id = request.getId();
+            String title = request.getTitle();
+            String article = request.getArticle();
+            ArticleEntity entity = articleService.getById(id);
+            if (null == entity) {
+                String tip = String.format("Article is not exist,id = %s", id);
+                log.info(tip);
+                throw new ServiceException(ErrorReturn.ARTICLE_DO_NOT_EXIST, tip);
+            }
             entity.setTitle(title);
             entity.setArticle(article);
             articleService.updateById(entity);
+            // 清除缓存
+            String cacheKey = RedisCacheKey.ARTICLE_TABLE_CACHE_KEY_PREFIX + id;
+            redisService.delete(cacheKey);
         });
     }
 }

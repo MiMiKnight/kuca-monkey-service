@@ -1,7 +1,9 @@
 package com.github.mimiknight.monkey.common.utils.impl;
 
 import com.github.mimiknight.kuca.utils.service.standard.RedisService;
+import com.github.mimiknight.monkey.common.constant.ProjectConstant;
 import com.github.mimiknight.monkey.common.utils.standard.CacheService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,15 @@ public class CacheServiceImpl implements CacheService {
         this.redisService = redisService;
     }
 
+    /**
+     * 做get和put
+     *
+     * @param cacheName   缓存名称
+     * @param returnClass 返回类
+     * @param code        代码
+     * @param function    函数
+     * @return {@link T}
+     */
     private <T> T doGetAndPut(String cacheName, Class<T> returnClass, Supplier<T> code, Function<Supplier<T>, T> function) {
         T result = redisService.get(cacheName, returnClass);
         if (null == result) {
@@ -37,7 +48,7 @@ public class CacheServiceImpl implements CacheService {
     public <T> T getAndPut(String cacheName, Class<T> returnClass, Supplier<T> code) {
         return doGetAndPut(cacheName, returnClass, code, t -> {
             T result = code.get();
-            redisService.set(cacheName, result, 24, TimeUnit.HOURS);
+            redisService.set(cacheName, result, ProjectConstant.Cache.EXPIRE_TIME, TimeUnit.HOURS);
             return result;
         });
     }
