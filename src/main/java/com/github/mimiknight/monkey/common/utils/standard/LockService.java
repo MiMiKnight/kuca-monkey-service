@@ -42,29 +42,4 @@ public interface LockService {
      */
     void doTryLock(String lockName, long waitTime, TimeUnit unit, Runnable lockedCode);
 
-    /**
-     * 给代码块上锁
-     * <p>
-     * 有返回值
-     * <p>
-     * doLock() 如果没有获取到锁则一直等待，直到锁被释放
-     *
-     * @param lockName   锁名
-     * @param lockedCode 被上锁的代码
-     * @return {@link T}
-     */
-    <T> T doLock(String lockName, Supplier<T> lockedCode);
-
-    /**
-     * 给代码块上锁
-     * <p>
-     * 无返回值
-     * <p>
-     * doLock() 如果没有获取到锁则一直等待，直到锁被释放
-     *
-     * @param lockName   锁名
-     * @param lockedCode 被上锁的代码
-     */
-    void doLock(String lockName, Runnable lockedCode);
-
 }

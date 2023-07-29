@@ -1,7 +1,7 @@
 package com.github.mimiknight.monkey.rest.handler.article;
 
-import com.github.mimiknight.kuca.common.utils.standard.RedisLockService;
 import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler;
+import com.github.mimiknight.kuca.utils.service.standard.RedisLockService;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.common.utils.standard.LockService;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 /**
  * 保存文章处理器类
@@ -59,13 +58,10 @@ public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArt
         }
         // 为业务逻辑加锁
         String lockName = "MonkeyService:Lock:ModifyContentTable:" + id;
-        // 被锁的代码
-        Supplier<Boolean> lockedCode = () -> {
+        lockService.doTryLock(lockName, 3L, TimeUnit.SECONDS, () -> {
             entity.setTitle(title);
             entity.setArticle(article);
             articleService.updateById(entity);
-            return true;
-        };
-        lockService.doTryLock(lockName, 3L, TimeUnit.SECONDS, lockedCode);
+        });
     }
 }

@@ -1,13 +1,12 @@
 package com.github.mimiknight.monkey.common.utils.impl;
 
-import com.github.mimiknight.kuca.common.utils.standard.RedisLockService;
+import com.github.mimiknight.kuca.utils.service.standard.RedisLockService;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.common.utils.standard.LockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -91,15 +90,4 @@ public class LockServiceImpl implements LockService {
         execute(lockName, getLockCode, lockedCode);
     }
 
-    @Override
-    public <T> T doLock(String lockName, Supplier<T> lockedCode) {
-        Predicate<String> getLockCode = key -> redisLockService.lock(key);
-        return execute(lockName, getLockCode, lockedCode);
-    }
-
-    @Override
-    public void doLock(String lockName, Runnable lockedCode) {
-        Predicate<String> getLockCode = key -> redisLockService.lock(key);
-        execute(lockName, getLockCode, lockedCode);
-    }
 }

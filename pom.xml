@@ -33,8 +33,6 @@
         <maven.compiler.version>11</maven.compiler.version>
         <!--kuca-ecology-->
         <kuca-ecology-spring-boot-starter.version>1.0.0-SNAPSHOT</kuca-ecology-spring-boot-starter.version>
-        <!--kuca-common-->
-        <kuca-common-spring-boot-starter.version>1.0.0-SNAPSHOT</kuca-common-spring-boot-starter.version>
     </properties>
 
     <!--引入依赖-->
@@ -43,11 +41,6 @@
             <groupId>com.github.mimiknight</groupId>
             <artifactId>kuca-ecology-spring-boot-starter</artifactId>
             <version>${kuca-ecology-spring-boot-starter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.mimiknight</groupId>
-            <artifactId>kuca-common-spring-boot-starter</artifactId>
-            <version>${kuca-common-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

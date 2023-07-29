@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.common.utils.impl;
 
-import com.github.mimiknight.kuca.common.utils.standard.RedisService;
+import com.github.mimiknight.kuca.utils.service.standard.RedisService;
 import com.github.mimiknight.monkey.common.utils.standard.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
