@@ -15,9 +15,9 @@ import lombok.Setter;
 @Getter
 public class HealthCheckResponse implements EcologyResponse {
 
-    @JsonProperty(value = "service_name", index = 1)
+    @JsonProperty(value = "service_name" , index = 1)
     private String serviceName;
 
-    @JsonProperty(value = "run_status", index = 2)
+    @JsonProperty(value = "run_status" , index = 2)
     private String runStatus;
 }

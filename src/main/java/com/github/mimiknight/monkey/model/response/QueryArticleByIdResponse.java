@@ -3,6 +3,8 @@ package com.github.mimiknight.monkey.model.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mimiknight.kuca.ecology.model.response.EcologyResponse;
+import com.github.mimiknight.kuca.utils.constant.DateTimeFormatStandard;
+import com.github.mimiknight.kuca.utils.constant.TimeZoneGMT;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -21,45 +23,45 @@ public class QueryArticleByIdResponse implements EcologyResponse {
     /**
      * 主键
      */
-    @JsonProperty(value = "id", index = 1)
+    @JsonProperty(value = "id" , index = 1)
     private String id;
 
     /**
      * 文章标题
      */
-    @JsonProperty(value = "title", index = 2)
+    @JsonProperty(value = "title" , index = 2)
     private String title;
 
     /**
      * 文章内容
      */
-    @JsonProperty(value = "article", index = 3)
+    @JsonProperty(value = "article" , index = 3)
     private String article;
 
     /**
      * 乐观锁
      */
-    @JsonProperty(value = "version", index = 4)
+    @JsonProperty(value = "version" , index = 4)
     private Integer version;
 
     /**
      * 逻辑删除
      */
-    @JsonProperty(value = "deleted", index = 5)
+    @JsonProperty(value = "deleted" , index = 5)
     private Integer deleted;
 
     /**
      * 创建时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS z", timezone = "UTC")
-    @JsonProperty(value = "created_time", index = 6)
+    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_4, timezone = TimeZoneGMT.GMT)
+    @JsonProperty(value = "created_time" , index = 6)
     private ZonedDateTime createdTime;
 
     /**
      * 更新时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS z", timezone = "UTC")
-    @JsonProperty(value = "updated_time", index = 7)
+    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_4, timezone = TimeZoneGMT.GMT)
+    @JsonProperty(value = "updated_time" , index = 7)
     private ZonedDateTime updatedTime;
 
 }
