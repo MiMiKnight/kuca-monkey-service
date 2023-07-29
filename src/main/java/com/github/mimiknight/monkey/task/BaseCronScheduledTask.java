@@ -11,9 +11,9 @@ import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Cron方式触发的定时任务基类
+ * Cron定时任务基类
  *
- * @author victor2015yhm@gmail.com
+ * @author MiMiKnight <victor2015yhm@gmail.com>
  * @since 2023-07-28 19:39:18
  */
 @Slf4j
@@ -44,7 +44,7 @@ public abstract class BaseCronScheduledTask implements Runnable {
      * 被跟踪代码
      */
     private final Runnable trackedCode = () -> {
-        // 任务开关
+        // 任务开关 TODO:此处的代码待完善
         boolean enable = false;
         if (!enable) {
             return;
