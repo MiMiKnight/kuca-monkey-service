@@ -51,4 +51,5 @@
     <tree path="/src/main/java/com/github/mimiknight/monkey/mapstruct" title="MapStruct对象映射转换类目录"/>
     <tree path="/src/main/java/com/github/mimiknight/monkey/mapper" title="数据库持久化类目录"/>
     <tree path="/src/main/java/com/github/mimiknight/monkey/model/po" title="数据库持久化对象目录"/>
+    <tree path="/src/main/resources/mapper" title="数据库持久化配置文件目录"/>
 </trees>
