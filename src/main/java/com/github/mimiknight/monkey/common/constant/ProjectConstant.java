@@ -31,4 +31,16 @@ public interface ProjectConstant {
         String MDC_TRACE_ID_KEY = "TRACE_ID";
 
     }
+
+    /**
+     * 锁 相关常量
+     */
+    interface Lock {
+        /**
+         * 获取锁的等待时间
+         * <p>
+         * 时间单位：秒
+         */
+        long GET_LOCK_WAITE_TIME = 3L;
+    }
 }

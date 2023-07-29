@@ -1,6 +1,7 @@
 package com.github.mimiknight.monkey.common.utils.impl;
 
 import com.github.mimiknight.kuca.utils.service.standard.RedisLockService;
+import com.github.mimiknight.monkey.common.constant.ProjectConstant;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.common.utils.standard.LockService;
@@ -85,9 +86,19 @@ public class LockServiceImpl implements LockService {
     }
 
     @Override
+    public <T> T doTryLock(String lockName, Supplier<T> lockedCode) {
+        return doTryLock(lockName, ProjectConstant.Lock.GET_LOCK_WAITE_TIME, TimeUnit.SECONDS, lockedCode);
+    }
+
+    @Override
     public void doTryLock(String lockName, long waitTime, TimeUnit unit, Runnable lockedCode) {
         Predicate<String> getLockCode = key -> redisLockService.tryLock(key, waitTime, unit);
         execute(lockName, getLockCode, lockedCode);
+    }
+
+    @Override
+    public void doTryLock(String lockName, Runnable lockedCode) {
+        doTryLock(lockName, ProjectConstant.Lock.GET_LOCK_WAITE_TIME, TimeUnit.SECONDS, lockedCode);
     }
 
 }

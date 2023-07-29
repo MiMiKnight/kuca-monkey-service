@@ -12,8 +12,6 @@ import com.github.mimiknight.monkey.service.standard.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * 保存文章处理器类
  *
@@ -58,7 +56,7 @@ public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArt
         }
         // 为业务逻辑加锁
         String lockName = "MonkeyService:Lock:ModifyContentTable:" + id;
-        lockService.doTryLock(lockName, 3L, TimeUnit.SECONDS, () -> {
+        lockService.doTryLock(lockName, () -> {
             entity.setTitle(title);
             entity.setArticle(article);
             articleService.updateById(entity);
