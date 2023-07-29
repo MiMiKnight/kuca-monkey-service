@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.common.config;
 
-import com.github.mimiknight.monkey.task.scheduled.BaseScheduledTask;
+import com.github.mimiknight.monkey.springtask.scheduled.BaseCronScheduledTask;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -50,11 +50,12 @@ public class ScheduledTaskRegister implements SchedulingConfigurer {
     public void configureTasks(@NotNull ScheduledTaskRegistrar taskRegistrar) {
         // 设置执行定时任务的线程池
         taskRegistrar.setScheduler(Executors.newScheduledThreadPool(5 * processors));
-        init(taskRegistrar);
+        // 注册Cron定时任务
+        registerCronTask(taskRegistrar);
     }
 
-    private void init(ScheduledTaskRegistrar taskRegistrar) {
-        Map<String, BaseScheduledTask> taskMap = appContext.getBeansOfType(BaseScheduledTask.class);
+    private void registerCronTask(ScheduledTaskRegistrar taskRegistrar) {
+        Map<String, BaseCronScheduledTask> taskMap = appContext.getBeansOfType(BaseCronScheduledTask.class);
         if (MapUtils.isEmpty(taskMap)) {
             log.info("There is no scheduled task need to be registered.");
             return;

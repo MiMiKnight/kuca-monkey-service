@@ -1,4 +1,4 @@
-package com.github.mimiknight.monkey.task.scheduled;
+package com.github.mimiknight.monkey.springtask;
 
 import com.github.mimiknight.monkey.common.utils.standard.LockService;
 import com.github.mimiknight.monkey.common.utils.standard.LogService;
@@ -10,9 +10,7 @@ import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 定时任务基类
- * <p>
- * 所有自定义定时任务的基类
+ * Spring Task 任务基类
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-07-28 19:39:18
@@ -78,19 +76,12 @@ public abstract class BaseScheduledTask implements Runnable {
      *
      * @return {@link String}
      */
-    public String getCronExpression() {
-        // TODO: 此处代码待完善
-        String cronExpressionName = this.getTaskName() + "Cron";
-        String cronExpression = System.getProperty(cronExpressionName);
-        return cronExpression;
-    }
+    public abstract String getCronExpression();
 
     /**
      * 获取为Cron表达式统一设定的时区
      *
      * @return {@link ZoneId}
      */
-    public ZoneId getCronTimeZone() {
-        return ZoneId.of("UTC");
-    }
+    public abstract ZoneId getCronTimeZone();
 }
