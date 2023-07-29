@@ -12,6 +12,6 @@ public interface RedisCacheKey {
     /**
      * 文章表缓存键前缀
      */
-    String ARTICLE_TABLE_CACHE_KEY_PREFIX = "MonKeyService:Cache:ArticleTable:";
+    String ARTICLE_TABLE_CACHE_KEY_PREFIX = "MonkeyService:Cache:ArticleTable:";
 
 }

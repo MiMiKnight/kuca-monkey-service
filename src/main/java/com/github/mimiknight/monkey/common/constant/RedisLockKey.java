@@ -12,11 +12,11 @@ public interface RedisLockKey {
     /**
      * 文章表记录锁前缀
      */
-    String ARTICLE_TABLE_LOCK_KEY_PREFIX = "MonKeyService:Lock:ArticleTable:";
+    String ARTICLE_TABLE_LOCK_KEY_PREFIX = "MonkeyService:Lock:ArticleTable:";
 
     /**
      * 定时任务锁前缀
      */
-    String TASK_LOCK_KEY_PREFIX = "MonKeyService:Lock:Task:";
+    String TASK_LOCK_KEY_PREFIX = "MonkeyService:Lock:Task:";
 
 }
