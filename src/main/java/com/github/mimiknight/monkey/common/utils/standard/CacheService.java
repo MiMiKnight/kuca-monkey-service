@@ -27,6 +27,7 @@ public interface CacheService {
     <T> T getAndPut(String cacheName, Class<T> returnClass, Supplier<T> code);
 
     /**
+     * get和put
      * 获取并赋值
      * <p>
      * 如果缓存存在则直接从缓存中取值并返回,
@@ -34,6 +35,8 @@ public interface CacheService {
      * <p>
      *
      * @param cacheName   缓存名称
+     * @param expireTime  缓存过期时间
+     * @param unit        缓存过期时间单位
      * @param returnClass 返回值对象Class类型
      * @param code        代码块
      * @return {@link T}
