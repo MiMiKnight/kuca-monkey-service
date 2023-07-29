@@ -1,6 +1,6 @@
-####################################
-##  目的: 新建表 t_monkey_content
-####################################
+/**
+ * 目的: 新建表 t_monkey_content
+ */
 CREATE TABLE IF NOT EXISTS `t_monkey_content`  (
     `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '主键',
     `title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文章标题',
