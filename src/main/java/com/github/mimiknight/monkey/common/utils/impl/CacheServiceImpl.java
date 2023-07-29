@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -24,23 +25,29 @@ public class CacheServiceImpl implements CacheService {
         this.redisService = redisService;
     }
 
-    @Override
-    public <T> T getAndPut(String cacheName, Class<T> returnClass, Supplier<T> code) {
+    private <T> T doGetAndPut(String cacheName, Class<T> returnClass, Supplier<T> code, Function<Supplier<T>, T> function) {
         T result = redisService.get(cacheName, returnClass);
         if (null == result) {
-            result = code.get();
-            redisService.set(cacheName, result, 24, TimeUnit.HOURS);
+            result = function.apply(code);
         }
         return result;
     }
 
     @Override
+    public <T> T getAndPut(String cacheName, Class<T> returnClass, Supplier<T> code) {
+        return doGetAndPut(cacheName, returnClass, code, t -> {
+            T result = code.get();
+            redisService.set(cacheName, result, 24, TimeUnit.HOURS);
+            return result;
+        });
+    }
+
+    @Override
     public <T> T getAndPut(String cacheName, long expireTime, TimeUnit unit, Class<T> returnClass, Supplier<T> code) {
-        T result = redisService.get(cacheName, returnClass);
-        if (null == result) {
-            result = code.get();
+        return doGetAndPut(cacheName, returnClass, code, t -> {
+            T result = code.get();
             redisService.set(cacheName, result, expireTime, unit);
-        }
-        return result;
+            return result;
+        });
     }
 }
