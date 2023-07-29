@@ -9,7 +9,7 @@ import java.util.function.Supplier;
  * 日志工具类
  *
  * @author victor2015yhm@gmail.com
- * @date 2023-07-07 22:05:38
+ * @since 2023-07-07 22:05:38
  */
 public interface LogService {
 

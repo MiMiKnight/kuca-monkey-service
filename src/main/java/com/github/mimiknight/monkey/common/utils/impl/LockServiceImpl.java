@@ -73,7 +73,7 @@ public class LockServiceImpl implements LockService {
             try {
                 redisLockService.unlock(lockName);
             } catch (Exception e) {
-                log.error("Failed to release lock manually,lockName = {},error = {}", lockName, e.getMessage());
+                log.error("Failed to release lock manually,lock name = {},error = {}", lockName, e.getMessage());
             }
         }
     }
