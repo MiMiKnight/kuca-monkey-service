@@ -6,5 +6,5 @@ package com.github.mimiknight.monkey.common.utils.standard;
  * @author victor2015yhm@gmail.com
  * @since 2023-03-12 22:36:10
  */
-public interface FutureUtil {
+public interface ThreadService {
 }

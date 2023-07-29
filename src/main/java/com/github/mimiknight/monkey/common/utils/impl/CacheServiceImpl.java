@@ -3,6 +3,7 @@ package com.github.mimiknight.monkey.common.utils.impl;
 import com.github.mimiknight.kuca.common.utils.standard.RedisService;
 import com.github.mimiknight.monkey.common.utils.standard.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Supplier;
@@ -13,7 +14,7 @@ import java.util.function.Supplier;
  * @author victor2015yhm@gmail.com
  * @since 2023-07-28 07:54:36
  */
-@Service
+@Component
 public class CacheServiceImpl implements CacheService {
 
     private RedisService redisService;

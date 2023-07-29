@@ -7,7 +7,7 @@ package com.github.mimiknight.monkey.common.utils.standard;
  * @author Jack
  * @since 2023-07-17 12:41:05
  */
-public interface EncryptDecryptUtil {
+public interface EncryptDecryptService {
     /**
      * 加密
      *

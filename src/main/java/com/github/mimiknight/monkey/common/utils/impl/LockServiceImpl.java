@@ -6,6 +6,7 @@ import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.common.utils.standard.LockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -19,7 +20,7 @@ import java.util.function.Supplier;
  * @since 2023-07-27 19:42:40
  */
 @Slf4j
-@Service
+@Component
 public class LockServiceImpl implements LockService {
 
     private RedisLockService redisLockService;

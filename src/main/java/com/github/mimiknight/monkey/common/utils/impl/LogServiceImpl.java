@@ -27,8 +27,7 @@ import java.util.function.Supplier;
  */
 @Slf4j
 @Component
-public class
-LogServiceImpl implements LogService {
+public class LogServiceImpl implements LogService {
 
     private JsonService jsonService;
 
