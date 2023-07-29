@@ -4,8 +4,8 @@ import com.github.mimiknight.kuca.common.utils.standard.RedisService;
 import com.github.mimiknight.monkey.common.utils.standard.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
@@ -25,11 +25,21 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
-    public <T> T getAndPut(String cacheName, Class<T> clazz, Supplier<T> supplier) {
-        T result = redisService.get(cacheName, clazz);
+    public <T> T getAndPut(String cacheName, Class<T> returnClass, Supplier<T> code) {
+        T result = redisService.get(cacheName, returnClass);
         if (null == result) {
-            result = supplier.get();
-            redisService.set(cacheName, result);
+            result = code.get();
+            redisService.set(cacheName, result, 24, TimeUnit.HOURS);
+        }
+        return result;
+    }
+
+    @Override
+    public <T> T getAndPut(String cacheName, long expireTime, TimeUnit unit, Class<T> returnClass, Supplier<T> code) {
+        T result = redisService.get(cacheName, returnClass);
+        if (null == result) {
+            result = code.get();
+            redisService.set(cacheName, result, expireTime, unit);
         }
         return result;
     }

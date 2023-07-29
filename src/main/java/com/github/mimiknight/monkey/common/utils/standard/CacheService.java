@@ -1,5 +1,6 @@
 package com.github.mimiknight.monkey.common.utils.standard;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
@@ -11,12 +12,31 @@ import java.util.function.Supplier;
 public interface CacheService {
 
     /**
+     * 获取并赋值
+     * <p>
+     * 如果缓存存在则直接从缓存中取值并返回,
+     * 如果缓存不存在则从传入的code处取值，并设置缓存;
+     * <p>
+     * 默认缓存过期时间：24小时
      *
-     *
-     * @param cacheName 缓存名称
-     * @param clazz     clazz
-     * @param supplier  供应商
+     * @param cacheName   缓存名称
+     * @param returnClass 返回值对象Class类型
+     * @param code        代码块
      * @return {@link T}
      */
-    <T> T getAndPut(String cacheName, Class<T> clazz, Supplier<T> supplier);
+    <T> T getAndPut(String cacheName, Class<T> returnClass, Supplier<T> code);
+
+    /**
+     * 获取并赋值
+     * <p>
+     * 如果缓存存在则直接从缓存中取值并返回,
+     * 如果缓存不存在则从传入的code处取值，并设置缓存;
+     * <p>
+     *
+     * @param cacheName   缓存名称
+     * @param returnClass 返回值对象Class类型
+     * @param code        代码块
+     * @return {@link T}
+     */
+    <T> T getAndPut(String cacheName, long expireTime, TimeUnit unit, Class<T> returnClass, Supplier<T> code);
 }
