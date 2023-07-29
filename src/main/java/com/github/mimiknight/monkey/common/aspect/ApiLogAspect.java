@@ -39,11 +39,11 @@ public class ApiLogAspect implements Ordered {
         this.httpServletResponse = httpServletResponse;
     }
 
-    private LogService logUtils;
+    private LogService logService;
 
     @Autowired
-    public void setLogUtils(LogService logUtils) {
-        this.logUtils = logUtils;
+    public void setLogService(LogService logService) {
+        this.logService = logService;
     }
 
     /**
@@ -60,11 +60,11 @@ public class ApiLogAspect implements Ordered {
     public Object doAround(ProceedingJoinPoint point) throws Throwable {
         Object requestParam = point.getArgs()[0];
         // 打印接口请求参数日志
-        logUtils.traceRequest(httpServletRequest, requestParam);
+        logService.traceRequest(httpServletRequest, requestParam);
         // 执行被代理的业务逻辑
         Object proceed = point.proceed();
         // 打印接口正常响应参数日志
-        logUtils.traceResponse(httpServletRequest, httpServletResponse, proceed);
+        logService.traceResponse(httpServletRequest, httpServletResponse, proceed);
         return proceed;
     }
 

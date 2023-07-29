@@ -56,11 +56,11 @@ public class HandleExceptionAspect {
         this.servletResponse = servletResponse;
     }
 
-    private LogService logUtils;
+    private LogService logService;
 
     @Autowired
-    public void setLogUtils(LogService logUtils) {
-        this.logUtils = logUtils;
+    public void setLogService(LogService logService) {
+        this.logService = logService;
     }
 
     /**
@@ -268,7 +268,7 @@ public class HandleExceptionAspect {
     private void traceResponseAndCleanTraceId(ExceptionResponse response) {
         try {
             // 打印异常响应日志
-            logUtils.traceResponse(servletRequest, servletResponse, response);
+            logService.traceResponse(servletRequest, servletResponse, response);
             // 清除TraceID
             MDC.clear();
         } catch (Exception ignored) {
