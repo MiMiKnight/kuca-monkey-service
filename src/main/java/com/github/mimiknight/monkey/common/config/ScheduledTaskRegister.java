@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.common.config;
 
-import com.github.mimiknight.monkey.springtask.scheduled.BaseCronScheduledTask;
+import com.github.mimiknight.monkey.task.BaseCronScheduledTask;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,8 +49,8 @@ public class ScheduledTaskRegister implements SchedulingConfigurer {
     @Override
     public void configureTasks(@NotNull ScheduledTaskRegistrar taskRegistrar) {
         // 设置执行定时任务的线程池
-        taskRegistrar.setScheduler(Executors.newScheduledThreadPool(5 * processors));
-        // 注册Cron定时任务
+        taskRegistrar.setScheduler(Executors.newScheduledThreadPool(2 * processors));
+        // 注册定时任务
         registerCronTask(taskRegistrar);
     }
 

@@ -1,5 +1,6 @@
-package com.github.mimiknight.monkey.springtask;
+package com.github.mimiknight.monkey.task;
 
+import com.github.mimiknight.monkey.common.constant.RedisLockKey;
 import com.github.mimiknight.monkey.common.utils.standard.LockService;
 import com.github.mimiknight.monkey.common.utils.standard.LogService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,14 +11,14 @@ import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Spring Task 任务基类
+ * Cron方式触发的定时任务基类
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-07-28 19:39:18
  */
 @Slf4j
 @Component
-public abstract class BaseScheduledTask implements Runnable {
+public abstract class BaseCronScheduledTask implements Runnable {
 
     private LockService lockService;
 
@@ -35,6 +36,7 @@ public abstract class BaseScheduledTask implements Runnable {
 
     @Override
     public void run() {
+        // 对定时任务代码中的日志打印添加日志跟踪功能e
         logService.logTrace(trackedCode);
     }
 
@@ -42,12 +44,17 @@ public abstract class BaseScheduledTask implements Runnable {
      * 被跟踪代码
      */
     private final Runnable trackedCode = () -> {
+        // 任务开关
+        boolean enable = false;
+        if (!enable) {
+            return;
+        }
         log.info("The scheduled task starts running,task name = {}", this.getTaskName());
         try {
-            String lockName = "MonkeyService:Lock:Task:" + this.getTaskName();
+            String lockName = RedisLockKey.TASK_LOCK_KEY_PREFIX + this.getTaskName();
             /*
              * 此处加锁且设置获取锁的等待时间为0毫秒，是为了实现所有微服务中的同名定时任务互斥执行；
-             * 如果当前存在一个正在执行的定时任务，则本定时人物执行到此处时，不等待获取锁，直接退出执行定时任务；
+             * 如果当前存在一个正在执行的定时任务，则本定时任务执行到此处时，不等待获取锁，直接退出执行定时任务；
              */
             lockService.doTryLock(lockName, 0L, TimeUnit.MILLISECONDS, this::doTask);
         } catch (Exception e) {
@@ -76,12 +83,20 @@ public abstract class BaseScheduledTask implements Runnable {
      *
      * @return {@link String}
      */
-    public abstract String getCronExpression();
+    public String getCronExpression() {
+        // TODO: 此处代码待完善
+        String cronExpressionName = this.getTaskName() + "Cron";
+        String cronExpression = System.getProperty(cronExpressionName);
+        return cronExpression;
+    }
 
     /**
      * 获取为Cron表达式统一设定的时区
      *
      * @return {@link ZoneId}
      */
-    public abstract ZoneId getCronTimeZone();
+    public ZoneId getCronTimeZone() {
+        return ZoneId.of("UTC");
+    }
+
 }
