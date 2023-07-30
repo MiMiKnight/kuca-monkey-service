@@ -44,11 +44,7 @@ public abstract class BaseCronScheduledTask implements Runnable {
      * 被跟踪代码
      */
     private final Runnable trackedCode = () -> {
-        // 任务开关 TODO:此处的代码待完善
-        boolean enable = false;
-        if (!enable) {
-            return;
-        }
+        // TODO: 添加定时任务开关
         log.info("The scheduled task starts running,task name = {}", this.getTaskName());
         try {
             String lockName = RedisLockKey.TASK_LOCK_KEY_PREFIX + this.getTaskName();
