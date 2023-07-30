@@ -33,33 +33,27 @@ public interface ProjectConstant {
     }
 
     /**
-     * 锁 相关常量
+     * Redis 相关常量
      */
-    interface Lock {
+    interface Redis {
+        /**
+         * Redis 分隔符
+         */
+        String SEPARATOR = ":";
+
         /**
          * 项目默认获取锁的等待时间
          * <p>
          * 时间单位：秒
          */
         long DEFAULT_GET_LOCK_WAITE_TIME = 3L;
-    }
 
-    /**
-     * 缓存 相关常量
-     */
-    interface Cache {
         /**
          * 项目默认缓存过期时间
          * <p>
          * 时间单位：小时
          */
-        long EXPIRE_TIME = 24L;
-
-
-        /**
-         * 分隔符
-         */
-        String SEPARATOR = ":";
+        long DEFAULT_CACHE_EXPIRE_TIME = 24L;
     }
 
     /**
