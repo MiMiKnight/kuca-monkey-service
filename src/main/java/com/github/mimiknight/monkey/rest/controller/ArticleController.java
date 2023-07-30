@@ -3,6 +3,7 @@ package com.github.mimiknight.monkey.rest.controller;
 import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandleAdapter;
 import com.github.mimiknight.kuca.ecology.model.response.SuccessResponse;
 import com.github.mimiknight.monkey.common.constant.ApiPath;
+import com.github.mimiknight.monkey.model.request.AuditArticleRequest;
 import com.github.mimiknight.monkey.model.request.ModifyArticleByIdRequest;
 import com.github.mimiknight.monkey.model.request.QueryArticleByIdRequest;
 import com.github.mimiknight.monkey.model.request.SaveArticleRequest;
@@ -46,6 +47,12 @@ public class ArticleController extends EcologyRequestHandleAdapter {
     public SuccessResponse v1(@RequestParam("id") String id) throws Exception {
         QueryArticleByIdRequest request = new QueryArticleByIdRequest();
         request.setId(id);
+        return handle(request);
+    }
+
+    @Operation(summary = "文章审核接口")
+    @PostMapping(value = "/v1/audit")
+    public SuccessResponse v1(@RequestBody AuditArticleRequest request) throws Exception {
         return handle(request);
     }
 }

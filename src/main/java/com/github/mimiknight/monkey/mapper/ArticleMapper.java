@@ -1,9 +1,12 @@
 package com.github.mimiknight.monkey.mapper;
 
-import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 文章表持久化类
@@ -18,4 +21,19 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface ArticleMapper extends BaseMapper<ArticleEntity> {
 
+    /**
+     * 根据文章主键查找审核中的文章
+     *
+     * @param articleIds 文章主键id集合
+     * @return {@link List}<{@link ArticleEntity}>
+     */
+    List<ArticleEntity> selectAuditongArticleByIds(@Param("articleIds") List<String> articleIds);
+
+    /**
+     * 文章审核
+     *
+     * @param articleIds  文章主键id集合
+     * @param auditResult 审核状态
+     */
+    void audit(@Param("articleIds") List<String> articleIds, @Param("auditResult") int auditResult);
 }

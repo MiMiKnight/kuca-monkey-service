@@ -1,6 +1,5 @@
 package com.github.mimiknight.monkey.model.entity;
 
-import com.github.mimiknight.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.github.mimiknight.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,6 +47,18 @@ public class ArticleEntity extends Model<ArticleEntity> {
      */
     @TableField("article")
     private String article;
+
+    /**
+     * 审核
+     * <p>
+     * 1：审核中
+     * <p>
+     * 2：审核通过
+     * <p>
+     * 3：审核不通过
+     */
+    @TableField("audit")
+    private Integer audit;
 
     /**
      * 乐观锁

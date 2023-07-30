@@ -7,6 +7,7 @@
         <id column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="article" property="article"/>
+        <result column="audit" property="audit"/>
         <result column="version" property="version"/>
         <result column="deleted" property="deleted"/>
         <result column="created_time" property="createdTime"
@@ -18,7 +19,25 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id
-        , title, article, version, deleted, created_time, updated_time
+        , title, article, audit, version, deleted, created_time, updated_time
     </sql>
+
+    <select id="selectAuditongArticleByIds" resultType="com.github.mimiknight.monkey.model.entity.ArticleEntity">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_monkey_article
+        WHERE audit = 1 AND id IN
+        <foreach collection="articleIds" item="id" open="(" separator="," close=")">
+            id
+        </foreach>
+    </select>
+
+    <update id="audit">
+        UPDATE t_monkey_article
+        SET audit = #{auditResult}
+        WHERE id IN
+        <foreach collection="articleIds" item="id" open="(" separator="," close=")">
+            id
+        </foreach>
+    </update>
 
 </mapper>

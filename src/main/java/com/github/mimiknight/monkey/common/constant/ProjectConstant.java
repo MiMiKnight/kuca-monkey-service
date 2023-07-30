@@ -61,4 +61,16 @@ public interface ProjectConstant {
          */
         String SEPARATOR = ":";
     }
+
+    /**
+     * 文章 审核字段 常量
+     */
+    interface ArticleAudit {
+        // 审核中
+        Integer AUDITING = 1;
+        // 审核通过
+        Integer AUDITED = 2;
+        // 审核不通过
+        Integer NOT_AUDITED = 3;
+    }
 }

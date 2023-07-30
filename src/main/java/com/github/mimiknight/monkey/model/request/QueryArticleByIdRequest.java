@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mimiknight.kuca.ecology.model.request.EcologyRequest;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
@@ -24,9 +25,8 @@ public class QueryArticleByIdRequest implements EcologyRequest {
     /**
      * 主键
      */
-    @Past
-    @NotBlank(message = "QueryContentByIdRequest.id.NotBlank")
-    @Size(min = 32, max = 64, message = "QueryContentByIdRequest.id.Size")
+    @NotBlank(message = "QueryArticleByIdRequest.id.NotBlank")
+    @Length(min = 18, max = 64, message = "QueryArticleByIdRequest.id.Length")
     @JsonProperty(value = "id")
     private String id;
 }

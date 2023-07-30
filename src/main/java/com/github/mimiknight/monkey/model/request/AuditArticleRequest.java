@@ -4,23 +4,32 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mimiknight.kuca.ecology.model.request.EcologyRequest;
 import com.github.mimiknight.kuca.utils.constant.DateTimeFormatStandard;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
- * 审核文章
+ * 文章审核接口请求参数对象
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-03-09 20:26:22
  */
-@Getter
-@Setter
+@Data
 public class AuditArticleRequest implements EcologyRequest {
+
+    /**
+     * 文章id集合
+     */
+    @Size(min = 1, max = 64, message = "AuditArticleRequest.articleIds.Size")
+    @JsonProperty(value = "article_ids")
+    private List<String> articleIds;
 
     /**
      * 审核结果
@@ -29,8 +38,8 @@ public class AuditArticleRequest implements EcologyRequest {
      * <p>
      * 2：审核不通过
      */
-    @NotNull(message = "AuditContentRequest.auditResult.NotNull")
-    @Range(min = 1, max = 2, message = "AuditContentRequest.auditResult.Range")
+    @NotNull(message = "AuditArticleRequest.auditResult.NotNull")
+    @Range(min = 2, max = 3, message = "AuditArticleRequest.auditResult.Range")
     @JsonProperty(value = "audit_result")
     private Integer auditResult;
 

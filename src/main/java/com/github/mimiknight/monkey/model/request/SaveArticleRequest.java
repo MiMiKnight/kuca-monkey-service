@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mimiknight.kuca.ecology.model.request.EcologyRequest;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 保存文章内容请求参数
@@ -18,12 +21,16 @@ public class SaveArticleRequest implements EcologyRequest {
     /**
      * 文章标题
      */
+    @NotBlank(message = "SaveArticleRequest.title.NotBlank")
+    @Length(min = 5, max = 128, message = "SaveArticleRequest.title.Length")
     @JsonProperty(value = "title")
     private String title;
 
     /**
      * 文章内容
      */
+    @NotBlank(message = "SaveArticleRequest.article.NotBlank")
+    @Length(min = 10, max = 512, message = "SaveArticleRequest.article.Length")
     @JsonProperty(value = "article")
     private String article;
 }

@@ -1,6 +1,7 @@
 package com.github.mimiknight.monkey.rest.handler.article;
 
 import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler;
+import com.github.mimiknight.monkey.common.constant.ProjectConstant;
 import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import com.github.mimiknight.monkey.model.request.SaveArticleRequest;
 import com.github.mimiknight.monkey.model.response.SaveArticleResponse;
@@ -29,6 +30,7 @@ public class SaveArticleHandler implements EcologyRequestHandler<SaveArticleRequ
         ArticleEntity entity = new ArticleEntity();
         entity.setTitle(request.getTitle());
         entity.setArticle(request.getArticle());
+        entity.setAudit(ProjectConstant.ArticleAudit.AUDITING);
         contentService.save(entity);
     }
 }

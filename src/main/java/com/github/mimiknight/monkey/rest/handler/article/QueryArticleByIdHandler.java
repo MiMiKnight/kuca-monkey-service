@@ -1,6 +1,7 @@
 package com.github.mimiknight.monkey.rest.handler.article;
 
 import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler;
+import com.github.mimiknight.monkey.common.constant.ProjectConstant;
 import com.github.mimiknight.monkey.common.constant.RedisCacheKey;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
@@ -37,12 +38,12 @@ public class QueryArticleByIdHandler implements EcologyRequestHandler<QueryArtic
 
     @Override
     public void handle(QueryArticleByIdRequest request, QueryArticleByIdResponse response) throws Exception {
-        // 内容记录id
-        String id = request.getId();
         // 文章表记录缓存键
-        String articleTableRecordCacheKey = RedisCacheKey.ARTICLE_TABLE_CACHE_KEY_PREFIX + id;
-        // 缓存存在结果从缓存中读取，没有则从数据查询结果
+        String articleTableRecordCacheKey = RedisCacheKey.ARTICLE_TABLE_CACHE_KEY_PREFIX + request.getId();
+        // 存在缓存则从缓存中读取，没有则从数据库查询结果
         ArticleEntity articleEntity = cacheService.getAndPut(articleTableRecordCacheKey, ArticleEntity.class, () -> {
+            // 内容记录id
+            String id = request.getId();
             ArticleEntity entity = articleService.getById(id);
             if (null == entity) {
                 throw new ServiceException(ErrorReturn.ARTICLE_DO_NOT_EXIST);

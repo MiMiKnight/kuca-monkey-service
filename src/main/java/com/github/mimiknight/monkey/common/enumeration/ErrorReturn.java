@@ -59,7 +59,12 @@ public enum ErrorReturn {
     /**
      * 文章记录不存在
      */
-    ARTICLE_DO_NOT_EXIST(ErrorCode.SERVICE_CODE_002, "Article do not exist.");
+    ARTICLE_DO_NOT_EXIST(ErrorCode.SERVICE_CODE_002, "Article do not exist."),
+
+    /**
+     * 根据提供的文章主键集合未查到任何审核中的文章数据
+     */
+    NO_FIND_AUDITING_ARTICLE_BY_IDS(ErrorCode.SERVICE_CODE_003, "No find any auditing article by aricle id list.");
 
     /**
      * 错误码
