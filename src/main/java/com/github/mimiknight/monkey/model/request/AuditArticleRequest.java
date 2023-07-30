@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mimiknight.kuca.ecology.model.request.EcologyRequest;
 import com.github.mimiknight.kuca.utils.constant.DateTimeFormatStandard;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
