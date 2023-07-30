@@ -22,12 +22,13 @@
         , title, article, audit, version, deleted, created_time, updated_time
     </sql>
 
-    <select id="selectAuditongArticleByIds" resultType="com.github.mimiknight.monkey.model.entity.ArticleEntity">
-        SELECT <include refid="Base_Column_List"/>
+    <select id="selectAuditingArticleByIds" resultType="com.github.mimiknight.monkey.model.entity.ArticleEntity">
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM t_monkey_article
         WHERE audit = 1 AND id IN
         <foreach collection="articleIds" item="id" open="(" separator="," close=")">
-            id
+            #{id}
         </foreach>
     </select>
 
@@ -36,7 +37,7 @@
         SET audit = #{auditResult}
         WHERE id IN
         <foreach collection="articleIds" item="id" open="(" separator="," close=")">
-            id
+            #{id}
         </foreach>
     </update>
 

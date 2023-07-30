@@ -27,7 +27,7 @@ public interface ArticleMapper extends BaseMapper<ArticleEntity> {
      * @param articleIds 文章主键id集合
      * @return {@link List}<{@link ArticleEntity}>
      */
-    List<ArticleEntity> selectAuditongArticleByIds(@Param("articleIds") List<String> articleIds);
+    List<ArticleEntity> selectAuditingArticleByIds(@Param("articleIds") List<String> articleIds);
 
     /**
      * 文章审核

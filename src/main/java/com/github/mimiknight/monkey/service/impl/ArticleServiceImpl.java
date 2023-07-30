@@ -31,7 +31,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
 
     @Override
     public List<String> audit(List<String> articleIds, int auditResult) {
-        List<ArticleEntity> articleList = articleMapper.selectAuditongArticleByIds(articleIds);
+        List<ArticleEntity> articleList = articleMapper.selectAuditingArticleByIds(articleIds);
         if (CollectionUtils.isEmpty(articleList)) {
             throw new ServiceException(ErrorReturn.NO_FIND_AUDITING_ARTICLE_BY_IDS);
         }
