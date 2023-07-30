@@ -42,7 +42,7 @@ public class JsonConfig {
         //忽略 在json字符串中存在，但是在java对象中不存在对应属性的情况。防止错误
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // PrettyPrinter 格式化输出
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, false);
         // 忽略无法转换的对象
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         // 指定时区
