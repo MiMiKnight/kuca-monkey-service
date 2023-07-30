@@ -1,6 +1,6 @@
 package ${package.Controller};
 
-import cn.yhm.developer.kuca.ecology.core.EcologyRequestHandleAdapter;
+import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandleAdapter;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

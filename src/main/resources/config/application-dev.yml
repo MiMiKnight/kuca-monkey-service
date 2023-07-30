@@ -73,7 +73,7 @@ spring:
 # MyBatis配置
 mybatis-plus:
   mapper-locations: classpath:mapper/**/*Mapper.xml
-  type-handlers-package: cn.yhm.developer.monkey.common.typehandler
+  type-handlers-package: com.github.mimiknight.monkey.common.mybatis.typehandler
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:

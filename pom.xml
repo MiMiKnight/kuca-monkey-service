@@ -315,7 +315,7 @@
                     <archive>
                         <manifest>
                             <!--项目启动类-->
-                            <mainClass>cn.yhm.developer.kuca.panda.Application.main</mainClass>
+                            <mainClass>com.github.mimiknight.monkey.Application.main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

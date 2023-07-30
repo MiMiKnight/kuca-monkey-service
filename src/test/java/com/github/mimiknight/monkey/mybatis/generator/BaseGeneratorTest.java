@@ -52,7 +52,7 @@ public class BaseGeneratorTest {
         String projectPath = System.getProperty("user.dir");
         String xmlOutputDir = projectPath + "/.code-generate/mapperXml";
 
-        String parent = "cn.yhm.developer";
+        String parent = "com.github.mimiknight";
         String moduleName = "monkey";
         String entityPackageName = "model.entity";
         String servicePackageName = "service.standard";
