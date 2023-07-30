@@ -56,7 +56,7 @@ public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArt
             String id = request.getId();
             String title = request.getTitle();
             String article = request.getArticle();
-            ArticleEntity entity = articleService.getById(id);
+            ArticleEntity entity = articleService.getEntityById(id);
             if (null == entity) {
                 String tip = String.format("Article is not exist,id = %s", id);
                 log.info(tip);
@@ -64,7 +64,7 @@ public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArt
             }
             entity.setTitle(title);
             entity.setArticle(article);
-            articleService.updateById(entity);
+            articleService.updateArticleById(entity);
             // 清除缓存
             String cacheKey = RedisCacheKey.ARTICLE_TABLE_CACHE_KEY_PREFIX + id;
             redisService.delete(cacheKey);

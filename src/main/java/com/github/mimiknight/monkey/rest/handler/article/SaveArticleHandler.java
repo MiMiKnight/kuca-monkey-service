@@ -1,8 +1,6 @@
 package com.github.mimiknight.monkey.rest.handler.article;
 
 import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler;
-import com.github.mimiknight.monkey.common.constant.ProjectConstant;
-import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import com.github.mimiknight.monkey.model.request.SaveArticleRequest;
 import com.github.mimiknight.monkey.model.response.SaveArticleResponse;
 import com.github.mimiknight.monkey.service.standard.ArticleService;
@@ -18,19 +16,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class SaveArticleHandler implements EcologyRequestHandler<SaveArticleRequest, SaveArticleResponse> {
 
-    private ArticleService contentService;
+    private ArticleService articleService;
 
     @Autowired
-    public void setContentService(ArticleService contentService) {
-        this.contentService = contentService;
+    public void setArticleService(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @Override
     public void handle(SaveArticleRequest request, SaveArticleResponse response) throws Exception {
-        ArticleEntity entity = new ArticleEntity();
-        entity.setTitle(request.getTitle());
-        entity.setArticle(request.getArticle());
-        entity.setAudit(ProjectConstant.ArticleAudit.AUDITING);
-        contentService.save(entity);
+        String title = request.getTitle();
+        String article = request.getArticle();
+        articleService.save(title, article);
     }
 }

@@ -39,12 +39,6 @@ public class QueryArticleByIdResponse implements EcologyResponse {
     private String article;
 
     /**
-     * 乐观锁
-     */
-    @JsonProperty(value = "version", index = 4)
-    private Integer version;
-
-    /**
      * 逻辑删除
      */
     @JsonProperty(value = "deleted", index = 5)

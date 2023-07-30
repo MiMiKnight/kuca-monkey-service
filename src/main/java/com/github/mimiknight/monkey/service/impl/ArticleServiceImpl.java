@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.mimiknight.kuca.utils.service.standard.DateTimeService;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.mapper.ArticleMapper;
@@ -10,7 +10,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -20,13 +23,20 @@ import java.util.stream.Collectors;
  * @since 2023-05-21 17:55:25
  */
 @Service
-public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity> implements ArticleService {
+public class ArticleServiceImpl implements ArticleService {
 
     private ArticleMapper articleMapper;
 
     @Autowired
     public void setArticleMapper(ArticleMapper articleMapper) {
         this.articleMapper = articleMapper;
+    }
+
+    private DateTimeService dateTimeService;
+
+    @Autowired
+    public void setDateTimeService(DateTimeService dateTimeService) {
+        this.dateTimeService = dateTimeService;
     }
 
     @Override
@@ -40,4 +50,26 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         articleMapper.audit(ids, auditResult);
         return ids;
     }
+
+    @Override
+    public ArticleEntity getEntityById(String id) {
+        return articleMapper.getEntityById(id);
+    }
+
+    @Override
+    public void updateArticleById(ArticleEntity entity) {
+        String id = entity.getId();
+        String title = entity.getTitle();
+        String article = entity.getArticle();
+        ZonedDateTime updatedTime = ZonedDateTime.now();
+        articleMapper.updateArticleById(id, title, article, updatedTime);
+    }
+
+    @Override
+    public void save(String title, String article) {
+        String id = UUID.randomUUID().toString().replace("-", "");
+        LocalDateTime now = dateTimeService.utcLocalDateTime();
+        articleMapper.save(id, title, article, now, now);
+    }
+
 }

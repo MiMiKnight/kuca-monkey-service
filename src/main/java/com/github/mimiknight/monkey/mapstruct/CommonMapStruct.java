@@ -26,7 +26,6 @@ public interface CommonMapStruct {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "title", target = "title")
     @Mapping(source = "article", target = "article")
-    @Mapping(source = "version", target = "version")
     @Mapping(source = "deleted", target = "deleted")
     @Mapping(source = "createdTime", target = "createdTime")
     @Mapping(source = "updatedTime", target = "updatedTime")

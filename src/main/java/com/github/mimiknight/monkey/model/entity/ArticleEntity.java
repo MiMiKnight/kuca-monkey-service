@@ -6,13 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.Version;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.github.mimiknight.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
@@ -23,10 +19,9 @@ import java.time.ZonedDateTime;
  * @author victor2015yhm@gmail.com
  * @since 2023-06-05 06:42:47
  */
-@Getter
-@Setter
+@Data
 @TableName("t_monkey_article")
-public class ArticleEntity extends Model<ArticleEntity> {
+public class ArticleEntity {
 
     private static final long serialVersionUID = 123080239902732129L;
 
@@ -61,13 +56,6 @@ public class ArticleEntity extends Model<ArticleEntity> {
     private Integer audit;
 
     /**
-     * 乐观锁
-     */
-    @TableField("version")
-    @Version
-    private Integer version;
-
-    /**
      * 逻辑删除
      */
     @TableField("deleted")
@@ -85,27 +73,5 @@ public class ArticleEntity extends Model<ArticleEntity> {
      */
     @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE, typeHandler = MyZonedDateTimeTypeHandler.class)
     private ZonedDateTime updatedTime;
-
-    public static final String ID = "id";
-
-    public static final String TITLE = "title";
-
-    public static final String ARTICLE = "article";
-
-    public static final String AUDIT = "audit";
-
-    public static final String VERSION = "version";
-
-    public static final String DELETED = "deleted";
-
-    public static final String CREATED_TIME = "created_time";
-
-    public static final String UPDATED_TIME = "updated_time";
-
-    @Override
-    public Serializable pkVal() {
-        return this.id;
-    }
-
 
 }

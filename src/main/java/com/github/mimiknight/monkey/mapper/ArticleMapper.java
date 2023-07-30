@@ -1,11 +1,12 @@
 package com.github.mimiknight.monkey.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Repository
 @Mapper
-public interface ArticleMapper extends BaseMapper<ArticleEntity> {
+public interface ArticleMapper {
 
     /**
      * 根据文章主键查找审核中的文章
@@ -36,4 +37,17 @@ public interface ArticleMapper extends BaseMapper<ArticleEntity> {
      * @param auditResult 审核状态
      */
     void audit(@Param("articleIds") List<String> articleIds, @Param("auditResult") int auditResult);
+
+    ArticleEntity getEntityById(@Param("id") String id);
+
+    void updateArticleById(@Param("id") String id,
+                           @Param("title") String title,
+                           @Param("article") String article,
+                           @Param("updatedTime") ZonedDateTime updatedTime);
+
+    void save(@Param("id") String id,
+              @Param("title") String title,
+              @Param("article") String article,
+              @Param("createdTime") LocalDateTime createdTime,
+              @Param("updatedTime") LocalDateTime updatedTime);
 }

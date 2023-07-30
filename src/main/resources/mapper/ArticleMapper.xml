@@ -8,7 +8,6 @@
         <result column="title" property="title"/>
         <result column="article" property="article"/>
         <result column="audit" property="audit"/>
-        <result column="version" property="version"/>
         <result column="deleted" property="deleted"/>
         <result column="created_time" property="createdTime"
                 typeHandler="com.github.mimiknight.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler"/>
@@ -19,7 +18,7 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id
-        , title, article, audit, version, deleted, created_time, updated_time
+        , title, article, audit, deleted, created_time, updated_time
     </sql>
 
     <select id="selectAuditingArticleByIds" resultType="com.github.mimiknight.monkey.model.entity.ArticleEntity">
@@ -32,6 +31,13 @@
         </foreach>
     </select>
 
+    <select id="getEntityById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_monkey_article
+        WHERE id = #{id}
+    </select>
+
     <update id="audit">
         UPDATE t_monkey_article
         SET audit = #{auditResult}
@@ -40,5 +46,18 @@
             #{id}
         </foreach>
     </update>
+
+    <update id="updateArticleById">
+        UPDATE t_monkey_article
+        SET title        = #{title},
+            article      = #{article},
+            updated_time = #{updatedTime}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="save">
+        INSERT INTO t_monkey_article (id, title, article, created_time, updated_time)
+        VALUE (#{id}, #{title}, #{article}, #{createdTime}, #{updatedTime});
+    </insert>
 
 </mapper>
