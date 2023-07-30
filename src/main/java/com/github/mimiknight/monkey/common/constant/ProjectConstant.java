@@ -41,7 +41,7 @@ public interface ProjectConstant {
          * <p>
          * 时间单位：秒
          */
-        long GET_LOCK_WAITE_TIME = 3L;
+        long DEFAULT_GET_LOCK_WAITE_TIME = 3L;
     }
 
     /**

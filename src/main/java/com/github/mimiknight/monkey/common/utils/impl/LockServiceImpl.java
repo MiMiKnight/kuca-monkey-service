@@ -79,7 +79,7 @@ public class LockServiceImpl implements LockService {
 
     @Override
     public <T> T doTryLock(String lockName, Supplier<T> lockedCode) {
-        return doTryLock(lockName, ProjectConstant.Lock.GET_LOCK_WAITE_TIME, TimeUnit.SECONDS, lockedCode);
+        return doTryLock(lockName, ProjectConstant.Lock.DEFAULT_GET_LOCK_WAITE_TIME, TimeUnit.SECONDS, lockedCode);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class LockServiceImpl implements LockService {
 
     @Override
     public void doTryLock(String lockName, Runnable lockedCode) {
-        doTryLock(lockName, ProjectConstant.Lock.GET_LOCK_WAITE_TIME, TimeUnit.SECONDS, lockedCode);
+        doTryLock(lockName, ProjectConstant.Lock.DEFAULT_GET_LOCK_WAITE_TIME, TimeUnit.SECONDS, lockedCode);
     }
 
 }

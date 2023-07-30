@@ -42,8 +42,8 @@ public class AuditArticleRequest implements EcologyRequest {
      * <p>
      * 2022-09-04 10:06:39.123 GMT+08:00 【表示 东八区 2022年9月4日10点6分39秒123毫秒】
      */
-    @DateTimeFormat(pattern = DateTimeFormatStandard.STANDARD_4)
-    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_4)
+    @DateTimeFormat(pattern = DateTimeFormatStandard.STANDARD_6)
+    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_6)
     @JsonProperty(value = "audit_time")
     private ZonedDateTime auditTime;
 }

@@ -53,14 +53,14 @@ public class QueryArticleByIdResponse implements EcologyResponse {
     /**
      * 创建时间
      */
-    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_4, timezone = TimeZoneGMT.GMT)
+    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_6, timezone = TimeZoneGMT.GMT)
     @JsonProperty(value = "created_time" , index = 6)
     private ZonedDateTime createdTime;
 
     /**
      * 更新时间
      */
-    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_4, timezone = TimeZoneGMT.GMT)
+    @JsonFormat(pattern = DateTimeFormatStandard.STANDARD_6, timezone = TimeZoneGMT.GMT)
     @JsonProperty(value = "updated_time" , index = 7)
     private ZonedDateTime updatedTime;
 
