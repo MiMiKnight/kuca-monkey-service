@@ -66,7 +66,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/${app.name}.%d{yyyy-MM-dd}.info.%i.log.zip
+                ${log.path}/archive/info/${app.name}.%d{yyyy-MM-dd}.info.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
@@ -88,7 +88,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/${app.name}.%d{yyyy-MM-dd}.warn.%i.log.zip
+                ${log.path}/archive/warn/${app.name}.%d{yyyy-MM-dd}.warn.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
@@ -110,7 +110,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/${app.name}.%d{yyyy-MM-dd}.error.%i.log.zip
+                ${log.path}/archive/error/${app.name}.%d{yyyy-MM-dd}.error.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
@@ -132,7 +132,29 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/${app.name}.%d{yyyy-MM-dd}.api.%i.log.zip
+                ${log.path}/archive/api/${app.name}.%d{yyyy-MM-dd}.api.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <!--调用第三方接口API日志-->
+    <appender name="ThirdPartyApi" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/3rdpApi.log</file>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern.api}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.path}/archive/3rdpApi/${app.name}.%d{yyyy-MM-dd}.3rdpApi.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
@@ -182,22 +204,34 @@
         <queueSize>1024</queueSize>
         <includeCallerData>true</includeCallerData>
     </appender>
+    <!--异步ThirdPartyApi-->
+    <appender name="AsyncThirdPartyApi" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ThirdPartyApi"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
 
     <!--ELK TODO:上传日志到ELK系统-->
 
-    <!--API接口日志-->
-    <logger name="cn.yhm.developer.kuca.panda.common.util.PrintApiLog"
+    <!--本项目API日志-->
+    <logger name="com.github.mimiknight.monkey.common.utils.impl.LogServiceImpl"
             level="${log.level}"
             additivity="false">
         <appender-ref ref="AsyncApi"/>
-        <appender-ref ref="AsyncConsole"/>
+    </logger>
+
+    <!--第三方接口调用API日志-->
+    <logger name="com.github.mimiknight.kuca.utils.component.http.ApiLogInterceptor"
+            level="${log.level}"
+            additivity="false">
+        <appender-ref ref="AsyncThirdPartyApi"/>
     </logger>
 
     <!-- 日志等级 trace<debug<info<warn<error<fatal -->
     <!--  等于或高于日志记录器当前配置级别的日志的将被打印出来 -->
     <!--日志输出级别-->
     <root level="${log.level}">
-        <appender-ref ref="AsyncConsole"/>
         <appender-ref ref="AsyncInfo"/>
         <appender-ref ref="AsyncWarn"/>
         <appender-ref ref="AsyncError"/>
