@@ -46,7 +46,7 @@ public class JsonConfig {
         // 忽略无法转换的对象
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         // 指定时区
-        mapper.setTimeZone(TimeZone.getTimeZone(ZoneId.of(TimeZoneGMT.GMT_N_6)));
+        mapper.setTimeZone(TimeZone.getTimeZone(ZoneId.of(TimeZoneGMT.GMT)));
 
         mapper.registerModule(new JavaTimeModule()) // 注册java8新时间类型模块
                 .registerModule(new Jdk8Module())
