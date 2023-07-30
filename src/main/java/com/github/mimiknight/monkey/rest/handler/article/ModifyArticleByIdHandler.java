@@ -1,7 +1,6 @@
 package com.github.mimiknight.monkey.rest.handler.article;
 
 import com.github.mimiknight.kuca.ecology.core.EcologyRequestHandler;
-import com.github.mimiknight.kuca.utils.service.standard.RedisLockService;
 import com.github.mimiknight.kuca.utils.service.standard.RedisService;
 import com.github.mimiknight.monkey.common.constant.RedisCacheKey;
 import com.github.mimiknight.monkey.common.constant.RedisLockKey;
@@ -16,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
+
 /**
  * 保存文章处理器类
  *
@@ -26,19 +27,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArticleByIdRequest, ModifyArticleByIdResponse> {
 
-
     private ArticleService articleService;
 
     @Autowired
-    public void setContentService(ArticleService contentService) {
-        this.articleService = contentService;
-    }
-
-    private RedisLockService redisLockService;
-
-    @Autowired
-    public void setRedisLockService(RedisLockService redisLockService) {
-        this.redisLockService = redisLockService;
+    public void setArticleService(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     private LockService lockService;
