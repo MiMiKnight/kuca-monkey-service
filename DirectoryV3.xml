@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- install idea "TreeInfotip" plugin show directory description info  -->
  <trees>
-     <tree path="/src/main/java/com/github/mimiknight/monkey/task" title="Sprint Task 目录" extension=""
+     <tree path="/src/main/java/com/github/mimiknight/monkey/task" title="Spring Task 目录" extension=""
            presentableText="" tooltipTitle="" icon="" textColor="" backgroundColor=""/>
      <tree path="/src/main/java/com/github/mimiknight/monkey/task/scheduled" title="Cron定时任务类目录" extension=""
            presentableText="" tooltipTitle="" icon="" textColor="" backgroundColor=""/>

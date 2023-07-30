@@ -92,6 +92,8 @@ public class ArticleEntity extends Model<ArticleEntity> {
 
     public static final String ARTICLE = "article";
 
+    public static final String AUDIT = "audit";
+
     public static final String VERSION = "version";
 
     public static final String DELETED = "deleted";
