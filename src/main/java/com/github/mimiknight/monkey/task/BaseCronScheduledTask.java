@@ -46,6 +46,7 @@ public abstract class BaseCronScheduledTask implements Runnable {
     private final Runnable trackedCode = () -> {
         // TODO: 添加定时任务开关
         log.info("The scheduled task starts running,task name = {}", this.getTaskName());
+        boolean normal = true;
         try {
             String lockName = RedisLockKey.TASK_LOCK_KEY_PREFIX + this.getTaskName();
             /*
@@ -56,8 +57,11 @@ public abstract class BaseCronScheduledTask implements Runnable {
         } catch (Exception e) {
             // 因为定时任务中的异常没有全局异常处理类统一处理，故在此拦截定时任务中所有抛出的异常，避免污染日志
             log.error("The scheduled task ends abnormally,task name = {},error = {}", this.getTaskName(), e.getMessage());
+            normal = false;
         }
-        log.info("The scheduled task ends normally,task name = {}", this.getTaskName());
+        if (normal) {
+            log.info("The scheduled task ends normally,task name = {}", this.getTaskName());
+        }
     };
 
     /**
