@@ -1,6 +1,15 @@
 package com.github.mimiknight.monkey.common.config;
 
+import com.github.mimiknight.monkey.common.spring.filter.ApiLogFilter;
+import com.github.mimiknight.monkey.common.spring.filter.InjectRepeatableReadHttpServletRequestFilter;
+import com.github.mimiknight.monkey.common.spring.filter.LogTraceFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.servlet.Filter;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Spring过滤器注册配置类
@@ -10,5 +19,66 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class FilterRegistryConfig {
+
+    /**
+     * 全路径匹配URL规则
+     *
+     * @return {@link List}<{@link String}>
+     */
+    private List<String> allPathMatchUrlPattern() {
+        return Collections.singletonList("/*");
+    }
+
+    /**
+     * 获取过滤器名称
+     *
+     * @param filterClazz 过滤器Class对象
+     * @return {@link String}
+     */
+    private String getFilterName(Class<? extends Filter> filterClazz) {
+        return filterClazz.getSimpleName();
+    }
+
+    @Bean
+    public FilterRegistrationBean<LogTraceFilter> registerLogTraceFilter() {
+        FilterRegistrationBean<LogTraceFilter> registrationBean = new FilterRegistrationBean<>();
+        // 设置过滤器名称
+        registrationBean.setName(getFilterName(LogTraceFilter.class));
+        // 注入过滤器
+        registrationBean.setFilter(new LogTraceFilter());
+        // 过滤器顺序
+        registrationBean.setOrder(500);
+        // 拦截规则
+        registrationBean.setUrlPatterns(allPathMatchUrlPattern());
+        return registrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<InjectRepeatableReadHttpServletRequestFilter> registerPackRepeatableReadHttpServletRequestFilter() {
+        FilterRegistrationBean<InjectRepeatableReadHttpServletRequestFilter> registrationBean = new FilterRegistrationBean<>();
+        // 设置过滤器名称
+        registrationBean.setName(getFilterName(InjectRepeatableReadHttpServletRequestFilter.class));
+        // 注入过滤器
+        registrationBean.setFilter(new InjectRepeatableReadHttpServletRequestFilter());
+        // 过滤器顺序
+        registrationBean.setOrder(501);
+        // 拦截规则
+        registrationBean.setUrlPatterns(allPathMatchUrlPattern());
+        return registrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<ApiLogFilter> registerApiLogFilter() {
+        FilterRegistrationBean<ApiLogFilter> registrationBean = new FilterRegistrationBean<>();
+        // 设置过滤器名称
+        registrationBean.setName(getFilterName(ApiLogFilter.class));
+        // 注入过滤器
+        registrationBean.setFilter(new ApiLogFilter());
+        // 过滤器顺序
+        registrationBean.setOrder(502);
+        // 拦截规则
+        registrationBean.setUrlPatterns(allPathMatchUrlPattern());
+        return registrationBean;
+    }
 
 }
