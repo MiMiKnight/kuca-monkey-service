@@ -36,8 +36,8 @@ public class DatebaseFieldEncryptDecryptInterceptor implements Interceptor {
         if (null == parameterObject) {
             return invocation.proceed();
         }
-        // 拦截 insert、update 参数 加密
-        // 拦截 select 结果集参数  解密
+        // TODO 拦截 insert、update 参数 加密
+        // TODO 拦截 select 结果集参数  解密
         return invocation.proceed();
     }
 
