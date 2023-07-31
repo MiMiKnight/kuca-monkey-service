@@ -32,11 +32,11 @@ public class FilterRegistryConfig {
     /**
      * 获取过滤器名称
      *
-     * @param filterClazz 过滤器Class对象
+     * @param filterClass 过滤器Class对象
      * @return {@link String}
      */
-    private String getFilterName(Class<? extends Filter> filterClazz) {
-        return filterClazz.getSimpleName();
+    private String getFilterName(Class<? extends Filter> filterClass) {
+        return filterClass.getSimpleName();
     }
 
     @Bean
