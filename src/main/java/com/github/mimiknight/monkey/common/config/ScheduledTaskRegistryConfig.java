@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 @Configuration
-public class ScheduledTaskRegister implements SchedulingConfigurer {
+public class ScheduledTaskRegistryConfig implements SchedulingConfigurer {
 
     /**
      * 定时任务Map
