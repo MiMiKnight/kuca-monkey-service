@@ -2,7 +2,7 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.1 https://maven.apache.org/xsd/assembly-2.1.1.xsd">
     <!--后缀-->
-    <id>release</id>
+    <id>RELEASE</id>
 
     <formats>
         <format>tar.gz</format>
@@ -11,21 +11,33 @@
 
     <includeBaseDirectory>true</includeBaseDirectory>
 
+    <baseDirectory>KucaMonkeyService</baseDirectory>
+
     <fileSets>
-        <!--配置文件放入resources  -->
+        <!-- 数据库初始化脚本生成位置 -->
         <fileSet>
-            <directory>${project.basedir}/src/main/resources/startup</directory>
+            <directory>${project.basedir}/build/init</directory>
+            <includes>
+                <include>*.sql</include>
+            </includes>
+            <outputDirectory>/init</outputDirectory>
+            <fileMode>0744</fileMode>
+        </fileSet>
+        <!-- 启动脚本生成位置 -->
+        <fileSet>
+            <directory>${project.basedir}/build/startup</directory>
             <includes>
                 <include>*.sh</include>
                 <include>*.bat</include>
             </includes>
-            <outputDirectory>/script</outputDirectory>
+            <outputDirectory>/startup</outputDirectory>
+            <fileMode>0744</fileMode>
         </fileSet>
-        <!--配置文件放入resources  -->
+        <!-- 配置文件放入resources -->
         <fileSet>
             <directory>${project.basedir}/src/main/resources</directory>
             <outputDirectory>/resources</outputDirectory>
-            <fileMode>0755</fileMode>
+            <fileMode>0744</fileMode>
         </fileSet>
     </fileSets>
     <!-- 不使用项目的artifact，第三方jar不要解压，打包进zip文件的lib目录 -->
@@ -34,9 +46,6 @@
             <outputDirectory>lib</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <scope>runtime</scope>
-<!--            <excludes>-->
-<!--                <exclude>${groupId}:${artifactId}</exclude>-->
-<!--            </excludes>-->
         </dependencySet>
     </dependencySets>
 </assembly>

@@ -304,13 +304,13 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- 打包解压后的目录名 -->
+                    <!-- 压缩包名 -->
                     <finalName>${project.artifactId}</finalName>
-                    <!-- 压缩包位置 -->
-                    <outputDirectory>build</outputDirectory>
-                    <descriptors>s
+                    <!-- 打包后的压缩包位置 -->
+                    <outputDirectory>.build</outputDirectory>
+                    <descriptors>
                         <!-- 描述文件路径 -->
-                        <descriptor>assembly.xml</descriptor>
+                        <descriptor>./assembly.xml</descriptor>
                     </descriptors>
                     <archive>
                         <manifest>
