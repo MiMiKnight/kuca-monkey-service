@@ -22,12 +22,23 @@ public class InjectRepeatableReadHttpServletRequestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (request instanceof HttpServletRequest) {
-            HttpServletRequest servletRequest = (HttpServletRequest) request;
-            RepeatableReadHttpServletRequest repeatableReadHttpServletRequest = new RepeatableReadHttpServletRequest(servletRequest);
-            chain.doFilter(repeatableReadHttpServletRequest, response);
+        // 当前request不是HttpServletRequest对象则不进行注入
+        if (!isHttpServletRequest(request)) {
+            chain.doFilter(request, response);
             return;
         }
-        chain.doFilter(request, response);
+        HttpServletRequest servletRequest = (HttpServletRequest) request;
+        RepeatableReadHttpServletRequest repeatableReadHttpServletRequest = new RepeatableReadHttpServletRequest(servletRequest);
+        chain.doFilter(repeatableReadHttpServletRequest, response);
+    }
+
+    private boolean isHttpServletRequest(ServletRequest request) {
+        if (null == request) {
+            return false;
+        }
+        if (request instanceof HttpServletRequest) {
+            return true;
+        }
+        return false;
     }
 }
