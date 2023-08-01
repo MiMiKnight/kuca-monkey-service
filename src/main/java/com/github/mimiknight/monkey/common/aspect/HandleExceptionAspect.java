@@ -7,7 +7,6 @@ import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.common.tip.ErrorFieldTip;
 import com.github.mimiknight.monkey.common.tip.ErrorTip;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
@@ -53,13 +52,6 @@ public class HandleExceptionAspect {
     @Autowired
     public void setServletResponse(HttpServletResponse servletResponse) {
         this.servletResponse = servletResponse;
-    }
-
-    private LogService logService;
-
-    @Autowired
-    public void setLogService(LogService logService) {
-        this.logService = logService;
     }
 
     /**
@@ -241,8 +233,6 @@ public class HandleExceptionAspect {
                 .data(tip)
                 // 设置响应时间戳
                 .timestamp(ZonedDateTime.now()).build();
-        // 跟踪响应和清除TraceID
-        traceResponseAndCleanTraceId(response);
         return response;
     }
 
@@ -257,22 +247,6 @@ public class HandleExceptionAspect {
         String errorType = errorReturn.getErrorType().getName();
         String errorCode = errorReturn.getErrorCode();
         return buildExceptionResponse(httpStatusCode, errorCode, errorType, tip);
-    }
-
-    /**
-     * 跟踪响应和清除TraceID
-     *
-     * @param response 响应
-     */
-    private void traceResponseAndCleanTraceId(ExceptionResponse response) {
-        try {
-            // 打印异常响应日志
-            logService.traceResponse(servletRequest, servletResponse, response);
-            // 清除TraceID
-            MDC.clear();
-        } catch (Exception ignored) {
-            // 此处拦截异常，防止上面的代码存在异常影响实际业务逻辑
-        }
     }
 
 }
