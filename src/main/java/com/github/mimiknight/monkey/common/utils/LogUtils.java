@@ -84,14 +84,13 @@ public class LogUtils {
      * @param body       响应体
      */
     public static void format(String uri, String method, Map<String, String> headerMap, int statusCode, Duration duration, Object body) {
-        long cost = duration.toMillis();
         log.info("===============================Response Begin==============================");
         log.info("URI          : {}", uri);
         log.info("Method       : {}", method);
         log.info("Status Code  : {}", statusCode);
-        log.info("Cost Time    : {}ms", cost);
+        log.info("Cost Time    : {}ms", duration.toMillis());
         log.info("Headers      : {}", headerMap);
-        log.info("Response body: {}", body);
+        log.info("Response Body: {}", body);
         log.info("===============================Response End================================");
     }
 
