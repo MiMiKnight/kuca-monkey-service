@@ -215,7 +215,7 @@
     <!--ELK TODO:上传日志到ELK系统-->
 
     <!--本项目API日志-->
-    <logger name="com.github.mimiknight.monkey.common.utils.impl.LogServiceImpl"
+    <logger name="com.github.mimiknight.monkey.common.utils.LogUtils"
             level="${log.level}"
             additivity="false">
         <appender-ref ref="AsyncApi"/>
@@ -232,6 +232,7 @@
     <!--  等于或高于日志记录器当前配置级别的日志的将被打印出来 -->
     <!--日志输出级别-->
     <root level="${log.level}">
+        <appender-ref ref="AsyncConsole"/>
         <appender-ref ref="AsyncInfo"/>
         <appender-ref ref="AsyncWarn"/>
         <appender-ref ref="AsyncError"/>
