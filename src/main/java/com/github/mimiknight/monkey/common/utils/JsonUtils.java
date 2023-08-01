@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
@@ -144,5 +145,14 @@ public class JsonUtils {
         JsonNode parent = readTree(json);
         return children(parent, fieldName);
     }
-    
+
+    /**
+     * 创建JSON对象节点
+     *
+     * @return {@link ObjectNode}
+     */
+    public static ObjectNode createObjectNode() {
+        return MAPPER.createObjectNode();
+    }
+
 }

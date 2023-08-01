@@ -38,7 +38,7 @@ public class CommonUtils {
      */
     public static Object requestQuery(HttpServletRequest request) {
         // TODO 待完善
-        return new Object();
+        return JsonUtils.createObjectNode();
     }
 
     /**
@@ -98,9 +98,9 @@ public class CommonUtils {
                 String body = IOUtils.toString(request.getReader());
                 return JsonUtils.readTree(body);
             }
-            return new Object();
+            return JsonUtils.createObjectNode();
         } catch (Exception e) {
-            return new Object();
+            return JsonUtils.createObjectNode();
         }
     }
 
@@ -115,12 +115,12 @@ public class CommonUtils {
             String contentType = response.getContentType();
             if (CommonUtils.isJsonContentType(contentType)) {
                 // TODO 待完善
-                String body = "响应体JSON字符串";
+                String body = "{\"title\":\"测试响应体\"}";
                 return JsonUtils.readTree(body);
             }
-            return new Object();
+            return JsonUtils.createObjectNode();
         } catch (Exception e) {
-            return new Object();
+            return JsonUtils.createObjectNode();
         }
     }
 
