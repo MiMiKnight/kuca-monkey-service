@@ -141,7 +141,7 @@
     </appender>
     <!--调用第三方接口API日志-->
     <appender name="ThirdPartyApi" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/3rdpApi.log</file>
+        <file>${log.path}/3rdp-api.log</file>
         <encoder>
             <charset>${log.charset}</charset>
             <pattern>${log.pattern.api}</pattern>
@@ -154,7 +154,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/3rdpApi/${app.name}.%d{yyyy-MM-dd}.3rdpApi.%i.log.zip
+                ${log.path}/archive/3rdpApi/${app.name}.%d{yyyy-MM-dd}.3rdp-api.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>

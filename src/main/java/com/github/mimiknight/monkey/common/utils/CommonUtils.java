@@ -58,6 +58,26 @@ public class CommonUtils {
     }
 
     /**
+     * HttpServletRequest请求中Content-Type是否为JSON类型
+     *
+     * @param request 请求
+     * @return boolean
+     */
+    public static boolean isJsonContentType(HttpServletRequest request) {
+        return isJsonContentType(request.getContentType());
+    }
+
+    /**
+     * HttpServletResponse响应中Content-Type是否为JSON类型
+     *
+     * @param response 响应
+     * @return boolean
+     */
+    public static boolean isJsonContentType(HttpServletResponse response) {
+        return isJsonContentType(response.getContentType());
+    }
+
+    /**
      * 获取请求体
      * <p>
      * 为什么从HttpServletRequest中直接获取的请求体字符串不直接作为请求体返回，而是要包装成JsonNode对象？
@@ -104,24 +124,30 @@ public class CommonUtils {
         }
     }
 
+    /**
+     * 是否为HttpServletResponse请求对象
+     *
+     * @param request 请求
+     * @return boolean
+     */
     public static boolean isHttpServletRequest(ServletRequest request) {
         if (null == request) {
             return false;
         }
-        if (request instanceof HttpServletRequest) {
-            return true;
-        }
-        return false;
+        return (request instanceof HttpServletRequest);
     }
 
+    /**
+     * 是否为HttpServletResponse响应对象
+     *
+     * @param response 响应
+     * @return boolean
+     */
     public static boolean isHttpServletResponse(ServletResponse response) {
         if (null == response) {
             return false;
         }
-        if (response instanceof HttpServletResponse) {
-            return true;
-        }
-        return false;
+        return (response instanceof HttpServletResponse);
     }
 
 }
