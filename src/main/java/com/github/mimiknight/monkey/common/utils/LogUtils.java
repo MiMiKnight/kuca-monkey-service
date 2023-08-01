@@ -7,7 +7,6 @@ import org.slf4j.MDC;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
 
@@ -54,45 +53,6 @@ public class LogUtils {
         return result;
     }
 
-    /**
-     * 接口请求参数格式化输出
-     *
-     * @param uri       接口路径
-     * @param method    接口请求方式
-     * @param headerMap 请求头
-     * @param query     请求行参数
-     * @param body      请求体
-     */
-    public static void format(String uri, String method, Map<String, String> headerMap, Object query, Object body) {
-        log.info("===============================Request Begin===============================");
-        log.info("URI          : {}", uri);
-        log.info("Method       : {}", method);
-        log.info("Headers      : {}", headerMap);
-        log.info("Request Query: {}", query);
-        log.info("Request Body : {}", body);
-        log.info("===============================Request End=================================");
-    }
-
-    /**
-     * 接口响应参数格式化输出
-     *
-     * @param uri        接口路径
-     * @param method     接口请求方式
-     * @param headerMap  响应头
-     * @param statusCode 响应状态码
-     * @param duration   接口响应耗时
-     * @param body       响应体
-     */
-    public static void format(String uri, String method, Map<String, String> headerMap, int statusCode, Duration duration, Object body) {
-        log.info("===============================Response Begin==============================");
-        log.info("URI          : {}", uri);
-        log.info("Method       : {}", method);
-        log.info("Status Code  : {}", statusCode);
-        log.info("Cost Time    : {}ms", duration.toMillis());
-        log.info("Headers      : {}", headerMap);
-        log.info("Response Body: {}", body);
-        log.info("===============================Response End================================");
-    }
 
     /**
      * 跟踪请求
@@ -105,7 +65,7 @@ public class LogUtils {
         TreeMap<String, String> headerMap = new TreeMap<>();
         Object requestQuery = CommonUtils.requestQuery(request);
         Object requestBody = CommonUtils.requestBody(request);
-        format(uri, method, headerMap, requestQuery, requestBody);
+        ApiLogFormat.formatRequest(uri, method, headerMap, requestQuery, requestBody);
     }
 
     /**
@@ -121,7 +81,7 @@ public class LogUtils {
         int statusCode = response.getStatus();
         TreeMap<String, String> headerMap = new TreeMap<>();
         Object responseBody = CommonUtils.responseBody(response);
-        format(uri, method, headerMap, statusCode, duration, responseBody);
+        ApiLogFormat.formatResponse(uri, method, headerMap, statusCode, duration, responseBody);
     }
 
 

@@ -215,7 +215,7 @@
     <!--ELK TODO:上传日志到ELK系统-->
 
     <!--本项目API日志-->
-    <logger name="com.github.mimiknight.monkey.common.utils.LogUtils"
+    <logger name="com.github.mimiknight.monkey.common.utils.ApiLogFormat"
             level="${log.level}"
             additivity="false">
         <appender-ref ref="AsyncApi"/>
