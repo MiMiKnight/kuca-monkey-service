@@ -1,7 +1,7 @@
 package com.github.mimiknight.monkey.common.config;
 
 import com.github.mimiknight.monkey.common.spring.filter.ApiLogFilter;
-import com.github.mimiknight.monkey.common.spring.filter.InjectRepeatableReadHttpServletRequestFilter;
+import com.github.mimiknight.monkey.common.spring.filter.InjectRepeatableReadRequestResponseFilter;
 import com.github.mimiknight.monkey.common.spring.filter.LogTraceFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +25,8 @@ public class FilterRegistryConfig {
      *
      * @return {@link List}<{@link String}>
      */
-    private List<String> allPathMatchUrlPattern() {
-        return Collections.singletonList("/*");
+    private List<String> allApiPathMatchPattern() {
+        return Collections.singletonList("/rest/developer/monkey-service/*");
     }
 
     /**
@@ -49,21 +49,21 @@ public class FilterRegistryConfig {
         // 过滤器顺序
         registrationBean.setOrder(500);
         // 拦截规则
-        registrationBean.setUrlPatterns(allPathMatchUrlPattern());
+        registrationBean.setUrlPatterns(allApiPathMatchPattern());
         return registrationBean;
     }
 
     @Bean
-    public FilterRegistrationBean<InjectRepeatableReadHttpServletRequestFilter> registerPackRepeatableReadHttpServletRequestFilter() {
-        FilterRegistrationBean<InjectRepeatableReadHttpServletRequestFilter> registrationBean = new FilterRegistrationBean<>();
+    public FilterRegistrationBean<InjectRepeatableReadRequestResponseFilter> registerPackRepeatableReadHttpServletRequestFilter() {
+        FilterRegistrationBean<InjectRepeatableReadRequestResponseFilter> registrationBean = new FilterRegistrationBean<>();
         // 设置过滤器名称
-        registrationBean.setName(getFilterName(InjectRepeatableReadHttpServletRequestFilter.class));
+        registrationBean.setName(getFilterName(InjectRepeatableReadRequestResponseFilter.class));
         // 注入过滤器
-        registrationBean.setFilter(new InjectRepeatableReadHttpServletRequestFilter());
+        registrationBean.setFilter(new InjectRepeatableReadRequestResponseFilter());
         // 过滤器顺序
         registrationBean.setOrder(501);
         // 拦截规则
-        registrationBean.setUrlPatterns(allPathMatchUrlPattern());
+        registrationBean.setUrlPatterns(allApiPathMatchPattern());
         return registrationBean;
     }
 
@@ -77,7 +77,7 @@ public class FilterRegistryConfig {
         // 过滤器顺序
         registrationBean.setOrder(502);
         // 拦截规则
-        registrationBean.setUrlPatterns(allPathMatchUrlPattern());
+        registrationBean.setUrlPatterns(allApiPathMatchPattern());
         return registrationBean;
     }
 

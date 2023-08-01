@@ -61,7 +61,7 @@ public class RepeatableReadHttpServletRequest extends HttpServletRequestWrapper 
     @Override
     public BufferedReader getReader() throws IOException {
         String charsetName = this.getCharacterEncoding();
-        ByteArrayInputStream bais = new ByteArrayInputStream(body);
-        return new BufferedReader(new InputStreamReader(bais, Charset.forName(charsetName)));
+        Charset charset = Charset.forName(charsetName);
+        return new BufferedReader(new InputStreamReader(this.getInputStream(), charset));
     }
 }

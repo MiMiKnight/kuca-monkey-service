@@ -1,8 +1,8 @@
 package com.github.mimiknight.monkey.task;
 
 import com.github.mimiknight.monkey.common.constant.RedisLockKey;
+import com.github.mimiknight.monkey.common.utils.LogUtils;
 import com.github.mimiknight.monkey.common.utils.standard.LockService;
-import com.github.mimiknight.monkey.common.utils.standard.LogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,17 +27,10 @@ public abstract class BaseCronScheduledTask implements Runnable {
         this.lockService = lockService;
     }
 
-    private LogService logService;
-
-    @Autowired
-    public void setLogService(LogService logService) {
-        this.logService = logService;
-    }
-
     @Override
     public void run() {
         // 对定时任务代码中的日志打印添加日志跟踪功能e
-        logService.logTrace(trackedCode);
+        LogUtils.logTrace(trackedCode);
     }
 
     /**

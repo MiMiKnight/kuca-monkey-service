@@ -1,6 +1,7 @@
 package com.github.mimiknight.monkey.common.spring.filter;
 
 import com.github.mimiknight.monkey.common.spring.servlet.RepeatableReadHttpServletRequest;
+import com.github.mimiknight.monkey.common.utils.CommonUtils;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -18,12 +19,12 @@ import java.io.IOException;
  * @author MiMiKnight victor2015yhm@gmail.com
  * @since 2023-07-31 21:25:38
  */
-public class InjectRepeatableReadHttpServletRequestFilter implements Filter {
+public class InjectRepeatableReadRequestResponseFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        // 当前request不是HttpServletRequest对象则不进行注入
-        if (!isHttpServletRequest(request)) {
+        // TODO 待完善
+        if (CommonUtils.isHttpServletRequest(request)) {
             chain.doFilter(request, response);
             return;
         }
@@ -32,13 +33,4 @@ public class InjectRepeatableReadHttpServletRequestFilter implements Filter {
         chain.doFilter(repeatableReadHttpServletRequest, response);
     }
 
-    private boolean isHttpServletRequest(ServletRequest request) {
-        if (null == request) {
-            return false;
-        }
-        if (request instanceof HttpServletRequest) {
-            return true;
-        }
-        return false;
-    }
 }
