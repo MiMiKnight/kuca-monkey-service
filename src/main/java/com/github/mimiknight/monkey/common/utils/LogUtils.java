@@ -1,6 +1,6 @@
 package com.github.mimiknight.monkey.common.utils;
 
-import com.github.mimiknight.monkey.common.constant.ProjectConstant;
+import com.github.mimiknight.monkey.common.constant.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
@@ -29,7 +29,7 @@ public class LogUtils {
      */
     public static void logTrace(Runnable trackedCode) {
         // 设置当前请求线程中的跟踪ID
-        MDC.put(ProjectConstant.Log.MDC_TRACE_ID_KEY, CommonUtils.uuid());
+        MDC.put(Constant.Log.MDC_TRACE_ID_KEY, CommonUtils.uuid());
         // 执行被跟踪的代码逻辑
         trackedCode.run();
         // 清除当前请求线程中的跟踪ID
@@ -45,7 +45,7 @@ public class LogUtils {
      */
     public static <T> T logTrace(Supplier<T> trackedCode) {
         // 设置当前请求线程中的跟踪ID
-        MDC.put(ProjectConstant.Log.MDC_TRACE_ID_KEY, CommonUtils.uuid());
+        MDC.put(Constant.Log.MDC_TRACE_ID_KEY, CommonUtils.uuid());
         // 执行被跟踪的代码逻辑
         T result = trackedCode.get();
         // 清除当前请求线程中的跟踪ID

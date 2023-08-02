@@ -1,5 +1,7 @@
 package com.github.mimiknight.monkey.common.config;
 
+import com.github.mimiknight.monkey.common.constant.Constant;
+import com.github.mimiknight.monkey.common.utils.CommonUtils;
 import com.github.mimiknight.monkey.task.BaseCronScheduledTask;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
@@ -8,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
@@ -46,8 +49,20 @@ public class ScheduledTaskRegistryConfig implements SchedulingConfigurer {
         this.appContext = appContext;
     }
 
+    private Environment environment;
+
+    @Autowired
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
     @Override
     public void configureTasks(@NotNull ScheduledTaskRegistrar taskRegistrar) {
+        // 定时任务开关状态
+        String status = environment.getProperty(Constant.App.TASK_SWITCH_KEY, Constant.SwitchStatus.OFF);
+        if (!CommonUtils.switchStatus(status)) {
+            return;
+        }
         // 设置执行定时任务的线程池
         taskRegistrar.setScheduler(Executors.newScheduledThreadPool(2 * processors));
         // 注册定时任务

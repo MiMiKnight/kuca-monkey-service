@@ -47,3 +47,9 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+# task
+task:
+  enable: on
+  cron:
+    LogoffUserScheduledTaskCron: 0/20 * * * * ?

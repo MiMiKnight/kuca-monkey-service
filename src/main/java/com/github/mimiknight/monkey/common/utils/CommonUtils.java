@@ -1,5 +1,6 @@
 package com.github.mimiknight.monkey.common.utils;
 
+import com.github.mimiknight.monkey.common.constant.Constant;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
@@ -148,6 +149,34 @@ public class CommonUtils {
             return false;
         }
         return (response instanceof HttpServletResponse);
+    }
+
+    /**
+     * 获取开关状态
+     *
+     * @param status 状态
+     * @return boolean
+     */
+    public static boolean switchStatus(String status) {
+        if (Constant.SwitchStatus.ENABLE.equalsIgnoreCase(status)) {
+            return true;
+        }
+        if (Constant.SwitchStatus.DISABLE.equalsIgnoreCase(status)) {
+            return true;
+        }
+        if (Constant.SwitchStatus.ON.equalsIgnoreCase(status)) {
+            return true;
+        }
+        if (Constant.SwitchStatus.OFF.equalsIgnoreCase(status)) {
+            return false;
+        }
+        if (Constant.SwitchStatus.IS_TRUE.equalsIgnoreCase(status)) {
+            return true;
+        }
+        if (Constant.SwitchStatus.IS_FALSE.equalsIgnoreCase(status)) {
+            return false;
+        }
+        return false;
     }
 
 }

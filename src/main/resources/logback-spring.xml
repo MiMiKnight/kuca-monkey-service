@@ -10,10 +10,10 @@
     <property name="log.charset" value="UTF-8"/>
     <!--日志打印格式正则-->
     <property name="log.pattern"
-              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] [Class:%class Method:%method Line:%line] : %msg%n"/>
+              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,GMT+08:00} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] [Class:%class Method:%method Line:%line] : %msg%n"/>
     <!--API Request-->
     <property name="log.pattern.api"
-              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] : %msg%n"/>
+              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,GMT+08:00} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] : %msg%n"/>
     <!--日志最大保留天数-->
     <property name="log.maxHistory" value="15"/>
     <!--单日志文件最大文件大小-->

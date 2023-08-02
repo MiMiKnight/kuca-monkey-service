@@ -6,7 +6,7 @@ package com.github.mimiknight.monkey.common.constant;
  * @author victor2015yhm@gmail.com
  * @since 2023-03-12 10:39:05
  */
-public interface ProjectConstant {
+public interface Constant {
 
     /**
      * 项目相关常量
@@ -17,6 +17,22 @@ public interface ProjectConstant {
          * 项目名称
          */
         String NAME = "MonkeyService";
+
+        String TASK_SWITCH_KEY = "task.enable";
+    }
+
+    /**
+     * 开关状态
+     */
+    interface SwitchStatus {
+        boolean TRUE = true;
+        boolean FALSE = false;
+        String IS_TRUE = "true";
+        String IS_FALSE = "false";
+        String ENABLE = "enable";
+        String DISABLE = "disable";
+        String OFF = "off";
+        String ON = "on";
     }
 
 

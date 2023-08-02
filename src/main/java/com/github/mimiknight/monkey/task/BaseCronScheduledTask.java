@@ -5,6 +5,7 @@ import com.github.mimiknight.monkey.common.utils.LogUtils;
 import com.github.mimiknight.monkey.common.utils.standard.LockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.time.ZoneId;
@@ -27,6 +28,13 @@ public abstract class BaseCronScheduledTask implements Runnable {
         this.lockService = lockService;
     }
 
+    private Environment environment;
+
+    @Autowired
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
     @Override
     public void run() {
         // 对定时任务代码中的日志打印添加日志跟踪功能e
@@ -37,7 +45,6 @@ public abstract class BaseCronScheduledTask implements Runnable {
      * 被跟踪代码
      */
     private final Runnable trackedCode = () -> {
-        // TODO: 添加定时任务开关
         log.info("The scheduled task starts running,task name = {}", this.getTaskName());
         boolean normal = true;
         try {
@@ -77,10 +84,8 @@ public abstract class BaseCronScheduledTask implements Runnable {
      * @return {@link String}
      */
     public String getCronExpression() {
-        // TODO: 此处代码待完善
-        String cronExpressionName = this.getTaskName() + "Cron";
-        String cronExpression = System.getProperty(cronExpressionName);
-        return cronExpression;
+        String cronExpressionName = "task.cron." + this.getTaskName() + "Cron";
+        return environment.getProperty(cronExpressionName, "");
     }
 
     /**
