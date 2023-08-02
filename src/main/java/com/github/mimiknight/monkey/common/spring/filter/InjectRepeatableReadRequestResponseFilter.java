@@ -25,8 +25,7 @@ public class InjectRepeatableReadRequestResponseFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        boolean isRequest = this.isHttpServletRequestAndJsonContentType(request);
-        if (isRequest) {
+        if (isTransformToRepeatableReadRequest(request)) {
             HttpServletRequest servletRequest = (HttpServletRequest) request;
             request = new RepeatableReadHttpServletRequest(servletRequest);
         }
@@ -35,14 +34,14 @@ public class InjectRepeatableReadRequestResponseFilter implements Filter {
         chain.doFilter(request, response);
     }
 
-    private boolean isHttpServletRequestAndJsonContentType(ServletRequest request) {
+    private boolean isTransformToRepeatableReadRequest(ServletRequest request) {
         if (!CommonUtils.isHttpServletRequest(request)) {
             return false;
         }
         return CommonUtils.isJsonContentType((HttpServletRequest) request);
     }
 
-    private boolean isHttpServletResponseAndJsonContentType(ServletResponse response) {
+    private boolean isTransformToRepeatableReadResponse(ServletResponse response) {
         if (!CommonUtils.isHttpServletResponse(response)) {
             return false;
         }

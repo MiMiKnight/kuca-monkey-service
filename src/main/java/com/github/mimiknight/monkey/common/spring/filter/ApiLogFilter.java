@@ -27,12 +27,10 @@ public class ApiLogFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        boolean isRequest = CommonUtils.isHttpServletRequest(request);
-        if (isRequest) {
+        if (CommonUtils.isHttpServletRequest(request)) {
             // 打印接口入参日志
             LogUtils.traceRequest((HttpServletRequest) request);
         }
-
         // 开始时间
         Instant start = Instant.now();
         // 执行过滤器责任链
@@ -41,9 +39,7 @@ public class ApiLogFilter implements Filter {
         Instant end = Instant.now();
         // 接口耗时
         Duration duration = Duration.between(start, end);
-
-        boolean isResponse = CommonUtils.isHttpServletResponse(response);
-        if (isResponse) {
+        if (CommonUtils.isHttpServletResponse(response)) {
             // 打印接口出参日志
             LogUtils.traceResponse((HttpServletRequest) request, (HttpServletResponse) response, duration);
         }
