@@ -8,10 +8,12 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.config.TriggerTask;
@@ -21,6 +23,7 @@ import java.time.ZoneId;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 定时任务注册配置类
@@ -42,6 +45,14 @@ public class ScheduledTaskRegistryConfig implements SchedulingConfigurer {
      */
     private final int processors = Runtime.getRuntime().availableProcessors();
 
+    private ThreadPoolTaskExecutor executor;
+
+    @Qualifier("CustomThreadPoolExecutor")
+    @Autowired
+    public void setExecutor( ThreadPoolTaskExecutor executor) {
+        this.executor = executor;
+    }
+
     private ApplicationContext appContext;
 
     @Autowired
@@ -61,10 +72,12 @@ public class ScheduledTaskRegistryConfig implements SchedulingConfigurer {
         // 定时任务开关状态
         String status = environment.getProperty(Constant.App.TASK_SWITCH_KEY, Constant.SwitchStatus.OFF);
         if (!CommonUtils.switchStatus(status)) {
+            log.info("Task is off,there is no task be registered.");
             return;
         }
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(2 * processors);
         // 设置执行定时任务的线程池
-        taskRegistrar.setScheduler(Executors.newScheduledThreadPool(2 * processors));
+        taskRegistrar.setScheduler(scheduledExecutorService);
         // 注册定时任务
         registerCronTask(taskRegistrar);
     }

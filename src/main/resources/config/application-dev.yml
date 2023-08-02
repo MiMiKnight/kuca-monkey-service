@@ -60,16 +60,12 @@ spring:
       # 线程名称前缀
       thread-name-prefix: kuca-thread-
       pool:
-        # 核心线程数
-        core-size: 10
-        # 最大线程数
-        max-size: 50
         # 空闲线程存活时间
         keep-alive: 60s
         # 允许核心线程超时
         allow-core-thread-timeout: on
         # 线程队列数量
-        queue-capacity: 100
+        queue-capacity: 20
 # MyBatis配置
 mybatis-plus:
   mapper-locations: classpath:mapper/**/*Mapper.xml
