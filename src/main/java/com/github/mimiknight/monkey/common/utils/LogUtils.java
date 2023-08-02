@@ -2,6 +2,7 @@ package com.github.mimiknight.monkey.common.utils;
 
 import com.github.mimiknight.monkey.common.constant.Constant;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.connector.ResponseFacade;
 import org.slf4j.MDC;
 
 import javax.servlet.http.HttpServletRequest;

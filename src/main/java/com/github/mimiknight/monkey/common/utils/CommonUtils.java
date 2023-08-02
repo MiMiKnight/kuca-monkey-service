@@ -1,6 +1,7 @@
 package com.github.mimiknight.monkey.common.utils;
 
 import com.github.mimiknight.monkey.common.constant.Constant;
+import com.github.mimiknight.monkey.common.spring.servlet.RepeatableReadHttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
@@ -50,7 +51,7 @@ public class CommonUtils {
      */
     public static boolean isJsonContentType(String contentType) {
         if (StringUtils.isBlank(contentType)) {
-            return false;
+            return true;
         }
         if (MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(contentType)) {
             return true;
@@ -114,12 +115,16 @@ public class CommonUtils {
     public static Object responseBody(HttpServletResponse response) {
         try {
             String contentType = response.getContentType();
-            if (CommonUtils.isJsonContentType(contentType)) {
-                // TODO 待完善
-                String body = "{\"title\":\"测试响应体\"}";
-                return JsonUtils.readTree(body);
+            if (!CommonUtils.isJsonContentType(contentType)) {
+                return JsonUtils.createObjectNode();
             }
-            return JsonUtils.createObjectNode();
+            if (!(response instanceof RepeatableReadHttpServletResponse)) {
+                return JsonUtils.createObjectNode();
+            }
+            RepeatableReadHttpServletResponse repeatableReadResponse = (RepeatableReadHttpServletResponse) response;
+            String body = repeatableReadResponse.toData();
+            return JsonUtils.readTree(body);
+
         } catch (Exception e) {
             return JsonUtils.createObjectNode();
         }

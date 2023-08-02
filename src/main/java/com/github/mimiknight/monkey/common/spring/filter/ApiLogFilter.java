@@ -1,17 +1,23 @@
 package com.github.mimiknight.monkey.common.spring.filter;
 
+import com.github.mimiknight.monkey.common.spring.servlet.RepeatableReadHttpServletResponse;
 import com.github.mimiknight.monkey.common.utils.CommonUtils;
 import com.github.mimiknight.monkey.common.utils.LogUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.connector.OutputBuffer;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -39,6 +45,7 @@ public class ApiLogFilter implements Filter {
         Instant end = Instant.now();
         // 接口耗时
         Duration duration = Duration.between(start, end);
+
         if (CommonUtils.isHttpServletResponse(response)) {
             // 打印接口出参日志
             LogUtils.traceResponse((HttpServletRequest) request, (HttpServletResponse) response, duration);

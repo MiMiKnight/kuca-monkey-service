@@ -1,6 +1,7 @@
 package com.github.mimiknight.monkey.common.spring.filter;
 
 import com.github.mimiknight.monkey.common.spring.servlet.RepeatableReadHttpServletRequest;
+import com.github.mimiknight.monkey.common.spring.servlet.RepeatableReadHttpServletResponse;
 import com.github.mimiknight.monkey.common.utils.CommonUtils;
 
 import javax.servlet.Filter;
@@ -29,7 +30,11 @@ public class InjectRepeatableReadRequestResponseFilter implements Filter {
             HttpServletRequest servletRequest = (HttpServletRequest) request;
             request = new RepeatableReadHttpServletRequest(servletRequest);
         }
-        // TODO 待完善response部分
+
+        if (isTransformToRepeatableReadResponse(response)) {
+            HttpServletResponse servletResponse = (HttpServletResponse) response;
+            response = new RepeatableReadHttpServletResponse(servletResponse);
+        }
 
         chain.doFilter(request, response);
     }
