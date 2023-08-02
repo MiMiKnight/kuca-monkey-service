@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @since 2023-03-09 00:01:17
  */
 @Slf4j
-@EnableScheduling
 @SpringBootApplication(scanBasePackages = {"com.github.mimiknight.monkey"})
 public class Application {
 

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.time.Duration;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 线程池配置
@@ -66,6 +67,7 @@ public class ThreadPoolConfig {
         int queueCapacity = pool.getQueueCapacity();
         executor.setQueueCapacity(queueCapacity);
         // 拒绝策略
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         return executor;
     }
 

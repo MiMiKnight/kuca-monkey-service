@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.config.ScheduledTask;
@@ -32,6 +33,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * @since 2023-07-28 19:34:08
  */
 @Slf4j
+@EnableScheduling
 @Configuration
 public class ScheduledTaskRegistryConfig implements SchedulingConfigurer {
 
