@@ -47,7 +47,11 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
-
+# 日志
+logging:
+  level:
+    root: info
+  config: classpath:logback-spring.xml
 # task
 task:
   enable: on

@@ -51,7 +51,7 @@ public class CommonUtils {
      */
     public static boolean isJsonContentType(String contentType) {
         if (StringUtils.isBlank(contentType)) {
-            return true;
+            return false;
         }
         if (MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(contentType)) {
             return true;
@@ -95,8 +95,7 @@ public class CommonUtils {
      */
     public static Object requestBody(HttpServletRequest request) {
         try {
-            String contentType = request.getContentType();
-            if (CommonUtils.isJsonContentType(contentType)) {
+            if (CommonUtils.isJsonContentType(request)) {
                 String body = IOUtils.toString(request.getReader());
                 return JsonUtils.readTree(body);
             }
@@ -114,15 +113,14 @@ public class CommonUtils {
      */
     public static Object responseBody(HttpServletResponse response) {
         try {
-            String contentType = response.getContentType();
-            if (!CommonUtils.isJsonContentType(contentType)) {
+            if (!CommonUtils.isJsonContentType(response)) {
                 return JsonUtils.createObjectNode();
             }
             if (!(response instanceof RepeatableReadHttpServletResponse)) {
                 return JsonUtils.createObjectNode();
             }
             RepeatableReadHttpServletResponse repeatableReadResponse = (RepeatableReadHttpServletResponse) response;
-            String body = repeatableReadResponse.toData();
+            String body = repeatableReadResponse.getBody();
             return JsonUtils.readTree(body);
 
         } catch (Exception e) {

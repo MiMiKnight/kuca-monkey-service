@@ -47,10 +47,7 @@ public class InjectRepeatableReadRequestResponseFilter implements Filter {
     }
 
     private boolean isTransformToRepeatableReadResponse(ServletResponse response) {
-        if (!CommonUtils.isHttpServletResponse(response)) {
-            return false;
-        }
-        return CommonUtils.isJsonContentType((HttpServletResponse) response);
+        return CommonUtils.isHttpServletResponse(response);
     }
 
 }

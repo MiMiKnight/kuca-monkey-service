@@ -29,30 +29,26 @@ public class RepeatableReadHttpServletResponse extends HttpServletResponseWrappe
     public RepeatableReadHttpServletResponse(HttpServletResponse response) {
         super(response);
         baos = new ByteArrayOutputStream();
-        try {
-            outputStream = this.getResponse().getOutputStream();
-        } catch (Exception e) {
-
-        }
     }
 
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
+        this.outputStream = this.getResponse().getOutputStream();
         return new ServletOutputStream() {
             @Override
             public boolean isReady() {
-                return false;
+                return outputStream.isReady();
             }
 
             @Override
             public void setWriteListener(WriteListener listener) {
-
+                outputStream.setWriteListener(listener);
             }
 
             @Override
             public void write(int b) throws IOException {
-                baos.write(b);
                 outputStream.write(b);
+                baos.write(b);
             }
         };
     }
@@ -64,17 +60,22 @@ public class RepeatableReadHttpServletResponse extends HttpServletResponseWrappe
         return new PrintWriter(new OutputStreamWriter(this.getOutputStream(), charset));
     }
 
-    public byte[] toByteArray() {
-        try {
-            this.flushBuffer();
-            return baos.toByteArray();
-        } catch (IOException e) {
-            return new byte[0];
-        }
+    /**
+     * 获取字节数组响应体
+     *
+     * @return {@link byte[]}
+     */
+    public byte[] getByteBody() {
+        return baos.toByteArray();
     }
 
-    public String toData() {
-        byte[] bytes = toByteArray();
+    /**
+     * 获取响应体
+     *
+     * @return {@link String}
+     */
+    public String getBody() {
+        byte[] bytes = getByteBody();
         if (ArrayUtils.isEmpty(bytes)) {
             return "";
         }
