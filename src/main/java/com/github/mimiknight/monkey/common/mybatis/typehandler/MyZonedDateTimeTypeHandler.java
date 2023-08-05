@@ -20,12 +20,16 @@ import java.util.Locale;
 
 /**
  * 自定义日期类型处理程序
+ * <p>
+ * jdbcType=VARCHAR或jdbcType=CHAR 才生效此TypeHandler
+ * <p>
+ * #{updatedTime,jdbcType=VARCHAR}
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-05-25 23:04:56
  */
 @Component
-@MappedTypes(ZonedDateTime.class)
+@MappedTypes(value = {ZonedDateTime.class})
 @MappedJdbcTypes(value = {JdbcType.VARCHAR, JdbcType.CHAR})
 public class MyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
 

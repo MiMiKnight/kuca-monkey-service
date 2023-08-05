@@ -3,7 +3,6 @@ package com.github.mimiknight.monkey.common.config;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -39,14 +38,6 @@ public class OpenApiConfig {
                 .version(version)
                 .description(description);
         return new OpenAPI().info(info);
-    }
-
-    @Bean
-    public GroupedOpenApi restApi() {
-        return GroupedOpenApi.builder()
-                .group("rest-api")
-                .pathsToMatch("/rest/developer/monkey-service/**")
-                .build();
     }
 
 }

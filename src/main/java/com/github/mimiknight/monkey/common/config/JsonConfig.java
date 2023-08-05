@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.github.mimiknight.kuca.utils.constant.DateTimeFormatStandard;
+import com.github.mimiknight.kuca.utils.constant.TimeZoneGMT;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -40,7 +41,7 @@ public class JsonConfig {
         // 忽略无法转换的对象
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         // 指定时区
-        mapper.setTimeZone(TimeZone.getDefault());
+        mapper.setTimeZone(TimeZone.getTimeZone(TimeZoneGMT.GMT));
         // 注册java8新时间类型模块
         mapper.registerModule(new JavaTimeModule()).
                 registerModule(new Jdk8Module()).

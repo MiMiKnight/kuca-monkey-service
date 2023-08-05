@@ -5,13 +5,13 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.github.mimiknight.monkey.model.entity.ArticleEntity">
         <id column="id" property="id"/>
-        <result column="title" property="title"/>
-        <result column="article" property="article"/>
-        <result column="audit" property="audit"/>
-        <result column="deleted" property="deleted"/>
-        <result column="created_time" property="createdTime"
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="article" property="article" jdbcType="VARCHAR"/>
+        <result column="audit" property="audit" jdbcType="TINYINT"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+        <result column="created_time" property="createdTime" jdbcType="VARCHAR"
                 typeHandler="com.github.mimiknight.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler"/>
-        <result column="updated_time" property="updatedTime"
+        <result column="updated_time" property="updatedTime" jdbcType="VARCHAR"
                 typeHandler="com.github.mimiknight.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler"/>
     </resultMap>
 
@@ -57,7 +57,7 @@
 
     <insert id="save">
         INSERT INTO t_monkey_article (id, title, article, created_time, updated_time)
-        VALUE (#{id}, #{title}, #{article}, #{createdTime}, #{updatedTime});
+            VALUE (#{id}, #{title}, #{article}, #{createdTime,jdbcType=VARCHAR}, #{updatedTime,jdbcType=VARCHAR});
     </insert>
 
 </mapper>
