@@ -1,33 +1,44 @@
-package com.github.mimiknight.monkey.common.utils.impl;
+package com.github.mimiknight.monkey.common.utils;
 
 import com.github.mimiknight.kuca.utils.service.standard.RedisLockService;
 import com.github.mimiknight.monkey.common.constant.Constant;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
-import com.github.mimiknight.monkey.common.utils.standard.LockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * 锁服务实现类
+ * 锁工具类
  *
- * @author victor2015yhm@gmail.com
- * @since 2023-07-27 19:42:40
+ * @author MiMiKnight victor2015yhm@gmail.com
+ * @since 2023-08-02 06:19:32
  */
 @Slf4j
 @Component
-public class LockServiceImpl implements LockService {
+public class LockUtils {
 
     private RedisLockService redisLockService;
 
     @Autowired
     public void setRedisLockService(RedisLockService redisLockService) {
         this.redisLockService = redisLockService;
+    }
+
+    private static LockUtils instance;
+
+    private LockUtils() {
+    }
+
+    @PostConstruct
+    public void init() {
+        instance = this;
+        instance.redisLockService = this.redisLockService;
     }
 
     /**
@@ -38,7 +49,7 @@ public class LockServiceImpl implements LockService {
      * @param lockedCode  被锁的代码
      * @return {@link T}
      */
-    private <T> T execute(String lockName, Predicate<String> getLockCode, Supplier<T> lockedCode) {
+    private static <T> T execute(String lockName, Predicate<String> getLockCode, Supplier<T> lockedCode) {
         // 如果获取锁失败则抛出异常
         if (!getLockCode.test(lockName)) {
             log.info("Failed to get the lock,lock = {}", lockName);
@@ -47,7 +58,7 @@ public class LockServiceImpl implements LockService {
         try {
             return lockedCode.get();
         } finally {
-            redisLockService.unlock(lockName);
+            instance.redisLockService.unlock(lockName);
         }
     }
 
@@ -58,7 +69,7 @@ public class LockServiceImpl implements LockService {
      * @param getLockCode 获取锁的代码
      * @param lockedCode  被锁的代码
      */
-    private void execute(String lockName, Predicate<String> getLockCode, Runnable lockedCode) {
+    private static void execute(String lockName, Predicate<String> getLockCode, Runnable lockedCode) {
         // 如果获取锁失败则抛出异常
         if (!getLockCode.test(lockName)) {
             log.info("Failed to get the lock,lock = {}", lockName);
@@ -67,29 +78,25 @@ public class LockServiceImpl implements LockService {
         try {
             lockedCode.run();
         } finally {
-            redisLockService.unlock(lockName);
+            instance.redisLockService.unlock(lockName);
         }
     }
 
-    @Override
-    public <T> T doTryLock(String lockName, long waitTime, TimeUnit unit, Supplier<T> lockedCode) {
-        Predicate<String> getLockCode = key -> redisLockService.tryLock(key, waitTime, unit);
+    public static <T> T doTryLock(String lockName, long waitTime, TimeUnit unit, Supplier<T> lockedCode) {
+        Predicate<String> getLockCode = key -> instance.redisLockService.tryLock(key, waitTime, unit);
         return execute(lockName, getLockCode, lockedCode);
     }
 
-    @Override
-    public <T> T doTryLock(String lockName, Supplier<T> lockedCode) {
+    public static <T> T doTryLock(String lockName, Supplier<T> lockedCode) {
         return doTryLock(lockName, Constant.Redis.DEFAULT_GET_LOCK_WAITE_TIME, TimeUnit.SECONDS, lockedCode);
     }
 
-    @Override
-    public void doTryLock(String lockName, long waitTime, TimeUnit unit, Runnable lockedCode) {
-        Predicate<String> getLockCode = key -> redisLockService.tryLock(key, waitTime, unit);
+    public static void doTryLock(String lockName, long waitTime, TimeUnit unit, Runnable lockedCode) {
+        Predicate<String> getLockCode = key -> instance.redisLockService.tryLock(key, waitTime, unit);
         execute(lockName, getLockCode, lockedCode);
     }
 
-    @Override
-    public void doTryLock(String lockName, Runnable lockedCode) {
+    public static void doTryLock(String lockName, Runnable lockedCode) {
         doTryLock(lockName, Constant.Redis.DEFAULT_GET_LOCK_WAITE_TIME, TimeUnit.SECONDS, lockedCode);
     }
 

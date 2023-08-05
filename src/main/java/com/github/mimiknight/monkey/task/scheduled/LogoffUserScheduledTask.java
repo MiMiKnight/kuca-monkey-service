@@ -19,5 +19,5 @@ public class LogoffUserScheduledTask extends BaseCronScheduledTask {
     protected void doTask() {
         log.info("Logoff User....");
     }
-    
+
 }

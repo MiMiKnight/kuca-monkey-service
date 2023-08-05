@@ -6,7 +6,6 @@ import com.github.mimiknight.monkey.common.constant.RedisCacheKey;
 import com.github.mimiknight.monkey.common.constant.RedisLockKey;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
-import com.github.mimiknight.monkey.common.utils.standard.LockService;
 import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import com.github.mimiknight.monkey.model.request.ModifyArticleByIdRequest;
 import com.github.mimiknight.monkey.model.response.ModifyArticleByIdResponse;
