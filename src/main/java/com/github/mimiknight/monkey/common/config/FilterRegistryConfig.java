@@ -3,11 +3,11 @@ package com.github.mimiknight.monkey.common.config;
 import com.github.mimiknight.monkey.common.spring.filter.ApiLogFilter;
 import com.github.mimiknight.monkey.common.spring.filter.InjectRepeatableReadRequestResponseFilter;
 import com.github.mimiknight.monkey.common.spring.filter.LogTraceFilter;
+import jakarta.servlet.Filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.Filter;
 import java.util.Collections;
 import java.util.List;
 

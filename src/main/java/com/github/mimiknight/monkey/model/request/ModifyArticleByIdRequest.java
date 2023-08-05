@@ -2,11 +2,9 @@ package com.github.mimiknight.monkey.model.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.mimiknight.kuca.ecology.model.request.EcologyRequest;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 /**
  * 修改文章请求参数

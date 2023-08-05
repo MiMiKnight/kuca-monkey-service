@@ -1,50 +1,39 @@
 package com.github.mimiknight.monkey.model.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.github.mimiknight.monkey.common.mybatis.typehandler.MyZonedDateTimeTypeHandler;
 import lombok.Data;
 
 import java.time.ZonedDateTime;
 
 /**
  * <p>
- * 文章表
+ * 文章表 t_monkey_article
  * </p>
  *
  * @author victor2015yhm@gmail.com
  * @since 2023-06-05 06:42:47
  */
 @Data
-@TableName("t_monkey_article")
 public class ArticleEntity {
 
     private static final long serialVersionUID = 123080239902732129L;
 
     /**
-     * 主键
+     * 主键 id
      */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
     /**
-     * 标题
+     * 标题 title
      */
-    @TableField("title")
     private String title;
 
     /**
-     * 文章内容
+     * 文章内容 article
      */
-    @TableField("article")
     private String article;
 
     /**
-     * 审核
+     * 审核 audit
      * <p>
      * 1：审核中
      * <p>
@@ -52,26 +41,21 @@ public class ArticleEntity {
      * <p>
      * 3：审核不通过
      */
-    @TableField("audit")
     private Integer audit;
 
     /**
-     * 逻辑删除
+     * 逻辑删除 deleted
      */
-    @TableField("deleted")
-    @TableLogic
     private Integer deleted;
 
     /**
-     * 创建时间
+     * 创建时间 createdTime
      */
-    @TableField(value = "created_time", fill = FieldFill.INSERT, typeHandler = MyZonedDateTimeTypeHandler.class)
     private ZonedDateTime createdTime;
 
     /**
-     * 更新时间
+     * 更新时间 updatedTime
      */
-    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE, typeHandler = MyZonedDateTimeTypeHandler.class)
     private ZonedDateTime updatedTime;
 
 }

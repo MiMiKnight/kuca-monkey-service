@@ -14,14 +14,14 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * 锁工具类
+ * 代码锁工具类
  *
  * @author MiMiKnight victor2015yhm@gmail.com
  * @since 2023-08-02 06:19:32
  */
 @Slf4j
 @Component
-public class LockUtils {
+public class LockCodeUtils {
 
     private RedisLockService redisLockService;
 
@@ -30,9 +30,9 @@ public class LockUtils {
         this.redisLockService = redisLockService;
     }
 
-    private static LockUtils instance;
+    private static LockCodeUtils instance;
 
-    private LockUtils() {
+    private LockCodeUtils() {
     }
 
     @PostConstruct

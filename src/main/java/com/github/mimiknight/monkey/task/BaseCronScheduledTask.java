@@ -77,7 +77,7 @@ public abstract class BaseCronScheduledTask implements Runnable {
      * @return {@link String}
      */
     public String getCronExpression() {
-        String cronExpressionName = "task.cron." + this.getTaskName() + "Cron";
+        String cronExpressionName = this.getTaskName() + "Cron";
         return environment.getProperty(cronExpressionName, "");
     }
 

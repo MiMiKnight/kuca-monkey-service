@@ -18,7 +18,7 @@ public interface Constant {
          */
         String NAME = "MonkeyService";
 
-        String TASK_SWITCH_KEY = "task.enable";
+        String TASK_SWITCH_KEY = "cron.task.enable";
     }
 
     /**

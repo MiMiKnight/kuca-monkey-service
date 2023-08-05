@@ -6,6 +6,7 @@ import com.github.mimiknight.monkey.common.constant.RedisCacheKey;
 import com.github.mimiknight.monkey.common.constant.RedisLockKey;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
+import com.github.mimiknight.monkey.common.utils.LockCodeUtils;
 import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import com.github.mimiknight.monkey.model.request.ModifyArticleByIdRequest;
 import com.github.mimiknight.monkey.model.response.ModifyArticleByIdResponse;
@@ -23,33 +24,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class ModifyArticleByIdHandler implements EcologyRequestHandler<ModifyArticleByIdRequest, ModifyArticleByIdResponse> {
-
+    @Autowired
     private ArticleService articleService;
-
     @Autowired
-    public void setArticleService(ArticleService articleService) {
-        this.articleService = articleService;
-    }
-
-    private LockService lockService;
-
-    @Autowired
-    public void setLockService(LockService lockService) {
-        this.lockService = lockService;
-    }
-
     private RedisService redisService;
-
-    @Autowired
-    public void setRedisService(RedisService redisService) {
-        this.redisService = redisService;
-    }
 
     @Override
     public void handle(ModifyArticleByIdRequest request, ModifyArticleByIdResponse response) {
         // 为业务逻辑加锁
         String lockName = RedisLockKey.ARTICLE_TABLE_LOCK_KEY_PREFIX + request.getId();
-        lockService.doTryLock(lockName, () -> {
+        LockCodeUtils.doTryLock(lockName, () -> {
             String id = request.getId();
             String title = request.getTitle();
             String article = request.getArticle();

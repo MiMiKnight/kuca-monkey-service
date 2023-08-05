@@ -46,28 +46,14 @@ public class ScheduledTaskRegistryConfig implements SchedulingConfigurer {
      * 本机CPU可用核心数
      */
     private final int processors = Runtime.getRuntime().availableProcessors();
-
-    private ThreadPoolTaskExecutor executor;
-
     @Qualifier("CustomThreadPoolExecutor")
     @Autowired
-    public void setExecutor( ThreadPoolTaskExecutor executor) {
-        this.executor = executor;
-    }
+    private ThreadPoolTaskExecutor executor;
 
+    @Autowired
     private ApplicationContext appContext;
-
     @Autowired
-    public void setAppContext(ApplicationContext appContext) {
-        this.appContext = appContext;
-    }
-
     private Environment environment;
-
-    @Autowired
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
 
     @Override
     public void configureTasks(@NotNull ScheduledTaskRegistrar taskRegistrar) {

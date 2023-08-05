@@ -3,7 +3,6 @@ package com.github.mimiknight.monkey.mapper;
 import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -18,7 +17,6 @@ import java.util.List;
  * @author victor2015yhm@gmail.com
  * @since 2023-05-22 07:33:51
  */
-@Repository
 @Mapper
 public interface ArticleMapper {
 
