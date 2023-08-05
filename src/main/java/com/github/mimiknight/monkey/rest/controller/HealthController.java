@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController extends EcologyRequestHandleAdapter {
 
     @Operation(summary = "健康检查接口")
-    @GetMapping(path = "/v1/check")
+    @GetMapping(path = "/servlet/v1/check")
     public SuccessResponse v1() throws Exception {
         return handle(new HealthCheckRequest());
     }

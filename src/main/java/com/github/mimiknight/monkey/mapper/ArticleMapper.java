@@ -4,7 +4,6 @@ import com.github.mimiknight.monkey.model.entity.ArticleEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -46,6 +45,6 @@ public interface ArticleMapper {
     void save(@Param("id") String id,
               @Param("title") String title,
               @Param("article") String article,
-              @Param("createdTime") LocalDateTime createdTime,
-              @Param("updatedTime") LocalDateTime updatedTime);
+              @Param("createdTime") ZonedDateTime createdTime,
+              @Param("updatedTime") ZonedDateTime updatedTime);
 }

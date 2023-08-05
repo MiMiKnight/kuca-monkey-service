@@ -3,13 +3,13 @@ package com.github.mimiknight.monkey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 启动类
  *
  * @author victor2015yhm@gmail.com
- * @since 2023-03-09 00:01:17
+ * @date 2023-08-06 00:54:19
+ * @since 0.0.1-SNAPSHOT
  */
 @Slf4j
 @SpringBootApplication(scanBasePackages = {"com.github.mimiknight.monkey"})

@@ -2,10 +2,11 @@ package com.github.mimiknight.monkey.common.mybatis.typehandler;
 
 import com.github.mimiknight.kuca.utils.constant.DateTimeFormatStandard;
 import com.github.mimiknight.kuca.utils.constant.TimeZoneGMT;
-import com.github.mimiknight.kuca.utils.service.utils.DateTimeUtils;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
+import org.springframework.stereotype.Component;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -23,7 +24,9 @@ import java.util.Locale;
  * @author victor2015yhm@gmail.com
  * @since 2023-05-25 23:04:56
  */
+@Component
 @MappedTypes(ZonedDateTime.class)
+@MappedJdbcTypes(value = {JdbcType.VARCHAR, JdbcType.CHAR})
 public class MyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
 
 

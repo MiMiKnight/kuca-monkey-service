@@ -6,7 +6,6 @@ import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.common.tip.ErrorFieldTip;
 import com.github.mimiknight.monkey.common.tip.ErrorTip;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -39,29 +38,8 @@ import java.util.Set;
 @Component
 @RestControllerAdvice
 public class HandleExceptionAspect {
-
-    private HttpServletRequest servletRequest;
-
     @Autowired
-    public void setServletRequest(HttpServletRequest servletRequest) {
-        this.servletRequest = servletRequest;
-    }
-
     private HttpServletResponse servletResponse;
-
-    @Autowired
-    public void setServletResponse(HttpServletResponse servletResponse) {
-        this.servletResponse = servletResponse;
-    }
-
-    /**
-     * 提示信息常量
-     */
-    interface Tip {
-        String TIP_001 = "System unknown error.";
-        String TIP_002 = "Request method is not allowed.";
-        String TIP_003 = "The api path does not exist";
-    }
 
     /**
      * 默认异常处理
@@ -77,7 +55,7 @@ public class HandleExceptionAspect {
         // 错误返回信息
         ErrorReturn errorReturn = ErrorReturn.DEFAULT_EXCEPTION;
         // 设置ErrorTip
-        ErrorTip errorTip = ErrorTip.build(Tip.TIP_001);
+        ErrorTip errorTip = ErrorTip.build("System unknown error.");
         // 获取状态码
         int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
         // 设置状态码
@@ -97,7 +75,7 @@ public class HandleExceptionAspect {
         // 错误返回信息
         ErrorReturn errorReturn = ErrorReturn.METHOD_NOT_ALLOWED;
         // 设置ErrorTip
-        ErrorTip errorTip = ErrorTip.build(Tip.TIP_002);
+        ErrorTip errorTip = ErrorTip.build("Request method is not allowed.");
         // 获取状态码
         int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
         // 设置状态码
@@ -116,7 +94,7 @@ public class HandleExceptionAspect {
         // 错误返回信息
         ErrorReturn errorReturn = ErrorReturn.RESOURCE_NOT_FOUND;
         // 设置ErrorTip
-        ErrorTip errorTip = ErrorTip.build(Tip.TIP_003);
+        ErrorTip errorTip = ErrorTip.build("The api path does not exist.");
         // 获取状态码
         int httpStatusCode = errorReturn.getErrorType().getHttpStatusCode();
         // 设置状态码

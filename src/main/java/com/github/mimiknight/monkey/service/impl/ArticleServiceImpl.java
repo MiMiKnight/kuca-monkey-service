@@ -1,6 +1,5 @@
 package com.github.mimiknight.monkey.service.impl;
 
-import com.github.mimiknight.kuca.utils.service.standard.DateTimeService;
 import com.github.mimiknight.monkey.common.enumeration.ErrorReturn;
 import com.github.mimiknight.monkey.common.exception.ServiceException;
 import com.github.mimiknight.monkey.mapper.ArticleMapper;
@@ -10,7 +9,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -25,19 +23,8 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
+    @Autowired
     private ArticleMapper articleMapper;
-
-    @Autowired
-    public void setArticleMapper(ArticleMapper articleMapper) {
-        this.articleMapper = articleMapper;
-    }
-
-    private DateTimeService dateTimeService;
-
-    @Autowired
-    public void setDateTimeService(DateTimeService dateTimeService) {
-        this.dateTimeService = dateTimeService;
-    }
 
     @Override
     public List<String> audit(List<String> articleIds, int auditResult) {
@@ -68,7 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void save(String title, String article) {
         String id = UUID.randomUUID().toString().replace("-", "");
-        LocalDateTime now = dateTimeService.utcLocalDateTime();
+        ZonedDateTime now = ZonedDateTime.now();
         articleMapper.save(id, title, article, now, now);
     }
 

@@ -31,19 +31,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class ArticleController extends EcologyRequestHandleAdapter {
 
     @Operation(summary = "保存article接口")
-    @PostMapping(value = "/v1/save")
+    @PostMapping(value = "/user/v1/save")
     public SuccessResponse v1(@RequestBody SaveArticleRequest request) throws Exception {
         return handle(request);
     }
 
     @Operation(summary = "修改article接口")
-    @PostMapping(value = "/v1/modify")
+    @PostMapping(value = "/user/v1/modify")
     public SuccessResponse v1(@RequestBody ModifyArticleByIdRequest request) throws Exception {
         return handle(request);
     }
 
     @Operation(summary = "根据id查询article接口")
-    @GetMapping(value = "/v1/query")
+    @GetMapping(value = "/user/v1/query")
     public SuccessResponse v1(@RequestParam("id") String id) throws Exception {
         QueryArticleByIdRequest request = new QueryArticleByIdRequest();
         request.setId(id);
@@ -51,7 +51,7 @@ public class ArticleController extends EcologyRequestHandleAdapter {
     }
 
     @Operation(summary = "文章审核接口")
-    @PostMapping(value = "/v1/audit")
+    @PostMapping(value = "/user/v1/audit")
     public SuccessResponse v1(@RequestBody AuditArticleRequest request) throws Exception {
         return handle(request);
     }
