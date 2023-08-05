@@ -1,8 +1,16 @@
-### IntelliJ IDEA ###
-.idea/
+### Project ###
+HELP.md
 target/
 .build/
-*.iml
-*.class
+
+### Git ###
 *.orig
-.code-generate/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
