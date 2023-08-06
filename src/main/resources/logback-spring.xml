@@ -10,18 +10,16 @@
     <property name="log.charset" value="UTF-8"/>
     <!--默认时区-->
     <property name="log.timezone" value="GMT+08:00"/>
+    <!--日志文件最大文件大小-->
+    <property name="log.max-file-size" value="20MB"/>
+    <!--日志最大保留周期 此参数与周期有关 本项目设置的周期为"天"，下列指的是最大保留15天日志-->
+    <property name="log.max-history" value="15"/>
     <!--日志打印格式正则-->
     <property name="log.pattern"
               value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,${log.timezone}} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] [Class:%class Method:%method Line:%line] : %msg%n"/>
     <!--API Request-->
     <property name="log.pattern.api"
               value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,${log.timezone}} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] : %msg%n"/>
-    <!--日志最大保留天数-->
-    <property name="log.maxHistory" value="15"/>
-    <!--单日志文件最大文件大小-->
-    <property name="log.maxFileSize" value="10MB"/>
-    <!--总日志文件最大大小-->
-    <property name="log.totalSizeCap" value="10GB"/>
 
     <!--Console控制台输出-->
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
@@ -48,8 +46,8 @@
             <fileNamePattern>
                 ${log.path}/archive/debug/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.debug.%i.log.zip
             </fileNamePattern>
-            <maxFileSize>5MB</maxFileSize>
-            <maxHistory>180</maxHistory>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
@@ -70,8 +68,8 @@
             <fileNamePattern>
                 ${log.path}/archive/info/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.info.%i.log.zip
             </fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>30</maxHistory>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
@@ -92,8 +90,8 @@
             <fileNamePattern>
                 ${log.path}/archive/warn/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.warn.%i.log.zip
             </fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>30</maxHistory>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
@@ -114,8 +112,8 @@
             <fileNamePattern>
                 ${log.path}/archive/error/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.error.%i.log.zip
             </fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>30</maxHistory>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
@@ -136,8 +134,8 @@
             <fileNamePattern>
                 ${log.path}/archive/api/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.api.%i.log.zip
             </fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>30</maxHistory>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
@@ -158,8 +156,8 @@
             <fileNamePattern>
                 ${log.path}/archive/3rdpApi/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.3rdp-api.%i.log.zip
             </fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>30</maxHistory>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
         </rollingPolicy>
     </appender>
