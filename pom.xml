@@ -270,7 +270,6 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix>../../lib/</classpathPrefix>
                             <mainClass>com.github.mimiknight.monkey.Application</mainClass>
                         </manifest>
                     </archive>
