@@ -15,6 +15,8 @@
 
 ## 运行项目
 ```shell
+cd ./KucaMonkeyService/lib
+
 java -jar kuca-monkey-service-0.0.1-SNAPSHOT.jar \
 -server \
 -Duser.language=en \
