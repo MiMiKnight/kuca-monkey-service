@@ -25,7 +25,7 @@ import java.util.Properties;
         @Signature(type = StatementHandler.class, method = "update", args = {Statement.class}),
         @Signature(type = StatementHandler.class, method = "query", args = {Statement.class, ResultHandler.class})
 })
-public class DatebaseFieldEncryptDecryptInterceptor implements Interceptor {
+public class DatabaseFieldEncryptDecryptInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
