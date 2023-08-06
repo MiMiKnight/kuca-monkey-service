@@ -15,6 +15,15 @@ public class ErrorTip {
     @JsonProperty(value = "tip")
     private String tip;
 
+    /**
+     * 空参构造
+     */
+    ErrorTip() {
+    }
+
+    /**
+     * 有参构造
+     */
     ErrorTip(String tip) {
         this.tip = tip;
     }

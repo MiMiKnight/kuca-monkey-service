@@ -23,13 +23,8 @@ import java.util.function.Supplier;
 @Component
 public class LockCodeUtils {
 
-    private RedisLockService redisLockService;
-
     @Autowired
-    public void setRedisLockService(RedisLockService redisLockService) {
-        this.redisLockService = redisLockService;
-    }
-
+    private RedisLockService redisLockService;
     private static LockCodeUtils instance;
 
     private LockCodeUtils() {
