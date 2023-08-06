@@ -8,12 +8,14 @@
     <property name="log.path" value="/opt/cloud/${app.name}/logs"/>
     <!--默认编码-->
     <property name="log.charset" value="UTF-8"/>
+    <!--默认时区-->
+    <property name="log.timezone" value="GMT+08:00"/>
     <!--日志打印格式正则-->
     <property name="log.pattern"
-              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,GMT+08:00} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] [Class:%class Method:%method Line:%line] : %msg%n"/>
+              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,${log.timezone}} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] [Class:%class Method:%method Line:%line] : %msg%n"/>
     <!--API Request-->
     <property name="log.pattern.api"
-              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,GMT+08:00} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] : %msg%n"/>
+              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,${log.timezone}} %-5level [PID:${PID}] [Thread:%thread] [TraceID:%X{TRACE_ID}] : %msg%n"/>
     <!--日志最大保留天数-->
     <property name="log.maxHistory" value="15"/>
     <!--单日志文件最大文件大小-->
@@ -44,7 +46,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/debug/${app.name}.%d{yyyy-MM-dd}.debug.%i.log.zip
+                ${log.path}/archive/debug/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.debug.%i.log.zip
             </fileNamePattern>
             <maxFileSize>5MB</maxFileSize>
             <maxHistory>180</maxHistory>
@@ -66,7 +68,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/info/${app.name}.%d{yyyy-MM-dd}.info.%i.log.zip
+                ${log.path}/archive/info/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.info.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
@@ -88,7 +90,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/warn/${app.name}.%d{yyyy-MM-dd}.warn.%i.log.zip
+                ${log.path}/archive/warn/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.warn.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
@@ -110,7 +112,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/error/${app.name}.%d{yyyy-MM-dd}.error.%i.log.zip
+                ${log.path}/archive/error/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.error.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
@@ -132,7 +134,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/api/${app.name}.%d{yyyy-MM-dd}.api.%i.log.zip
+                ${log.path}/archive/api/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.api.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
@@ -154,7 +156,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/3rdpApi/${app.name}.%d{yyyy-MM-dd}.3rdp-api.%i.log.zip
+                ${log.path}/archive/3rdpApi/${app.name}.%d{yyyy-MM-dd,${log.timezone}}.3rdp-api.%i.log.zip
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>30</maxHistory>
