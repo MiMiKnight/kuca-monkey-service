@@ -12,3 +12,13 @@
 > - 错误提示：it doesn't have an associated file or directory.
 > - 使用以下的命令手动打包，可正确打包
 > - mvn clean package assembly:single '-Dmaven.test.skip=true'
+
+## 运行项目
+```shell
+java -jar kuca-monkey-service-0.0.1-SNAPSHOT.jar \
+-server \
+-Duser.language=en \
+-Dfile.encoding=UTF-8 \
+-Duser.timezone=GMT+04:00 \
+-Djasypt.encryptor.password=5177251cc96740fdae33893599768b9e
+```

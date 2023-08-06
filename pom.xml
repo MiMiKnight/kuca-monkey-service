@@ -107,6 +107,12 @@
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>checker-qual</artifactId>
+                    <groupId>org.checkerframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -178,20 +184,6 @@
             </resource>
         </resources>
         <plugins>
-            <!-- spring-boot-maven-plugin -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <configuration>
-                            <excludeDevtools>true</excludeDevtools>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- maven-compiler-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -269,6 +261,21 @@
                     </rules>
                 </configuration>
             </plugin>
+            <!--maven-jar-plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>../../lib/</classpathPrefix>
+                            <mainClass>com.github.mimiknight.monkey.Application</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
             <!--maven-assembly-plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -277,7 +284,12 @@
                 <executions>
                     <execution>
                         <id>make-assembly</id>
+                        <!-- 将组装绑定到maven生命周期的哪一阶段 -->
                         <phase>package</phase>
+                        <goals>
+                            <!-- 指定assembly插件的打包方式-->
+                            <goal>single</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
