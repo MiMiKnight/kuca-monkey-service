@@ -8,4 +8,7 @@
 > - -Djasypt.encryptor.password=5177251cc96740fdae33893599768b9e
 
 ## 项目打包
-> - mvn clean assembly:single -DskipTests=true
+> - 不要使用idea自带的插件右键'assembly:single'打包，否则会缺失生成本项目自身的jar包且报如下的错误；
+> - 错误提示：it doesn't have an associated file or directory.
+> - 使用以下的命令手动打包，可正确打包
+> - mvn clean package assembly:single '-Dmaven.test.skip=true'
