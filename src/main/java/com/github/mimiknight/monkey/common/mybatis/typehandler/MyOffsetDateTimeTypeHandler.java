@@ -12,8 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -24,12 +24,13 @@ import java.util.Locale;
  * <p>
  * #{updatedTime,jdbcType=VARCHAR}
  *
- * @author victor2015yhm@gmail.com
- * @since 2023-05-25 23:04:56
+ * @author MiMiKnight victor2015yhm@gmail.com
+ * @date 2023-08-06 08:11:23
+ * @since 0.0.1-SNAPSHOT
  */
-@MappedTypes(value = {ZonedDateTime.class})
+@MappedTypes(value = {OffsetDateTime.class})
 @MappedJdbcTypes(value = {JdbcType.VARCHAR, JdbcType.CHAR})
-public class MyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
+public class MyOffsetDateTimeTypeHandler extends BaseTypeHandler<OffsetDateTime> {
 
 
     /**
@@ -47,57 +48,57 @@ public class MyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
     private static final String DATABASE_TIMEZONE = TimeZoneGMT.GMT;
 
     @Override
-    public void setNonNullParameter(PreparedStatement ps, int index, ZonedDateTime dateTime,
+    public void setNonNullParameter(PreparedStatement ps, int index, OffsetDateTime dateTime,
                                     JdbcType jdbcType) throws SQLException {
-        String dateTimeStr = zonedDateTime2dateTimeStr(dateTime);
+        String dateTimeStr = offsetDateTime2dateTimeStr(dateTime);
         ps.setString(index, dateTimeStr);
     }
 
     @Override
-    public ZonedDateTime getNullableResult(ResultSet rs, String columnName) throws SQLException {
+    public OffsetDateTime getNullableResult(ResultSet rs, String columnName) throws SQLException {
         String dateTimeStr = rs.getString(columnName);
-        return dateTimeStr2ZonedDateTime(dateTimeStr);
+        return dateTimeStr2OffsetDateTime(dateTimeStr);
     }
 
     @Override
-    public ZonedDateTime getNullableResult(ResultSet rs, int index) throws SQLException {
+    public OffsetDateTime getNullableResult(ResultSet rs, int index) throws SQLException {
         String dateTimeStr = rs.getString(index);
-        return dateTimeStr2ZonedDateTime(dateTimeStr);
+        return dateTimeStr2OffsetDateTime(dateTimeStr);
     }
 
     @Override
-    public ZonedDateTime getNullableResult(CallableStatement cs, int index) throws SQLException {
+    public OffsetDateTime getNullableResult(CallableStatement cs, int index) throws SQLException {
         String dateTimeStr = cs.getString(index);
-        return dateTimeStr2ZonedDateTime(dateTimeStr);
+        return dateTimeStr2OffsetDateTime(dateTimeStr);
     }
 
     /**
-     * ZonedDateTime转日期字符串
+     * OffsetDateTime转日期字符串
      *
      * @param dateTime 日期时间
      * @return {@link String}
      */
-    private String zonedDateTime2dateTimeStr(ZonedDateTime dateTime) {
+    private String offsetDateTime2dateTimeStr(OffsetDateTime dateTime) {
         if (null == dateTime) {
             return null;
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN, Locale.ENGLISH);
-        ZonedDateTime utcDateTime = dateTime.withZoneSameInstant(ZoneId.of(DATABASE_TIMEZONE));
+        OffsetDateTime utcDateTime = dateTime.withOffsetSameInstant(ZoneOffset.of(DATABASE_TIMEZONE));
         return utcDateTime.format(formatter);
     }
 
     /**
-     * 日期时间字符串转ZonedDateTime
+     * 日期时间字符串转OffsetDateTime
      *
      * @param dateTimeStr 日期时间字符串
-     * @return {@link ZonedDateTime}
+     * @return {@link OffsetDateTime}
      */
-    private ZonedDateTime dateTimeStr2ZonedDateTime(String dateTimeStr) {
+    private OffsetDateTime dateTimeStr2OffsetDateTime(String dateTimeStr) {
         if (null == dateTimeStr) {
             return null;
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN, Locale.ENGLISH);
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, formatter);
-        return ZonedDateTime.of(dateTime, ZoneId.of(DATABASE_TIMEZONE));
+        return OffsetDateTime.of(dateTime, ZoneOffset.of(DATABASE_TIMEZONE));
     }
 }

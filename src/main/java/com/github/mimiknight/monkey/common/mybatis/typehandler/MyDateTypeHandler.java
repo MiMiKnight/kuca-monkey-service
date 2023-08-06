@@ -2,6 +2,7 @@ package com.github.mimiknight.monkey.common.mybatis.typehandler;
 
 import com.github.mimiknight.kuca.utils.constant.DateTimeFormatStandard;
 import com.github.mimiknight.kuca.utils.constant.TimeZoneGMT;
+import com.github.mimiknight.kuca.utils.service.utils.DateTimeUtils;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
@@ -11,25 +12,30 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
+ * 我日期类型处理程序
  * 自定义日期类型处理程序
  * <p>
  * jdbcType=VARCHAR或jdbcType=CHAR 才生效此TypeHandler
  * <p>
  * #{updatedTime,jdbcType=VARCHAR}
  *
- * @author victor2015yhm@gmail.com
- * @since 2023-05-25 23:04:56
+ * @author MiMiKnight victor2015yhm@gmail.com
+ * @date 2023-08-06 08:11:23
+ * @since 0.0.1-SNAPSHOT
  */
-@MappedTypes(value = {ZonedDateTime.class})
+@MappedTypes(value = {Date.class})
 @MappedJdbcTypes(value = {JdbcType.VARCHAR, JdbcType.CHAR})
-public class MyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
+public class MyDateTypeHandler extends BaseTypeHandler<Date> {
 
 
     /**
@@ -47,57 +53,57 @@ public class MyZonedDateTimeTypeHandler extends BaseTypeHandler<ZonedDateTime> {
     private static final String DATABASE_TIMEZONE = TimeZoneGMT.GMT;
 
     @Override
-    public void setNonNullParameter(PreparedStatement ps, int index, ZonedDateTime dateTime,
+    public void setNonNullParameter(PreparedStatement ps, int index, Date dateTime,
                                     JdbcType jdbcType) throws SQLException {
-        String dateTimeStr = zonedDateTime2dateTimeStr(dateTime);
+        String dateTimeStr = date2dateTimeStr(dateTime);
         ps.setString(index, dateTimeStr);
     }
 
     @Override
-    public ZonedDateTime getNullableResult(ResultSet rs, String columnName) throws SQLException {
+    public Date getNullableResult(ResultSet rs, String columnName) throws SQLException {
         String dateTimeStr = rs.getString(columnName);
-        return dateTimeStr2ZonedDateTime(dateTimeStr);
+        return dateTimeStr2Date(dateTimeStr);
     }
 
     @Override
-    public ZonedDateTime getNullableResult(ResultSet rs, int index) throws SQLException {
+    public Date getNullableResult(ResultSet rs, int index) throws SQLException {
         String dateTimeStr = rs.getString(index);
-        return dateTimeStr2ZonedDateTime(dateTimeStr);
+        return dateTimeStr2Date(dateTimeStr);
     }
 
     @Override
-    public ZonedDateTime getNullableResult(CallableStatement cs, int index) throws SQLException {
+    public Date getNullableResult(CallableStatement cs, int index) throws SQLException {
         String dateTimeStr = cs.getString(index);
-        return dateTimeStr2ZonedDateTime(dateTimeStr);
+        return dateTimeStr2Date(dateTimeStr);
     }
 
     /**
-     * ZonedDateTime转日期字符串
+     * Date转日期字符串
      *
      * @param dateTime 日期时间
      * @return {@link String}
      */
-    private String zonedDateTime2dateTimeStr(ZonedDateTime dateTime) {
+    private String date2dateTimeStr(Date dateTime) {
         if (null == dateTime) {
             return null;
         }
+        Instant instant = dateTime.toInstant();
+        LocalDateTime utcDateTime = LocalDateTime.ofInstant(instant, ZoneId.of(DATABASE_TIMEZONE));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN, Locale.ENGLISH);
-        ZonedDateTime utcDateTime = dateTime.withZoneSameInstant(ZoneId.of(DATABASE_TIMEZONE));
         return utcDateTime.format(formatter);
     }
 
     /**
-     * 日期时间字符串转ZonedDateTime
+     * 日期时间字符串转Date
      *
      * @param dateTimeStr 日期时间字符串
      * @return {@link ZonedDateTime}
      */
-    private ZonedDateTime dateTimeStr2ZonedDateTime(String dateTimeStr) {
+    private Date dateTimeStr2Date(String dateTimeStr) {
         if (null == dateTimeStr) {
             return null;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_PATTERN, Locale.ENGLISH);
-        LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, formatter);
-        return ZonedDateTime.of(dateTime, ZoneId.of(DATABASE_TIMEZONE));
+        TimeZone zone = TimeZone.getTimeZone(DATABASE_TIMEZONE);
+        return DateTimeUtils.toDate(dateTimeStr, DATE_TIME_FORMAT_PATTERN, zone, true, Locale.ENGLISH);
     }
 }

@@ -17,8 +17,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id
-        , title, article, audit, deleted, created_time, updated_time
+        id, title, article, audit, deleted, created_time, updated_time
     </sql>
 
     <select id="selectAuditingArticleByIds" resultType="com.github.mimiknight.monkey.model.entity.ArticleEntity">
