@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -19,45 +18,55 @@ import java.util.function.Supplier;
 @Component
 public class CacheServiceImpl implements CacheService {
 
+    @Autowired
     private RedisService redisService;
 
-    @Autowired
-    public void setRedisService(RedisService redisService) {
-        this.redisService = redisService;
-    }
-
     /**
-     * 做get和put
+     * 获取或设置缓存
      *
      * @param cacheName   缓存名称
-     * @param returnClass 返回类
-     * @param code        代码
-     * @param function    函数
+     * @param expireTime  缓存到期时间
+     * @param unit        缓存到期时间单位
+     * @param returnClass 返回值Class类型
+     * @param code        执行代码
      * @return {@link T}
      */
-    private <T> T doGetAndPut(String cacheName, Class<T> returnClass, Supplier<T> code, Function<Supplier<T>, T> function) {
+    private <T> T doGetAndPut(String cacheName, long expireTime, TimeUnit unit, Class<T> returnClass, Supplier<T> code) {
         T result = redisService.get(cacheName, returnClass);
         if (null == result) {
-            result = function.apply(code);
+            result = code.get();
+            redisService.set(cacheName, result, expireTime, unit);
         }
         return result;
     }
 
+    /**
+     * 获取或设置缓存
+     * <p>
+     * 默认缓存过期时间：24小时
+     *
+     * @param cacheName   缓存名称
+     * @param returnClass 返回值Class类型
+     * @param code        执行代码
+     * @return {@link T}
+     */
     @Override
     public <T> T getAndPut(String cacheName, Class<T> returnClass, Supplier<T> code) {
-        return doGetAndPut(cacheName, returnClass, code, t -> {
-            T result = code.get();
-            redisService.set(cacheName, result, Constant.Redis.DEFAULT_CACHE_EXPIRE_TIME, TimeUnit.HOURS);
-            return result;
-        });
+        return getAndPut(cacheName, Constant.Redis.DEFAULT_CACHE_EXPIRE_TIME, TimeUnit.HOURS, returnClass, code);
     }
 
+    /**
+     * 获取或设置缓存
+     *
+     * @param cacheName   缓存名称
+     * @param expireTime  缓存到期时间
+     * @param unit        缓存到期时间单位
+     * @param returnClass 返回值Class类型
+     * @param code        执行代码
+     * @return {@link T}
+     */
     @Override
     public <T> T getAndPut(String cacheName, long expireTime, TimeUnit unit, Class<T> returnClass, Supplier<T> code) {
-        return doGetAndPut(cacheName, returnClass, code, t -> {
-            T result = code.get();
-            redisService.set(cacheName, result, expireTime, unit);
-            return result;
-        });
+        return doGetAndPut(cacheName, expireTime, unit, returnClass, code);
     }
 }
