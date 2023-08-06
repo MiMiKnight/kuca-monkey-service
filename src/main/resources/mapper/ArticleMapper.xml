@@ -16,13 +16,13 @@
     </resultMap>
 
     <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
+    <sql id="BaseColumnList">
         id, title, article, audit, deleted, created_time, updated_time
     </sql>
 
     <select id="selectAuditingArticleByIds" resultType="com.github.mimiknight.monkey.model.entity.ArticleEntity">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="BaseColumnList"/>
         FROM t_monkey_article
         WHERE audit = 1 AND id IN
         <foreach collection="articleIds" item="id" open="(" separator="," close=")">
@@ -32,7 +32,7 @@
 
     <select id="getEntityById" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="BaseColumnList"/>
         FROM t_monkey_article
         WHERE id = #{id}
     </select>
@@ -50,7 +50,7 @@
         UPDATE t_monkey_article
         SET title        = #{title},
             article      = #{article},
-            updated_time = #{updatedTime}
+            updated_time = #{updatedTime,jdbcType=VARCHAR}
         WHERE id = #{id}
     </update>
 
