@@ -54,10 +54,6 @@
                         <fileset>
                             <!--要清理的目录-->
                             <directory>${project.basedir}/.build</directory>
-                            <!--要清理的文件-->
-                            <includes>
-                                <include>**/*</include>
-                            </includes>
                         </fileset>
                     </filesets>
                 </configuration>
