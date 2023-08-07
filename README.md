@@ -5,7 +5,7 @@
 > - -Duser.language=en
 > - -Dfile.encoding=UTF-8
 > - -Duser.timezone=GMT+04:00
-> - --jasypt.encryptor.password=5177251cc96740fdae33893599768b9e
+> - -Djasypt.encryptor.password=5177251cc96740fdae33893599768b9e
 
 ## 项目打包
 > - 不要使用idea自带的插件右键'assembly:single'打包，否则会缺失生成本项目自身的jar包且报如下的错误；
