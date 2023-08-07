@@ -16,8 +16,8 @@
     <artifactId>kuca-monkey-service-deployment</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kuca-monkey-service-deployment</name>
-    <description>kuca-monkey-service-deployment</description>
+    <name>deployment</name>
+    <description>deployment</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -53,7 +53,7 @@
                 </executions>
                 <configuration>
                     <!-- 压缩包名 -->
-                    <finalName>kuca-panda-service-${maven.build.timestamp}</finalName>
+                    <finalName>${project.build.name}-${maven.build.timestamp}</finalName>
                     <!-- 打包后的压缩包位置 -->
                     <outputDirectory>${project.parent.basedir}/.build</outputDirectory>
                     <descriptors>

@@ -23,11 +23,12 @@
     <artifactId>kuca-monkey-service-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>kuca-monkey-service-root</name>
-    <description>kuca-monkey-service-root</description>
-
+    <name>root</name>
+    <description>root</description>
 
     <properties>
+        <!--构建时项目名称-->
+        <project.build.name>kuca-monkey-service</project.build.name>
         <!--项目编码-->
         <project.encoding>UTF-8</project.encoding>
         <!--Maven 最低运行版本-->

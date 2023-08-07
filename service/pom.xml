@@ -13,11 +13,11 @@
 
     <!--本工程-->
     <groupId>com.github.mimiknight</groupId>
-    <artifactId>kuca-monkey-service</artifactId>
+    <artifactId>${project.build.name}</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kuca-monkey-service</name>
-    <description>kuca-monkey-service</description>
+    <name>service</name>
+    <description>service</description>
 
     <properties>
         <!--项目编码-->
@@ -310,7 +310,7 @@
                     <finalName>${project.artifactId}</finalName>
                     <descriptors>
                         <!-- 描述文件路径 -->
-                        <descriptor>src/main/resources/assembly.xml</descriptor>
+                        <descriptor>${project.basedir}/src/main/resources/assembly.xml</descriptor>
                     </descriptors>
                 </configuration>
             </plugin>
