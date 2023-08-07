@@ -7,17 +7,17 @@
     <!--父工程-->
     <parent>
         <groupId>com.github.mimiknight</groupId>
-        <artifactId>kuca-panda-service-root</artifactId>
+        <artifactId>kuca-monkey-service-root</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <!--本工程-->
     <groupId>com.github.mimiknight</groupId>
-    <artifactId>kuca-panda-service</artifactId>
+    <artifactId>kuca-monkey-service</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <name>kuca-panda-service</name>
-    <description>kuca-panda-service</description>
+    <name>kuca-monkey-service</name>
+    <description>kuca-monkey-service</description>
 
     <properties>
         <!--项目编码-->
