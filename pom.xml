@@ -12,13 +12,19 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
+    <!--子模块-->
+    <modules>
+        <module>service</module>
+        <module>deployment</module>
+    </modules>
+
     <!--本工程-->
-    <groupId>com.github.mimiknight.kuca</groupId>
+    <groupId>com.github.mimiknight</groupId>
     <artifactId>kuca-monkey-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>kuca-monkey-service</name>
-    <description>kuca-monkey-service</description>
+    <packaging>pom</packaging>
+    <name>kuca-monkey-service-root</name>
+    <description>kuca-monkey-service-root</description>
 
     <properties>
         <!--项目编码-->
@@ -32,280 +38,26 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.version>17</maven.compiler.version>
-        <!--kuca-ecology-->
-        <kuca-ecology-spring-boot-starter.version>0.0.1-SNAPSHOT</kuca-ecology-spring-boot-starter.version>
     </properties>
-
-    <!--引入依赖-->
-    <dependencies>
-        <dependency>
-            <groupId>com.github.mimiknight.kuca</groupId>
-            <artifactId>kuca-ecology-spring-boot-starter</artifactId>
-            <version>${kuca-ecology-spring-boot-starter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure-processor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
-            <version>1.9.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>checker-qual</artifactId>
-                    <groupId>org.checkerframework</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.ulisesbocchio</groupId>
-            <artifactId>jasypt-spring-boot-starter</artifactId>
-        </dependency>
-
-    </dependencies>
 
     <!--build-->
     <build>
-        <!-- maven-resources-plugin插件会读取如下的resources配置，来完成文件的copy工作 -->
-        <resources>
-            <!--把src/main/java下指定文件拷贝到classes类路径下-->
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-            <!--把src/main/resource下指定文件拷贝到classes类路径下-->
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.yml</include>
-                    <include>**/*.sql</include>
-                    <include>certificate/*.keystore</include>
-                </includes>
-            </resource>
-            <!--把src/test/resource下指定文件拷贝到classes类路径下-->
-            <resource>
-                <directory>src/test/resources</directory>
-                <includes>
-                    <include>**/*.vm</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
-            <!-- maven-compiler-plugin -->
+            <!--maven-clean-plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <artifactId>maven-clean-plugin</artifactId>
                 <configuration>
-                    <!--源码Java版本-->
-                    <source>${maven.compiler.source}</source>
-                    <!--目标文件Java版本-->
-                    <target>${maven.compiler.target}</target>
-                    <!--测试源码Java版本-->
-                    <testSource>${maven.compiler.source}</testSource>
-                    <!--测试目标文件Java版本-->
-                    <testTarget>${maven.compiler.target}</testTarget>
-                    <!--编码-->
-                    <encoding>${project.encoding}</encoding>
-                    <!--显示告警-->
-                    <showWarnings>true</showWarnings>
-                    <fork>true</fork>
-                    <!--指定Maven编译时的Java版本-->
-                    <compilerVersion>${maven.compiler.version}</compilerVersion>
-                    <compilerArgs>
-                        <!--启用所有推荐的警告-->
-                        <arg>-Xlint:all</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <!--用途：打包资源文件-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
-                <configuration>
-                    <encoding>${project.encoding}</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>resources</id>
-                        <phase>compile</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--maven-enforcer-plugin-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven-enforcer-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>enforce</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>display-info</goal>
-                            <goal>enforce</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!--规则检查不通过就构建失败;Default:false-->
-                    <failFast>true</failFast>
-                    <rules>
-                        <requireMavenVersion>
-                            <version>${maven.version}</version>
-                        </requireMavenVersion>
-                        <requireJavaVersion>
-                            <version>${jdk.version}</version>
-                        </requireJavaVersion>
-                        <bannedDependencies>
-                            <!--是否检查传递性依赖(间接依赖)-->
-                            <searchTransitive>true</searchTransitive>
-                            <excludes>
-                                <exclude>junit:junit</exclude>
-                            </excludes>
-                            <message>must use TestNG</message>
-                        </bannedDependencies>
-                    </rules>
-                </configuration>
-            </plugin>
-            <!--maven-jar-plugin-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>com.github.mimiknight.monkey.Application</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <!--maven-assembly-plugin-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>${maven-assembly-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <!-- 将组装绑定到maven生命周期的哪一阶段 -->
-                        <phase>package</phase>
-                        <goals>
-                            <!-- 指定assembly插件的打包方式-->
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- 压缩包名 -->
-                    <finalName>${project.artifactId}</finalName>
-                    <!-- 打包后的压缩包位置 -->
-                    <outputDirectory>.build</outputDirectory>
-                    <descriptors>
-                        <!-- 描述文件路径 -->
-                        <descriptor>./assembly.xml</descriptor>
-                    </descriptors>
-                    <archive>
-                        <manifest>
-                            <!--项目启动类-->
-                            <mainClass>com.github.mimiknight.monkey.Application</mainClass>
-                        </manifest>
-                    </archive>
+                    <filesets>
+                        <fileset>
+                            <!--要清理的目录-->
+                            <directory>${project.basedir}/.build</directory>
+                            <!--要清理的文件-->
+                            <includes>
+                                <include>**/*</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
                 </configuration>
             </plugin>
         </plugins>

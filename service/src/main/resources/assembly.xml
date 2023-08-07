@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.1 https://maven.apache.org/xsd/assembly-2.1.1.xsd
+http://maven.apache.org/ASSEMBLY/2.1.1 ">
+    <!--后缀-->
+    <id>release</id>
+
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <!--<baseDirectory>KucaPandaService</baseDirectory>-->
+
+    <!-- runtime依赖输出到lib文件夹 -->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <scope>runtime</scope>
+            <unpack>false</unpack>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+        <!-- resources -->
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources</directory>
+            <outputDirectory>/resources</outputDirectory>
+            <includes>
+                <include>config/*.properties</include>
+                <include>mapper/*Mapper.xml</include>
+                <include>SSL/SSL.keystore</include>
+                <include>logback-spring.xml</include>
+            </includes>
+            <fileMode>0644</fileMode>
+            <directoryMode>0744</directoryMode>
+        </fileSet>
+        <!-- db -->
+        <fileSet>
+            <directory>${project.parent.basedir}/deployment/release/db</directory>
+            <outputDirectory>/resources/db</outputDirectory>
+            <includes>
+                <include>**/*.sql</include>
+                <include>**/*.json</include>
+            </includes>
+            <fileMode>0644</fileMode>
+            <directoryMode>0744</directoryMode>
+        </fileSet>
+        <!-- conf -->
+        <fileSet>
+            <directory>${project.parent.basedir}/deployment/release/conf</directory>
+            <outputDirectory>/conf</outputDirectory>
+            <fileMode>0644</fileMode>
+            <directoryMode>0744</directoryMode>
+        </fileSet>
+        <!-- bin -->
+        <fileSet>
+            <directory>${project.parent.basedir}/deployment/release/bin</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <includes>
+                <include>**/*.sh</include>
+            </includes>
+            <fileMode>0644</fileMode>
+            <directoryMode>0744</directoryMode>
+        </fileSet>
+
+    </fileSets>
+</assembly>

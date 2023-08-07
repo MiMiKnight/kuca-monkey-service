@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.1 https://maven.apache.org/xsd/assembly-2.1.1.xsd
+http://maven.apache.org/ASSEMBLY/2.1.1 ">
+    <!--后缀-->
+    <id>deploy</id>
+
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <!--<baseDirectory>KucaPandaService</baseDirectory>-->
+
+    <fileSets>
+        <!-- tar.gz -->
+        <fileSet>
+            <directory>${project.parent.basedir}/service/target</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>kuca-panda-service-release.tar.gz</include>
+            </includes>
+            <fileMode>0644</fileMode>
+            <directoryMode>0755</directoryMode>
+        </fileSet>
+        <!-- image -->
+        <fileSet>
+            <directory>${project.basedir}/release/image</directory>
+            <outputDirectory>/image</outputDirectory>
+            <includes>
+                <include>build-docker.sh</include>
+                <include>build-k8s.sh</include>
+                <include>Dockerfile</include>
+                <include>k8s.yml</include>
+            </includes>
+            <fileMode>0644</fileMode>
+            <directoryMode>0755</directoryMode>
+        </fileSet>
+    </fileSets>
+
+</assembly>
