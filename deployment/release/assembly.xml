@@ -18,7 +18,7 @@ http://maven.apache.org/ASSEMBLY/2.1.1 ">
             <directory>${project.parent.basedir}/service/target</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
-                <include>kuca-panda-service-release.tar.gz</include>
+                <include>kuca-monkey-service-release.tar.gz</include>
             </includes>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>

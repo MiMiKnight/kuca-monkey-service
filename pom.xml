@@ -19,12 +19,14 @@
     </modules>
 
     <!--本工程-->
+    <!--本工程-->
     <groupId>com.github.mimiknight</groupId>
     <artifactId>kuca-monkey-service-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>kuca-monkey-service-root</name>
     <description>kuca-monkey-service-root</description>
+
 
     <properties>
         <!--项目编码-->
