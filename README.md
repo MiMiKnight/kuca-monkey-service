@@ -12,6 +12,7 @@
 > - 错误提示：it doesn't have an associated file or directory.
 > - 使用以下的命令手动打包，可正确打包
 > - mvn clean package assembly:single '-Dmaven.test.skip=true'
+> - mvn clean package '-Dmaven.test.skip=true'
 
 ## 运行项目
 ```shell

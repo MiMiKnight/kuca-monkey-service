@@ -19,7 +19,6 @@
     </modules>
 
     <!--本工程-->
-    <!--本工程-->
     <groupId>com.github.mimiknight</groupId>
     <artifactId>kuca-monkey-service-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -62,6 +61,7 @@
                     </filesets>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
