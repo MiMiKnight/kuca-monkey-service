@@ -41,15 +41,10 @@
             <outputDirectory>/resources</outputDirectory>
             <filtered>true</filtered>
             <includes>
-                <include>config/bootstrap.properties</include>
                 <include>config/application.properties</include>
                 <include>logback-spring.xml</include>
                 <include>mybatis/mapper/**/*Mapper.xml</include>
                 <include>mybatis/mybatis-config.xml</include>
-                <include>conf/app-config.properties</include>
-                <include>conf/api-path.properties</include>
-                <include>conf/cache-id.properties</include>
-                <include>conf/lock-id.properties</include>
             </includes>
             <fileMode>0640</fileMode>
             <directoryMode>0750</directoryMode>
