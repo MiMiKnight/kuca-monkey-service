@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--父项目-->
+    <parent>
+        <groupId>cn.mimiknight.develper</groupId>
+        <artifactId>kuca-monkey-service-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <!--本工程-->
+    <artifactId>kuca-monkey-service-foundation</artifactId>
+    <packaging>jar</packaging>
+    <name>foundation</name>
+    <description>服务公共基础代码模块</description>
+
+    <!--版本管理-->
+    <properties>
+
+    </properties>
+
+    <!--引入依赖-->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <!--构建管理-->
+    <build>
+
+    </build>
+
+</project>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--父项目-->
+    <parent>
+        <groupId>cn.mimiknight.develper</groupId>
+        <artifactId>kuca-monkey-service-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <!--本工程-->
+    <!--PS：本模块为pom打包方式不允许修改为jar打包方式，不允许其他模块引入本模块-->
+    <artifactId>kuca-monkey-service-deployment</artifactId>
+    <packaging>pom</packaging>
+    <name>deployment</name>
+    <description>服务部署模块</description>
+
+    <!--构建管理-->
+    <build>
+        <plugins>
+            <!--maven-enforcer-plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--规则检查不通过就构建失败;Default:false-->
+                    <failFast>true</failFast>
+                    <rules>
+                        <!--Maven版本 约束-->
+                        <requireMavenVersion>
+                            <!--[min,max]-->
+                            <version>[${maven.min.version},${maven.max.version}]</version>
+                        </requireMavenVersion>
+                        <!--JDK版本 约束-->
+                        <requireJavaVersion>
+                            <!--[min,max]-->
+                            <version>[${jdk.min.version},${jdk.max.version}]</version>
+                        </requireJavaVersion>
+                        <!--Java供应商 约束-->
+                        <requireJavaVendor>
+                            <includes>
+                                <include>${jdk.vendor.oracle}</include>
+                            </includes>
+                        </requireJavaVendor>
+                        <!--项目版本号 属性约束-->
+                        <requireProperty>
+                            <property>project.version</property>
+                            <message>You must set a 'project.version' property!</message>
+                            <regex>.*(-RELEASE|-SNAPSHOT)$</regex>
+                            <regexMessage>
+                                The 'project.version' property must conform to '.*(-RELEASE|-SNAPSHOT)$' regular
+                                expression.
+                            </regexMessage>
+                        </requireProperty>
+                        <!--项目名称 属性约束-->
+                        <requireProperty>
+                            <property>app.name</property>
+                            <message>You must set a 'app.name' property!</message>
+                            <regex>[\w\.-]{5,32}</regex>
+                            <regexMessage>
+                                The 'app.name' property must conform to '\w\.-]{5,32}' regular expression.
+                            </regexMessage>
+                        </requireProperty>
+                        <!--项目jar包名称 属性约束-->
+                        <requireProperty>
+                            <property>app.jar.name</property>
+                            <message>You must set a 'app.jar.name' property!</message>
+                            <regex>[\w\.-]{5,64}</regex>
+                            <regexMessage>
+                                The 'app.jar.name' property must conform to '\w\.-]{5,64}' regular expression.
+                            </regexMessage>
+                        </requireProperty>
+                        <!--项目MainClass 属性约束-->
+                        <requireProperty>
+                            <property>app.main.class</property>
+                            <message>You must set a 'app.main.class' property!</message>
+                            <regex>[\w\.-]{5,64}</regex>
+                            <regexMessage>
+                                The 'app.main.class' property must conform to '[\w\.-]{5,64}' regular expression.
+                            </regexMessage>
+                        </requireProperty>
+                        <!--项目部署路径 属性约束-->
+                        <requireProperty>
+                            <property>app.deploy.path</property>
+                            <message>You must set a 'app.deploy.path' property!</message>
+                            <regex>(/[A-Za-z_-]{1,64}){1,10}</regex>
+                            <regexMessage>
+                                The 'app.deploy.path' property must conform to '(/[A-Za-z_-]{1,64}){1,10}' regular
+                                expression.
+                            </regexMessage>
+                        </requireProperty>
+                        <!--项目日志路径 属性约束-->
+                        <requireProperty>
+                            <property>app.log.path</property>
+                            <message>You must set a 'app.log.path' property!</message>
+                            <regex>(/[A-Za-z_-]{1,64}){1,10}/logs</regex>
+                            <regexMessage>
+                                The 'app.log.path' property must conform to '(/[A-Za-z_-]{1,64}){1,10}/logs' regular
+                                expression.
+                            </regexMessage>
+                        </requireProperty>
+                        <requireFilesExist>
+                            <files>
+                                <!--项目assembly文件 存在性约束-->
+                                <file>${project.basedir}/release/conf/assembly.xml</file>
+                                <!--项目debug目录application-debug.properties文件 存在性约束-->
+                                <file>${project.basedir}/debug/config/application-debug.properties</file>
+                            </files>
+                        </requireFilesExist>
+                    </rules>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

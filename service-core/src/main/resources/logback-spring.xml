@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds" debug="false">
+    <!--关闭logback自身的启动日志打印-->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+
+    <!--项目全局日志等级-->
+    <springProperty scope="context" name="log.level" source="app.log.level" defaultValue="info"/>
+    <!--项目SQL日志等级 debug:开启;info:关闭-->
+    <springProperty scope="context" name="log.level.sql" source="app.log.level.sql" defaultValue="info"/>
+    <!--项目接口日志等级-->
+    <springProperty scope="context" name="log.level.api" source="app.log.level.api" defaultValue="info"/>
+    <!--项目名称-->
+    <property name="log.app.name" value="@app.name@"/>
+    <!--日志输出文件夹-->
+    <property name="log.path" value="@app.log.path@/${log.app.name}"/>
+    <!--项目日志跟踪ID键名-->
+    <property name="app.log.trace-id-key" value="@app.log.trace-id-key@"/>
+    <!--默认编码-->
+    <property name="log.charset" value="UTF-8"/>
+    <!--默认时区-->
+    <property name="log.timezone" value="GMT+08:00"/>
+    <!--日志文件最大文件大小-->
+    <property name="log.max-file-size" value="20MB"/>
+    <!--日志最大保留周期 此参数与周期有关 本项目设置的周期为"天"，下列指的是最大保留15天日志-->
+    <property name="log.max-history" value="15"/>
+    <property name="log.total-size-cap" value="5GB"/>
+    <!--默认日志格式-->
+    <property name="log.pattern"
+              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,${log.timezone}} %-5level [TraceID:%X{${app.log.trace-id-key}}] [PID:${PID}] [Thread:%thread] [Class:%class Method:%method Line:%line] : %msg%n"/>
+    <!--项目API日志格式-->
+    <property name="log.pattern.api"
+              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,${log.timezone}} %-5level [TraceID:%X{${app.log.trace-id-key}}] [PID:${PID}] [Thread:%thread] : %msg%n"/>
+    <!--SQL日志格式-->
+    <property name="log.pattern.sql"
+              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z,${log.timezone}} %-5level [TraceID:%X{${app.log.trace-id-key}}] [PID:${PID}] [Thread:%thread] : %msg%n"/>
+
+    <!--Console-->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+    <!--异步Console-->
+    <appender name="AsyncConsole" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="Console"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--Debug-->
+    <appender name="DebugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/debug.log</file>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.path}/archive/debug/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.debug.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
+            <totalSizeCap>${log.total-size-cap}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <!--异步Debug-->
+    <appender name="AsyncDebugFile" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="DebugFile"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--Info-->
+    <appender name="InfoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/info.log</file>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.path}/archive/info/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.info.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
+            <totalSizeCap>${log.total-size-cap}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <!--异步Info-->
+    <appender name="AsyncInfoFile" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="InfoFile"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--Warn-->
+    <appender name="WarnFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/warn.log</file>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.path}/archive/warn/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.warn.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
+            <totalSizeCap>${log.total-size-cap}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <!--异步Warn-->
+    <appender name="AsyncWarnFile" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="WarnFile"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--Error-->
+    <appender name="ErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/error.log</file>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.path}/archive/error/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.error.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
+            <totalSizeCap>${log.total-size-cap}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <!--异步Error-->
+    <appender name="AsyncErrorFile" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ErrorFile"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--Api项目接口日志-->
+    <appender name="ApiFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/api.log</file>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern.api}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.path}/archive/api/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.api.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
+            <totalSizeCap>${log.total-size-cap}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <!--异步Api-->
+    <appender name="AsyncApiFile" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ApiFile"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--调用第三方接口日志-->
+    <appender name="ThirdPartyApiFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/3rdp-api.log</file>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern.api}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.path}/archive/3rdpApi/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.3rdp-api.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
+            <totalSizeCap>${log.total-size-cap}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <!--异步ThirdPartyApi-->
+    <appender name="AsyncThirdPartyApiFile" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ThirdPartyApiFile"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--SQL日志-->
+    <appender name="SqlFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/sql.log</file>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern.sql}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${log.path}/archive/sql/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.sql.%i.log.zip
+            </fileNamePattern>
+            <maxFileSize>${log.max-file-size}</maxFileSize>
+            <maxHistory>${log.max-history}</maxHistory>
+            <totalSizeCap>${log.total-size-cap}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <!--异步SQL-->
+    <appender name="AsyncSqlFile" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SqlFile"/>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <!--SQL日志-->
+    <logger name="cn.mimiknight.monkey.core.repository.mapper"
+            level="${log.level.sql}" additivity="false">
+        <appender-ref ref="AsyncSqlFile"/>
+    </logger>
+    <!--项目接口日志-->
+    <logger name="cn.mimiknight.kuca.easy.module.spring.filter.KucaApiLogFilter"
+            level="${log.level.api}" additivity="false">
+        <appender-ref ref="AsyncApiFile"/>
+    </logger>
+    <!--第三方接口调用日志-->
+    <!--上传日志到ELK系统-->
+
+    <!--  等于或高于日志记录器当前配置级别的日志的将被打印出来 -->
+    <!-- 日志等级： trace < debug < info < warn < error < fatal -->
+    <!--日志输出级别-->
+    <root level="${log.level}">
+        <appender-ref ref="AsyncConsole"/>
+        <appender-ref ref="AsyncInfoFile"/>
+        <appender-ref ref="AsyncWarnFile"/>
+        <appender-ref ref="AsyncErrorFile"/>
+    </root>
+
+</configuration>

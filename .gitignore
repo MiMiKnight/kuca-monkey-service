@@ -1,0 +1,19 @@
+### Project ###
+*.class
+HELP.md
+target/
+.build/
+/deployment/debug/*
+!/deployment/debug/README.md
+
+### Git ###
+*.orig
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
