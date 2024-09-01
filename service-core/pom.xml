@@ -8,7 +8,7 @@
     <parent>
         <groupId>cn.mimiknight.develper</groupId>
         <artifactId>kuca-monkey-service-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <!--本工程-->
@@ -25,13 +25,13 @@
     <!--引入依赖-->
     <dependencies>
         <dependency>
-            <groupId>cn.mimiknight.develper</groupId>
-            <artifactId>kuca-monkey-service-foundation</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>cn.mimiknight.kuca</groupId>
+            <artifactId>kuca-ecology-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
+            <groupId>cn.mimiknight.develper</groupId>
+            <artifactId>kuca-monkey-service-foundation</artifactId>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -79,6 +79,12 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.3.1</version>
         </dependency>
     </dependencies>
 

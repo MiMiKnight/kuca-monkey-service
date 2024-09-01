@@ -2,7 +2,9 @@ package cn.mimiknight.developer.monkey.core.rest.controller;
 
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.AppApiPath;
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.HealthStandard;
+import cn.mimiknight.developer.monkey.core.rest.model.request.HealthCheckRequest;
 import cn.mimiknight.developer.monkey.core.rest.model.response.HealthCheckResponse;
+import cn.mimiknight.kuca.spring.ecology.AbstractEcologyRequestController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,13 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @ResponseStatus(HttpStatus.OK)
 @RequestMapping(path = AppApiPath.Module.HEALTH)
-public class HealthController implements HealthStandard {
+public class HealthController extends AbstractEcologyRequestController implements HealthStandard {
 
     @GetMapping(path = "/servlet/v1/check", produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
     public HealthCheckResponse check() {
-        HealthCheckResponse response = new HealthCheckResponse();
-        response.setServiceName("kuca-monkey-service");
-        return response;
+        HealthCheckRequest request = new HealthCheckRequest();
+        return handle(request, HealthCheckResponse.class);
     }
 }

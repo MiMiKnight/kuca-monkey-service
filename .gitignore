@@ -6,6 +6,9 @@ target/
 /deployment/debug/*
 !/deployment/debug/README.md
 
+### Maven ###
+.flattened-pom.xml
+
 ### Git ###
 *.orig
 
