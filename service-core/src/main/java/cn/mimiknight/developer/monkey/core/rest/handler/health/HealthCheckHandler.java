@@ -3,7 +3,9 @@ package cn.mimiknight.developer.monkey.core.rest.handler.health;
 import cn.mimiknight.developer.kuca.spring.ecology.handler.EcologyRequestHandler;
 import cn.mimiknight.developer.monkey.core.rest.model.request.HealthCheckRequest;
 import cn.mimiknight.developer.monkey.core.rest.model.response.HealthCheckResponse;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HealthCheckHandler implements EcologyRequestHandler<HealthCheckRequest, HealthCheckResponse> {
 
     @Override
