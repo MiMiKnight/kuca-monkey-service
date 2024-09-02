@@ -19,7 +19,7 @@
 > - -Duser.timezone=GMT+00:00
 > - -Dspring.profiles.name=application
 > - -Dspring.profiles.active=debug,custom
-> - -Dspring.config.additional-location="F:/ProjectWorkspace/JavaProject/IncubationProject/kuca-monkey-service/deployment/debug/config/"
+> - -Dspring.config.additional-location="F:/Workspace/CodeWorkspace/JavaProject/IncubationProject/kuca-monkey-service/deployment/debug/config/"
 
 ## Not Debug VM Option
 
