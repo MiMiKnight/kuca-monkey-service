@@ -158,8 +158,6 @@
                     <!--显示告警-->
                     <showWarnings>true</showWarnings>
                     <fork>true</fork>
-                    <!--指定Maven编译时的Java版本-->
-                    <compilerVersion>${maven.compiler.version}</compilerVersion>
                     <compilerArgs>
                         <!--启用所有推荐的警告-->
                         <arg>-Xlint:all</arg>
