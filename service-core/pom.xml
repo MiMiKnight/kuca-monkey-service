@@ -6,7 +6,7 @@
 
     <!--父项目-->
     <parent>
-        <groupId>cn.mimiknight.develper</groupId>
+        <groupId>cn.mimiknight.developer</groupId>
         <artifactId>kuca-monkey-service-parent</artifactId>
         <version>${revision}</version>
     </parent>
@@ -25,6 +25,11 @@
     <!--引入依赖-->
     <dependencies>
         <dependency>
+            <groupId>cn.mimiknight.developer</groupId>
+            <artifactId>kuca-monkey-service-foundation</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
@@ -32,11 +37,6 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.mimiknight.develper</groupId>
-            <artifactId>kuca-monkey-service-foundation</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>cn.mimiknight.developer.kuca</groupId>
