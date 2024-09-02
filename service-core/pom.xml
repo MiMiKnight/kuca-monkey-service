@@ -25,7 +25,7 @@
     <!--引入依赖-->
     <dependencies>
         <dependency>
-            <groupId>cn.mimiknight.kuca</groupId>
+            <groupId>cn.mimiknight.developer.kuca</groupId>
             <artifactId>kuca-ecology-boot-starter</artifactId>
         </dependency>
         <dependency>
