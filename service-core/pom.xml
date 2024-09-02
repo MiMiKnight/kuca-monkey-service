@@ -184,8 +184,10 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <!--关闭id后缀-->
+                    <appendAssemblyId>false</appendAssemblyId>
                     <!-- 压缩文件名 -->
-                    <finalName>${app.name}</finalName>
+                    <finalName>${app.name}-${maven.build.timestamp}</finalName>
                     <!-- 打包后的压缩包位置 -->
                     <outputDirectory>${project.parent.basedir}/.build</outputDirectory>
                     <descriptors>

@@ -9,7 +9,7 @@
         <format>tar.gz</format>
     </formats>
     <!--是否生成基础目录-->
-    <includeBaseDirectory>true</includeBaseDirectory>
+    <includeBaseDirectory>false</includeBaseDirectory>
 
     <!--输出依赖到lib目录-->
     <dependencySets>
