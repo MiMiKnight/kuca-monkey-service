@@ -55,16 +55,8 @@
 
         <!--kuca-->
         <kuca.version>1.0.0-SNAPSHOT</kuca.version>
-        <!--mariadb-java-client-->
-        <mariadb-java-client.version>3.1.4</mariadb-java-client.version>
-        <!--mybatis-spring-boot-starter-->
-        <mybatis-spring-boot-starter.version>3.0.1</mybatis-spring-boot-starter.version>
-        <!--mybatis-plus-->
-        <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <!--velocity-->
         <velocity.version>2.3</velocity.version>
-        <!--redisson-spring-boot-starter-->
-        <redisson-spring-boot-starter.version>3.24.3</redisson-spring-boot-starter.version>
         <!--mockito-->
         <mockito.version>5.7.0</mockito.version>
         <!--swagger-->
@@ -112,36 +104,9 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.mariadb.jdbc</groupId>
-                <artifactId>mariadb-java-client</artifactId>
-                <version>${mariadb-java-client.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis-spring-boot-starter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-generator</artifactId>
-                <version>${mybatis-plus.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity-engine-core</artifactId>
                 <version>${velocity.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.redisson</groupId>
-                <artifactId>redisson-spring-boot-starter</artifactId>
-                <version>${redisson-spring-boot-starter.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
