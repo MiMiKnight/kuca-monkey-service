@@ -1,10 +1,10 @@
 package cn.mimiknight.developer.monkey.core.rest.controller;
 
+import cn.mimiknight.developer.kuca.spring.ecology.AbstractEcologyRequestController;
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.AppApiPath;
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.HealthStandard;
 import cn.mimiknight.developer.monkey.core.rest.model.request.HealthCheckRequest;
 import cn.mimiknight.developer.monkey.core.rest.model.response.HealthCheckResponse;
-import cn.mimiknight.kuca.spring.ecology.AbstractEcologyRequestController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

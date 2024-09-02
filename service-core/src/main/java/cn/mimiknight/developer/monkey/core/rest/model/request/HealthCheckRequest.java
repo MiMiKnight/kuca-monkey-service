@@ -1,7 +1,7 @@
 package cn.mimiknight.developer.monkey.core.rest.model.request;
 
 
-import cn.mimiknight.kuca.spring.ecology.model.request.EcologyRequest;
+import cn.mimiknight.developer.kuca.spring.ecology.model.request.EcologyRequest;
 
 /**
  * 健康检查请求参数
