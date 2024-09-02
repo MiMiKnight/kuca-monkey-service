@@ -24,7 +24,7 @@
         <module>service-core</module>
         <module>deployment</module>
     </modules>
-    
+
     <!--版本管理-->
     <properties>
         <!--revision-->
@@ -95,7 +95,8 @@
     <build>
         <!--插件-->
         <plugins>
-            <!-- flatten-maven-plugin插件 作用：统一替换项目版本号 -->
+            <!-- flatten-maven-plugin插件 -->
+            <!--作用：统一替换revision项目版本号-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
