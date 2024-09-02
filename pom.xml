@@ -55,8 +55,6 @@
 
         <!--kuca-->
         <kuca.version>1.0.0-SNAPSHOT</kuca.version>
-        <!--spring-boot-->
-        <spring-boot.version>2.7.18</spring-boot.version>
         <!--mariadb-java-client-->
         <mariadb-java-client.version>3.1.4</mariadb-java-client.version>
         <!--mybatis-spring-boot-starter-->
@@ -65,14 +63,6 @@
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <!--velocity-->
         <velocity.version>2.3</velocity.version>
-        <!--lombok-->
-        <lombok.version>1.18.24</lombok.version>
-        <!--commons-lang3-->
-        <commons-lang3.version>3.14.0</commons-lang3.version>
-        <!--commons-collections4-->
-        <commons-collections4.version>4.4</commons-collections4.version>
-        <!--mapstruct-->
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
         <!--redisson-spring-boot-starter-->
         <redisson-spring-boot-starter.version>3.24.3</redisson-spring-boot-starter.version>
         <!--mockito-->
@@ -147,33 +137,6 @@
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity-engine-core</artifactId>
                 <version>${velocity.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-collections4</artifactId>
-                <version>${commons-collections4.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-processor</artifactId>
-                <version>${mapstruct.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.redisson</groupId>
