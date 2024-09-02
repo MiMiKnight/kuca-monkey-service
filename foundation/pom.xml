@@ -6,7 +6,7 @@
 
     <!--父项目-->
     <parent>
-        <groupId>cn.mimiknight.develper</groupId>
+        <groupId>cn.mimiknight.developer</groupId>
         <artifactId>kuca-monkey-service-parent</artifactId>
         <version>${revision}</version>
     </parent>

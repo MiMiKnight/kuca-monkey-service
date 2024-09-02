@@ -12,7 +12,6 @@
     </parent>
 
     <!--本工程-->
-    <groupId>cn.mimiknight.develper</groupId>
     <artifactId>kuca-monkey-service-parent</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
