@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
@@ -23,7 +22,6 @@ import java.time.ZonedDateTime;
 @Accessors(chain = true)
 public class ArticleEntity implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

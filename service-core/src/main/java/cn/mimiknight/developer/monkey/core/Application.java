@@ -1,6 +1,5 @@
 package cn.mimiknight.developer.monkey.core;
 
-import cn.mimiknight.kuca.spring.detach.request.annotation.EnableRequestDetach;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author MiMiKnight victor2015yhm@gmail.com
  * @since 2023-08-18 22:37:20
  */
-@EnableRequestDetach
 @Slf4j
 @EnableTransactionManagement // 开启事务管理
 @MapperScan(basePackages = {"cn.mimiknight.developer.monkey.core.repository.mapper"}) // MyBatis Mapper包位置扫描

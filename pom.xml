@@ -66,31 +66,6 @@
         <!--springdoc-openapi-->
         <springdoc-openapi>2.3.0</springdoc-openapi>
 
-        <!-- Maven插件版本 -->
-        <!--flatten-maven-plugin-->
-        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
-        <!--maven-compiler-plugin-->
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <!--maven-jar-plugin-->
-        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-        <!--maven-source-plugin-->
-        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
-        <!--maven-javadoc-plugin.version-->
-        <maven-javadoc-plugin.version>3.6.2</maven-javadoc-plugin.version>
-        <!--maven-resources-plugin-->
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <!--maven-surefire-plugin-->
-        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
-        <!--maven-enforcer-plugin-->
-        <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
-        <!--maven-release-plugin-->
-        <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
-        <!--maven-assembly-plugin-->
-        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
-        <!--maven-checkstyle-plugin-->
-        <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <!--maven-clean-plugin-->
-        <maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
     </properties>
 
     <!--依赖管理-->
