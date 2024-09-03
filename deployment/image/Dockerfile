@@ -5,7 +5,7 @@ WORKDIR /opt/app
 # 设置容器时区
 RUN echo "Asia/Shanghai" > /etc/timezone
 # 复制项目zip到容器中
-COPY target/myproject.zip /app
+COPY target/@app.name@-@app.build.version@.tar.gz /app
 # 解压
 # 暴露应用程序的端口
 EXPOSE 8443
