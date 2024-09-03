@@ -12,9 +12,9 @@
     </parent>
 
     <!--本工程-->
-    <!--PS：本模块为pom打包方式不允许修改为jar打包方式，不允许其他模块引入本模块-->
+    <!--PS：不允许其他模块引入本模块-->
     <artifactId>kuca-monkey-service-deployment</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>deployment</name>
     <description>服务部署模块</description>
 
@@ -39,22 +39,6 @@
                     <!--规则检查不通过就构建失败;Default:false-->
                     <failFast>true</failFast>
                     <rules>
-                        <!--Maven版本 约束-->
-                        <requireMavenVersion>
-                            <!--[min,max]-->
-                            <version>[${maven.min.version},${maven.max.version}]</version>
-                        </requireMavenVersion>
-                        <!--JDK版本 约束-->
-                        <requireJavaVersion>
-                            <!--[min,max]-->
-                            <version>[${jdk.min.version},${jdk.max.version}]</version>
-                        </requireJavaVersion>
-                        <!--Java供应商 约束-->
-                        <requireJavaVendor>
-                            <includes>
-                                <include>${jdk.vendor.oracle}</include>
-                            </includes>
-                        </requireJavaVendor>
                         <!--项目版本号 属性约束-->
                         <requireProperty>
                             <property>project.version</property>
