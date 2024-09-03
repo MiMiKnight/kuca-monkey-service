@@ -1,0 +1,10 @@
+# 项目名称
+APP_NAME=@app.name@
+# 项目构建版本
+APP_BUILD_VERSION=@app.build.version@
+# 项目压缩包名称
+ARCHIVE_FILE_NAME=@app.name@-@app.build.version@.tar.gz
+# 项目类路径
+APP_MAIN_CLASS=@app.main.class@
+# JAR名称
+APP_JAR_NAME=@app.jar.name@.jar
