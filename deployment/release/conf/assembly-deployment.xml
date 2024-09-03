@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd">
+    <!--后缀-->
+    <id>deployment</id>
+    <!--打包压缩文件格式-->
+    <formats>
+        <format>dir</format>
+    </formats>
+    <!--是否生成基础目录-->
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>${project.parent.basedir}/deployment/image</directory>
+            <outputDirectory>/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>0640</fileMode>
+            <directoryMode>0750</directoryMode>
+            <includes>
+                <include>blueprint.yaml</include>
+                <include>Dockerfile</include>
+                <include>build-docker.sh</include>
+                <include>build-k8s.sh</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

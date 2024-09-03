@@ -14,7 +14,7 @@
     <!--本工程-->
     <!--PS：不允许其他模块引入本模块-->
     <artifactId>kuca-monkey-service-deployment</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>deployment</name>
     <description>服务部署模块</description>
 
@@ -99,12 +99,42 @@
                         <requireFilesExist>
                             <files>
                                 <!--项目assembly文件 存在性约束-->
-                                <file>${project.basedir}/release/conf/assembly.xml</file>
+                                <file>${project.basedir}/release/conf/assembly-service.xml</file>
+                                <file>${project.basedir}/release/conf/assembly-deployment.xml</file>
                                 <!--项目debug目录application-debug.properties文件 存在性约束-->
                                 <file>${project.basedir}/debug/config/application-debug.properties</file>
                             </files>
                         </requireFilesExist>
                     </rules>
+                </configuration>
+            </plugin>
+            <!--maven-assembly-plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- 将组装绑定到maven生命周期的哪一阶段 -->
+                        <phase>package</phase>
+                        <goals>
+                            <!--single表示只运行一次-->
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--关闭id后缀-->
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <!-- 文件名 -->
+                    <finalName>deployment</finalName>
+                    <!-- 打包后的压缩包位置 -->
+                    <outputDirectory>${project.parent.basedir}/.build</outputDirectory>
+                    <descriptors>
+                        <!-- 描述文件路径 -->
+                        <descriptor>${project.parent.basedir}/deployment/release/conf/assembly-deployment.xml</descriptor>
+                    </descriptors>
                 </configuration>
             </plugin>
 

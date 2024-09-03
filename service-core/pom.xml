@@ -192,7 +192,7 @@
                     <outputDirectory>${project.parent.basedir}/.build</outputDirectory>
                     <descriptors>
                         <!-- 描述文件路径 -->
-                        <descriptor>${project.parent.basedir}/deployment/release/conf/assembly.xml</descriptor>
+                        <descriptor>${project.parent.basedir}/deployment/release/conf/assembly-service.xml</descriptor>
                     </descriptors>
                 </configuration>
             </plugin>
