@@ -29,15 +29,9 @@
     <properties>
         <!--revision-->
         <revision>1.0.0-SNAPSHOT</revision>
-        <!--项目编码-->
-        <project.encoding>UTF-8</project.encoding>
-        <!--项目源码编码-->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!--项目输出编码-->
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!--项目名称-->
         <app.name>kuca-monkey-service</app.name>
-        <!--项目构架版本-->
+        <!--项目构建版本-->
         <app.build.version>${maven.build.timestamp}</app.build.version>
         <!--项目jar包名称-->
         <app.jar.name>${app.name}-${project.version}</app.jar.name>
@@ -51,8 +45,6 @@
         <app.main.class>cn.mimiknight.developer.monkey.core.Application</app.main.class>
         <!--构建打包时间戳格式-->
         <maven.build.timestamp.format>yyyyMMddHHmmssSSS</maven.build.timestamp.format>
-        <!--kuca-dependencies-->
-        <kuca-dependencies.version>2024.4.101-SNAPSHOT</kuca-dependencies.version>
 
         <!--kuca-->
         <kuca.version>1.0.0-SNAPSHOT</kuca.version>
