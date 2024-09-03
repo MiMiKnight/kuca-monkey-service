@@ -29,8 +29,6 @@
     <properties>
         <!--revision-->
         <revision>1.0.0-SNAPSHOT</revision>
-        <!--构建打包时间戳格式-->
-        <maven.build.timestamp.format>yyyyMMddHHmmssSSS</maven.build.timestamp.format>
         <!--项目编码-->
         <project.encoding>UTF-8</project.encoding>
         <!--项目源码编码-->
