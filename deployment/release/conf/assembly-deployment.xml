@@ -21,7 +21,6 @@
             <includes>
                 <include>blueprint.yaml</include>
                 <include>Dockerfile</include>
-                <include>build-docker.sh</include>
                 <include>build-k8s.sh</include>
                 <include>metadata.txt</include>
             </includes>
