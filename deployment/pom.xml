@@ -76,16 +76,6 @@
                                 The 'app.main.class' property must conform to '[\w\.-]{5,64}' regular expression.
                             </regexMessage>
                         </requireProperty>
-                        <!--项目部署路径 属性约束-->
-                        <requireProperty>
-                            <property>app.deploy.path</property>
-                            <message>You must set a 'app.deploy.path' property!</message>
-                            <regex>(/[A-Za-z_-]{1,64}){1,10}</regex>
-                            <regexMessage>
-                                The 'app.deploy.path' property must conform to '(/[A-Za-z_-]{1,64}){1,10}' regular
-                                expression.
-                            </regexMessage>
-                        </requireProperty>
                         <!--项目日志路径 属性约束-->
                         <requireProperty>
                             <property>app.log.path</property>
@@ -101,8 +91,6 @@
                                 <!--项目assembly文件 存在性约束-->
                                 <file>${project.basedir}/release/conf/assembly-service.xml</file>
                                 <file>${project.basedir}/release/conf/assembly-deployment.xml</file>
-                                <!--项目debug目录application-debug.properties文件 存在性约束-->
-                                <file>${project.basedir}/debug/config/application-debug.properties</file>
                             </files>
                         </requireFilesExist>
                     </rules>

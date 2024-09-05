@@ -12,7 +12,7 @@
     <!--项目名称-->
     <property name="log.app.name" value="@app.name@"/>
     <!--日志输出文件夹-->
-    <property name="log.path" value="@app.log.path@/${log.app.name}"/>
+    <property name="log.path" value="@app.log.path@"/>
     <!--项目日志跟踪ID键名-->
     <property name="app.log.trace-id-key" value="@app.log.trace-id-key@"/>
     <!--默认编码-->
