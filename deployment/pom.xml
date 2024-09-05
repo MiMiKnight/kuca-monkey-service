@@ -80,11 +80,6 @@
                         <requireProperty>
                             <property>app.log.path</property>
                             <message>You must set a 'app.log.path' property!</message>
-                            <regex>(/[A-Za-z_-]{1,64}){1,10}/logs</regex>
-                            <regexMessage>
-                                The 'app.log.path' property must conform to '(/[A-Za-z_-]{1,64}){1,10}/logs' regular
-                                expression.
-                            </regexMessage>
                         </requireProperty>
                         <requireFilesExist>
                             <files>
