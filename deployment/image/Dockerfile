@@ -28,7 +28,7 @@ HEALTHCHECK NONE
 COPY --chown=${user}:${user} ../${archive_file_name} ./
 # 解压
 RUN yum -y install wget tar \
-    && sudo mkdir ${app_name} \
+    && mkdir ${app_name} \
     && tar -xvf ${archive_file_name} -c ./${app_name}
 # 定义匿名数据卷
 VOLUME ["${volume_log}"]
