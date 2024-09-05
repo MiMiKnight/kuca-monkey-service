@@ -13,7 +13,7 @@
 
     <!--本工程-->
     <artifactId>kuca-monkey-service-parent</artifactId>
-    <version>${revision}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>parent</name>
     <description>父项目</description>
@@ -27,8 +27,6 @@
 
     <!--版本管理-->
     <properties>
-        <!--revision-->
-        <revision>1.0.0-SNAPSHOT</revision>
         <!--项目名称-->
         <app.name>kuca-monkey-service</app.name>
         <!--项目构建版本-->
@@ -89,40 +87,6 @@
     <build>
         <!--插件-->
         <plugins>
-            <!-- flatten-maven-plugin插件 -->
-            <!--作用：统一替换revision项目版本号-->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <version>${flatten-maven-plugin.version}</version>
-                <inherited>true</inherited>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                        <configuration>
-                            <!-- 避免IDE将 .flattened-pom.xml 自动识别为功能模块 -->
-                            <updatePomFile>true</updatePomFile>
-                            <flattenMode>resolveCiFriendliesOnly</flattenMode>
-                            <pomElements>
-                                <parent>expand</parent>
-                                <distributionManagement>remove</distributionManagement>
-                                <repositories>remove</repositories>
-                            </pomElements>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!--maven-resources-plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

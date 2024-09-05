@@ -8,7 +8,7 @@
     <parent>
         <groupId>cn.mimiknight.developer</groupId>
         <artifactId>kuca-monkey-service-parent</artifactId>
-        <version>${revision}</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <!--本工程-->
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>cn.mimiknight.developer</groupId>
             <artifactId>kuca-monkey-service-foundation</artifactId>
-            <version>${revision}</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
