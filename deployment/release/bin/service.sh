@@ -8,14 +8,14 @@
 ##################################
 info() {
   echo "System information:"
-  echo "***********************"
+  echo "***********************\n"
   echo $(head -n 1 /etc/issue)
   echo $(uname -a)
-  echo
+  echo "JAVA_VERSION = xxx"
   echo "JAVA_HOME = $JAVA_HOME"
   echo $(java -version)
   echo
-  echo "***********************"
+  echo "***********************\n"
 }
 
 ##################################
@@ -37,6 +37,9 @@ usage() {
     ;;
   'status')
     status
+    ;;
+  *)
+    echo "service [info|start|stop|restart|status]"
     ;;
   esac
 }

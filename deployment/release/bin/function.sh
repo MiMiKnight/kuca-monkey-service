@@ -13,6 +13,7 @@ tip() {
 ##################################
 warn() {
   echo "WARN: $1"
+  exit 0
 }
 
 ##################################
@@ -25,7 +26,7 @@ error_exit() {
 
 ##################################
 # 设置JAVA环境变量函数
-# $1 参数1：JAVA安装目录
+# $1 参数1：JAVA安装目录（非必填参数）
 ##################################
 set_java_home() {
   var_java_install_path=$1
@@ -38,7 +39,7 @@ set_java_home() {
   if [ -z "$JAVA_HOME" ]; then
     JAVA_PATH=$(which java)
     if [ -z "$JAVA_PATH" ]; then
-      error_exit "Please set the JAVA_HOME variable in your environment, We need java(x64)! jdk17 or later is better!"
+      error_exit "Please set the JAVA_HOME variable in your environment, We need java(x64)! jdk8 or later is better!"
     else
       JAVA_HOME=$(dirname "$JAVA_PATH")/..
       JAVA_HOME=$(cd "$JAVA_HOME" && pwd)
@@ -70,14 +71,14 @@ get_app_pid() {
 # start函数
 # $1 参数1：APP MainClass
 ##################################
-app_start() {
+start() {
   p_app_mainclass=$1
   p_psid=$(get_app_pid $p_app_mainclass)
 
   if [ $p_psid -ne 0 ]; then
     tip_exit "$p_app_mainclass already started! (pid=$p_psid)"
   else
-    echo -n "Starting $APP_MAINCLASS ..."
+    echo "Starting $APP_MAINCLASS ..."
     JAVA_CMD="nohup $JAVA_HOME/bin/java $JAVA_OPTS -classpath $CLASSPATH $APP_MAINCLASS >/dev/null 2>&1 &"
     su - $RUN_USER -c "$JAVA_CMD"
     checkpid
@@ -92,20 +93,20 @@ app_start() {
 ##################################
 # stop函数
 ##################################
-app_stop() {
+stop() {
   echo 'stop'
 }
 
 ##################################
 # restart函数
 ##################################
-app_restart() {
+restart() {
   echo 'restart'
 }
 
 ##################################
 # status函数
 ##################################
-app_status() {
+status() {
   echo 'status'
 }

@@ -1,5 +1,5 @@
 # 指定基础镜像
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8-jdk-alpine AS builder
 # 时区参数
 ARG timezone="Asia/Shanghai"
 # 用户名
@@ -28,11 +28,13 @@ HEALTHCHECK NONE
 COPY --chown=${user}:${user} ../${archive_file_name} ./
 # 解压
 RUN yum -y install wget tar \
-    && mkdir ${app_name} \
-    && tar -xvf ${archive_file_name} -c ./${app_name}
+    && mkdir -p ${workdir}/${app_name} \
+    && mkdir -p ${volume_log} \
+    && tar -xvf ./${archive_file_name} -C ${workdir}/${app_name} \
+    && rm -rf ./${archive_file_name}
 # 定义匿名数据卷
 VOLUME ["${volume_log}"]
 # 暴露应用程序的端口
 EXPOSE ${app_port}
 # 运行应用程序
-ENTRYPOINT ["sh", "${workdir}/${app_name}/bin/start.sh"]
+ENTRYPOINT ["sh", "${workdir}/${app_name}/bin/service.sh","start"]
