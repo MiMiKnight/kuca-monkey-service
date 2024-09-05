@@ -1,7 +1,5 @@
 # 指定基础镜像
 FROM openjdk:8-jdk-alpine
-# 维护者
-ARG maintainer="victor2015yhm@gmail.com"
 # 时区参数
 ARG timezone="Asia/Shanghai"
 # 用户名
@@ -17,7 +15,7 @@ ARG volume_log="${workdir}/${app_name}/log"
 # 项目端口号
 ARG app_port=8443
 # 标签
-LABEL maintainer=${maintainer}
+LABEL maintainer="victor2015yhm@gmail.com"
 # 设置工作目录
 WORKDIR ${workdir}
 # 设置容器时区
@@ -30,11 +28,11 @@ HEALTHCHECK NONE
 COPY --chown=${user}:${user} ../${archive_file_name} ./
 # 解压
 RUN yum -y install wget tar \
-    && sudo mkdir ./${app_name} \
+    && sudo mkdir ${app_name} \
     && tar -xvf ${archive_file_name} -c ./${app_name}
 # 定义匿名数据卷
 VOLUME ["${volume_log}"]
 # 暴露应用程序的端口
 EXPOSE ${app_port}
 # 运行应用程序
-ENTRYPOINT ["java", "-jar", "myproject.jar"]
+ENTRYPOINT ["sh", "${workdir}/${app_name}/bin/start.sh"]
