@@ -28,7 +28,7 @@ image_domain="harbor.devops.vm.mimiknight.cn"
 # 镜像仓库名
 image_library="mmkd"
 # 项目镜像名
-image_name=${image_domain}/${image_library}/${app_name}:${app_version}
+image_name="${image_domain}/${image_library}/${app_name}:${app_version}"
 
 # # dos2unix
 file_dos2unix(){
