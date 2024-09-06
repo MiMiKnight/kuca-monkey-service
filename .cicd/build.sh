@@ -5,38 +5,12 @@ current_dir=$(cd "$(dirname "$0")" && pwd)
 # 当前脚本所在目录的上一级目录
 parent_dir=$(dirname "$current_dir")
 
-# 获取配置信息
-get_metadata(){
-  case "$1" in
-  'APP_NAME')
-    line_number=2
-    ;;
-  'APP_BUILD_VERSION')
-    line_number=4
-    ;;
-  'ARCHIVE_FILE_NAME')
-    line_number=6
-    ;;
-  'APP_MAIN_CLASS')
-    line_number=8
-    ;;
-  'APP_JAR_NAME')
-    line_number=10
-    ;;
-  *)
-    echo "[APP_NAME|APP_BUILD_VERSION|ARCHIVE_FILE_NAME|APP_MAIN_CLASS|APP_JAR_NAME]"
-    exit 1
-    ;;
-  esac
-  return "$(awk -F '=' 'NR==${line_number}{print $2}' "${parent_dir}/.build/deployment/metadata.txt")"
-}
-
 # 项目名称
-app_name=get_metadata "APP_NAME"
+app_name="$(awk -F '=' 'NR==2{print $2}' "${parent_dir}/.build/deployment/metadata.txt")"
 # 项目版本
-app_version=get_metadata "APP_BUILD_VERSION"
+app_version="$(awk -F '=' 'NR==4{print $2}' "${parent_dir}/.build/deployment/metadata.txt")"
 # 项目归档文件名
-app_archive_file_name=get_metadata "ARCHIVE_FILE_NAME"
+app_archive_file_name="$(awk -F '=' 'NR==6{print $2}' "${parent_dir}/.build/deployment/metadata.txt")"
 # 镜像仓库用户名
 image_user="mmk"
 # 镜像仓库密码
@@ -57,7 +31,7 @@ file_dos2unix(){
 
 # 构建镜像函数
 build_image(){
- mv "${parent_dir}/.build/${app_archive_file_name}" "${parent_dir}/.build/deployment/${app_archive_file_name}"
+ mv -f "${parent_dir}/.build/${app_archive_file_name}" "${parent_dir}/.build/deployment"
  # 进入Dockerfile文件所在的同级目录
  cd "${parent_dir}/.build/deployment"
  # 构建docker镜像
