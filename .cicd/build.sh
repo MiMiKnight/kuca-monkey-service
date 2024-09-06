@@ -5,6 +5,14 @@ current_dir=$(cd "$(dirname "$0")" && pwd)
 # 当前脚本所在目录的上一级目录
 parent_dir=$(dirname "$current_dir")
 
+# 打包
+package(){
+  # mvn clean compile package
+  echo "package"
+}
+# 执行项目打包
+package
+
 # 项目名称
 app_name="$(awk -F '=' 'NR==2{print $2}' "${parent_dir}/.build/deployment/metadata.txt")"
 # 项目版本
