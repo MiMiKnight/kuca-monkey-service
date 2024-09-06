@@ -43,7 +43,8 @@ build_image(){
  # 进入Dockerfile文件所在的同级目录
  cd "${parent_dir}/.build/deployment"
  # 构建docker镜像
- sudo docker build --file "${parent_dir}/.build/deployment/Dockerfile" \
+ sudo docker build \
+  --file "${parent_dir}/.build/deployment/Dockerfile" \
   --tag "${image_name}" .
  # 回到父级目录
  cd "${parent_dir}"
