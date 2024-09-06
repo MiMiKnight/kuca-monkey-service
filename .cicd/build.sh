@@ -5,22 +5,28 @@ current_dir=$(cd "$(dirname "$0")" && pwd)
 # 当前脚本所在目录的上一级目录
 parent_dir=$(dirname "$current_dir")
 
-# 打包
+#####################################
+## maven package 函数
+#####################################
 package(){
-  # mvn clean compile package '-Dmaven.test.skip=true'
-  echo "package"
+  mvn clean compile package '-Dmaven.test.skip=true'
+  echo "[Tip]maven package finish!!!"
 }
 # 执行项目打包
 package
 
-# dos2unix
+#####################################
+## dos2unix 函数
+#####################################
 file_dos2unix(){
  sudo dos2unix "${parent_dir}/.build/blueprint.yaml"
  sudo dos2unix "${parent_dir}/.build/Dockerfile"
  sudo dos2unix "${parent_dir}/.build/metadata.txt"
 }
 
-# move deployment
+#####################################
+## move deployment 函数
+#####################################
 move_deployment(){
   if [ ! -d "${parent_dir}/.build/deployment" ];then
     echo "[Warn] ${parent_dir}/.build/deployment not exist!!!"
@@ -48,7 +54,9 @@ image_library="mmkd"
 # 项目镜像名
 image_name="${image_domain}/${image_library}/${app_name}:${app_version}"
 
-# 构建镜像函数
+#####################################
+## 构建镜像函数
+#####################################
 build_image(){
  # 进入Dockerfile文件所在的同级目录
  cd "${parent_dir}/.build"
@@ -66,8 +74,7 @@ build_image(){
  sudo docker logout
 }
 
-# 构建镜像
+# 执行镜像构建
 build_image
-
-# 清除构建内容
+# 执行清除构建内容
 sudo rm -rf "${parent_dir}/.build"
