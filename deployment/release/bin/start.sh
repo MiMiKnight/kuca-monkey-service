@@ -1,5 +1,5 @@
 #!/bin/sh
-# TODO 脚本待完善
+set -ex
 # 指定用户
 
 # 当前shell脚本所在绝对路径目录

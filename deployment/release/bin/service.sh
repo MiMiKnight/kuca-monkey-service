@@ -1,5 +1,5 @@
 #!/bin/sh
-
+set -ex
 # 引入外部shell脚本
 . ./function.sh
 
