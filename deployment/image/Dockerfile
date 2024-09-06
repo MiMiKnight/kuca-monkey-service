@@ -17,17 +17,16 @@ ARG app_port=8443
 # 标签
 LABEL maintainer="victor2015yhm@gmail.com"
 #
-RUN yum -y install wget tar \
-    && echo "${timezone}" > /etc/timezone \
-    && sudo groupadd -g 500 -o -r ${user} \
-    && sudo useradd -M -N -g ${user} -o -r -d /home/${user} -s /usr/sbin/nologin -c "Java Web Service" -u 500 ${user} \
-    && mkdir -p ${workdir}/${app_name} \
-    && mkdir -p ${volume_log} \
-    && chmod -R 750 ${workdir}/${app_name} \
-    && chown -R ${user}:${user} ${workdir}/${app_name} \
+RUN sudo apt-get install -y wget tar \
+    && sudo echo "${timezone}" > /etc/timezone \
+    && sudo useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "JavaWebService" ${user} \
+    && sudo mkdir -p ${workdir}/${app_name} \
+    && sudo mkdir -p ${volume_log} \
+    && sudo chmod -R 750 ${workdir}/${app_name} \
+    && sudo chown -R ${user}:${user} ${workdir}/${app_name}
 # 设置工作目录
 WORKDIR ${workdir}
-# 指定后续指令的用户上下文。
+# 指定后续指令的用户上下文
 USER ${user}:${user}
 # 屏蔽基础镜像的健康检查
 HEALTHCHECK NONE
