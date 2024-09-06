@@ -10,6 +10,8 @@ ARG user="service"
 ARG app_name="@app.name@"
 # 项目版本
 ARG app_version="@app.build.version@"
+# 归档文件父目录（必填项）
+ARG archive_file_parent_path=''
 # 项目归档文件名称
 ARG archive_file_name="@app.name@-@app.build.version@".tar.gz
 # 设置工作目录
@@ -33,7 +35,7 @@ HEALTHCHECK NONE
 # 设置工作目录
 WORKDIR ${workdir}
 # 复制项目归档文件到容器工作目录
-COPY ../${archive_file_name} ./
+COPY ${archive_file_parent_path}/${archive_file_name} ./
 #
 RUN tar -xf ./${archive_file_name} -C ${workdir}/${app_name} \
     && rm -rf ./${archive_file_name} \
