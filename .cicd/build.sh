@@ -26,7 +26,7 @@ move_deployment(){
     echo "[Warn] ${parent_dir}/.build/deployment not exist!!!"
     exist 1
   fi
-  sudo mv -f "${parent_dir}/.build/deployment/*" "${parent_dir}/.build/"
+  sudo mv -f ${parent_dir}/.build/deployment/* ${parent_dir}/.build/
   sudo rm -rf "${parent_dir}/.build/deployment"
   file_dos2unix
 }
