@@ -24,3 +24,5 @@ sudo docker login ${image_domain} --username ${image_user} --password ${image_pa
 sudo docker push ${image_name}
 # 退出登陆docker
 sudo docker logout
+# 删除构建内容
+sudo rm -rf ../.build
