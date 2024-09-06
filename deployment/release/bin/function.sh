@@ -68,6 +68,19 @@ get_app_pid() {
 }
 
 ##################################
+# info函数
+##################################
+info() {
+  echo "System information:"
+  echo "***********************"
+  echo $(head -n 1 /etc/issue)
+  echo $(uname -a)
+  echo "JAVA_HOME = ${JAVA_HOME}"
+  echo "JAVA_VERSION = $(java -version)"
+  echo "***********************"
+}
+
+##################################
 # start函数
 # $1 参数1：APP MainClass
 ##################################

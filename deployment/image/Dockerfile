@@ -16,10 +16,17 @@ ARG volume_log="${workdir}/${app_name}/log"
 ARG app_port=8443
 # 标签
 LABEL maintainer="victor2015yhm@gmail.com"
+#
+RUN yum -y install wget tar \
+    && echo "${timezone}" > /etc/timezone \
+    && sudo groupadd -g 500 -o -r ${user} \
+    && sudo useradd -M -N -g ${user} -o -r -d /home/${user} -s /usr/sbin/nologin -c "Java Web Service" -u 500 ${user} \
+    && mkdir -p ${workdir}/${app_name} \
+    && mkdir -p ${volume_log} \
+    && chmod -R 750 ${workdir}/${app_name} \
+    && chown -R ${user}:${user} ${workdir}/${app_name} \
 # 设置工作目录
 WORKDIR ${workdir}
-# 设置容器时区
-RUN echo "${timezone}" > /etc/timezone
 # 指定后续指令的用户上下文。
 USER ${user}:${user}
 # 屏蔽基础镜像的健康检查
@@ -27,10 +34,7 @@ HEALTHCHECK NONE
 # 复制项目归档文件到容器工作目录
 COPY --chown=${user}:${user} ../${archive_file_name} ./
 # 解压
-RUN yum -y install wget tar \
-    && mkdir -p ${workdir}/${app_name} \
-    && mkdir -p ${volume_log} \
-    && tar -xvf ./${archive_file_name} -C ${workdir}/${app_name} \
+RUN tar -xvf ./${archive_file_name} -C ${workdir}/${app_name} \
     && rm -rf ./${archive_file_name}
 # 定义匿名数据卷
 VOLUME ["${volume_log}"]

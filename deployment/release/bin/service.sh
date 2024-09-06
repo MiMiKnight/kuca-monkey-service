@@ -4,21 +4,6 @@
 . ./function.sh
 
 ##################################
-# info函数
-##################################
-info() {
-  echo "System information:"
-  echo "***********************\n"
-  echo $(head -n 1 /etc/issue)
-  echo $(uname -a)
-  echo "JAVA_VERSION = xxx"
-  echo "JAVA_HOME = $JAVA_HOME"
-  echo $(java -version)
-  echo
-  echo "***********************\n"
-}
-
-##################################
 # usage函数
 ##################################
 usage() {
