@@ -9,6 +9,8 @@ parent_dir=$(dirname "$current_dir")
 ## maven package 函数
 #####################################
 package(){
+  #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk8-settings.xml"
+  #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk17-settings.xml"
   mvn clean compile package '-Dmaven.test.skip=true'
   echo "[Tip]maven package finish!!!"
 }
