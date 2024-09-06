@@ -54,3 +54,5 @@
 > - mvn clean package assembly:single '-Dmaven.test.skip=true'
 > - 或者
 > - mvn clean package '-Dmaven.test.skip=true'
+> - chmod +x .cicd/build.sh
+> - dos2unix .cicd/build.sh
