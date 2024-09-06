@@ -30,21 +30,31 @@ image_library="mmkd"
 # 项目镜像名
 image_name="${image_domain}/${image_library}/${app_name}:${app_version}"
 
-# # dos2unix
+# dos2unix
 file_dos2unix(){
  sudo dos2unix "${parent_dir}/.build/deployment/blueprint.yaml"
  sudo dos2unix "${parent_dir}/.build/deployment/Dockerfile"
  sudo dos2unix "${parent_dir}/.build/deployment/metadata.txt"
 }
 
+# move deployment
+move_deployment(){
+  if [ ! -d "${parent_dir}/.build/deployment" ];then
+    echo "[Warn] ${parent_dir}/.build/deployment not exist!!!"
+    exist 1
+  fi
+  file_dos2unix
+  sudo mv "${parent_dir}/.build/deployment/*" "${parent_dir}/.build"
+  sudo rm -rf "${parent_dir}/.build/deployment"
+}
+
 # 构建镜像函数
 build_image(){
- mv -f "${parent_dir}/.build/${app_archive_file_name}" "${parent_dir}/.build/deployment"
  # 进入Dockerfile文件所在的同级目录
- cd "${parent_dir}/.build/deployment"
+ cd "${parent_dir}/.build"
  # 构建docker镜像
  sudo docker build \
-  --file "${parent_dir}/.build/deployment/Dockerfile" \
+  --file "${parent_dir}/.build/Dockerfile" \
   --tag "${image_name}" .
  # 回到父级目录
  cd "${parent_dir}"
@@ -56,8 +66,8 @@ build_image(){
  sudo docker logout
 }
 
-# 文件dos2unix
-file_dos2unix
+# 移动部署文件
+move_deployment
 # 构建镜像
 build_image
 
