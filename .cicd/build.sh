@@ -7,7 +7,7 @@ parent_dir=$(dirname "$current_dir")
 
 # 打包
 package(){
-  # mvn clean compile package
+  # mvn clean compile package '-Dmaven.test.skip=true'
   echo "package"
 }
 # 执行项目打包
