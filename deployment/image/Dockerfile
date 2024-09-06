@@ -33,7 +33,7 @@ HEALTHCHECK NONE
 # 设置工作目录
 WORKDIR ${workdir}
 # 复制项目归档文件到容器工作目录
-COPY ../${archive_file_name} ./
+COPY ./${archive_file_name} ./
 #
 RUN tar -xf ./${archive_file_name} -C ${workdir}/${app_name} \
     && rm -rf ./${archive_file_name} \
