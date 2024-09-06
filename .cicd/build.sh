@@ -13,12 +13,30 @@ package(){
 # 执行项目打包
 package
 
+# dos2unix
+file_dos2unix(){
+ sudo dos2unix "${parent_dir}/.build/blueprint.yaml"
+ sudo dos2unix "${parent_dir}/.build/Dockerfile"
+ sudo dos2unix "${parent_dir}/.build/metadata.txt"
+}
+
+# move deployment
+move_deployment(){
+  if [ ! -d "${parent_dir}/.build/deployment" ];then
+    echo "[Warn] ${parent_dir}/.build/deployment not exist!!!"
+    exist 1
+  fi
+  sudo mv -f "${parent_dir}/.build/deployment/*" "${parent_dir}/.build/"
+  sudo rm -rf "${parent_dir}/.build/deployment"
+  file_dos2unix
+}
+# 移动部署文件
+move_deployment
+
 # 项目名称
-app_name="$(awk -F '=' 'NR==2{print $2}' "${parent_dir}/.build/deployment/metadata.txt")"
+app_name="$(awk -F '=' 'NR==2{print $2}' "${parent_dir}/.build/metadata.txt")"
 # 项目版本
-app_version="$(awk -F '=' 'NR==4{print $2}' "${parent_dir}/.build/deployment/metadata.txt")"
-# 项目归档文件名
-app_archive_file_name="$(awk -F '=' 'NR==6{print $2}' "${parent_dir}/.build/deployment/metadata.txt")"
+app_version="$(awk -F '=' 'NR==4{print $2}' "${parent_dir}/.build/metadata.txt")"
 # 镜像仓库用户名
 image_user="mmk"
 # 镜像仓库密码
@@ -29,24 +47,6 @@ image_domain="harbor.devops.vm.mimiknight.cn"
 image_library="mmkd"
 # 项目镜像名
 image_name="${image_domain}/${image_library}/${app_name}:${app_version}"
-
-# dos2unix
-file_dos2unix(){
- sudo dos2unix "${parent_dir}/.build/deployment/blueprint.yaml"
- sudo dos2unix "${parent_dir}/.build/deployment/Dockerfile"
- sudo dos2unix "${parent_dir}/.build/deployment/metadata.txt"
-}
-
-# move deployment
-move_deployment(){
-  if [ ! -d "${parent_dir}/.build/deployment" ];then
-    echo "[Warn] ${parent_dir}/.build/deployment not exist!!!"
-    exist 1
-  fi
-  file_dos2unix
-  sudo mv "${parent_dir}/.build/deployment/*" "${parent_dir}/.build"
-  sudo rm -rf "${parent_dir}/.build/deployment"
-}
 
 # 构建镜像函数
 build_image(){
@@ -66,8 +66,6 @@ build_image(){
  sudo docker logout
 }
 
-# 移动部署文件
-move_deployment
 # 构建镜像
 build_image
 
