@@ -18,17 +18,35 @@ image_domain="harbor.devops.vm.mimiknight.cn"
 image_library="mmkd"
 # 项目镜像名
 image_name=${image_domain}/${image_library}/${app_name}:${app_version}
-# dos2unix
-sudo dos2unix "${parent_dir}/.build/deployment/*"
-# 构建docker镜像
-sudo docker build --file "${parent_dir}/.build/deployment/Dockerfile" \
- --build-arg "${parent_dir}/.build" \
- --tag "${image_name}" .
-# 登陆docker
-sudo docker login ${image_domain} --username ${image_user} --password ${image_password}
-# 上传docker镜像
-sudo docker push "${image_name}"
-# 退出登陆docker
-sudo docker logout
+
+# # dos2unix
+file_dos2unix(){
+ sudo dos2unix "${parent_dir}/.build/deployment/blueprint.yaml"
+ sudo dos2unix "${parent_dir}/.build/deployment/Dockerfile"
+ sudo dos2unix "${parent_dir}/.build/deployment/metadata.txt"
+}
+
+# 构建镜像函数
+build_image(){
+ # 进入Dockerfile文件所在的同级目录
+ cd "${parent_dir}/.build/deployment"
+ # 构建docker镜像
+ sudo docker build --file "${parent_dir}/.build/deployment/Dockerfile" \
+  --tag "${image_name}" .
+ # 回到父级目录
+ cd "${parent_dir}"
+ # 登陆docker
+ sudo docker login ${image_domain} --username ${image_user} --password ${image_password}
+ # 上传docker镜像
+ sudo docker push "${image_name}"
+ # 退出登陆docker
+ sudo docker logout
+}
+
+# 文件dos2unix
+file_dos2unix
+# 构建镜像
+build_image
+
 # 清除构建内容
 sudo rm -rf "${parent_dir}/.build"
