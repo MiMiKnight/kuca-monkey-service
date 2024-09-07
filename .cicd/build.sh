@@ -85,8 +85,8 @@ image_password="Harbor12345"
 image_domain="harbor.devops.vm.mimiknight.cn"
 # 镜像仓库名
 image_library="mmkd"
-# 项目镜像名
-image_name="${image_domain}/${image_library}/${app_name}:${app_version}"
+# 项目镜像标签
+image_tag="${image_domain}/${image_library}/${app_name}:${app_version}"
 
 #####################################
 ## 构建镜像函数
@@ -97,13 +97,15 @@ build_image(){
  # 构建docker镜像
  sudo docker build \
   --file "${parent_dir}/.build/Dockerfile" \
-  --tag "${image_name}" .
+  --tag "${image_tag}" .
  # 回到父级目录
  cd "${parent_dir}"
  # 登陆docker
  sudo docker login ${image_domain} --username ${image_user} --password ${image_password}
  # 上传docker镜像
- sudo docker push "${image_name}"
+ sudo docker push "${image_tag}"
+ # 删除产物镜像
+ sudo docker rmi "$(sudo docker images | grep "${app_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
  # 退出登陆docker
  sudo docker logout
 }
