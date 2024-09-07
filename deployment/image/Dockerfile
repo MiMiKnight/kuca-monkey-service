@@ -32,7 +32,7 @@ RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak \
     && apt-get update \
     && apt-get install -y --reinstall ca-certificates \
     && sed -i "s@http://@https://@g" /etc/apt/sources.list \
-    && apt-get install -y dos2unix tar \
+    && apt-get install -y dos2unix tar vi vim \
     && mv -f /etc/apt/sources.list.bak /etc/apt/sources.list \
     && echo "${timezone}" > /etc/timezone \
     && useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "JavaWebService" ${user} \
