@@ -118,7 +118,7 @@ build_image
 build_blueprint(){
   echo "build_blueprint"
   # 替换镜像地址
-  sed -i "s{{image_tag}}@${image_tag}@g" ${parent_dir}/.build/blueprint.yaml
+  sed -i "s@{{image_tag}}@${image_tag}@g" ${parent_dir}/.build/blueprint.yaml
   # 向k8s推送部署服务
 }
 build_blueprint
