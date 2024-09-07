@@ -19,7 +19,8 @@ package(){
   fi
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk8-settings.xml"
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk17-settings.xml"
-  su -c "${cmd}"
+  # 执行打包命令
+  `${cmd}`
 
   # 循环等待打包结束
   local timeout now start_time end_time duration;
@@ -30,15 +31,15 @@ package(){
   duration=0 # 持续时间
   until [ ! -d "${parent_dir}/.build" ]
   do
-    echo "[TIP] maven is packaging now ...."
+    echo "[TIP] maven is packaging project now ...."
     now=$(date +'%Y-%m-%d %H:%M:%S')
     end_time=$(date --date="$now" +%s);
-    duration=${end_time}-${start_time}
-    if [ ${duration} -ge ${timeout} ]; then
-      echo "[ERROR] maven package timeout !!!"
+    duration=$((${end_time}-${start_time}))
+    if [ ${duration} -gt ${timeout} ]; then
+      echo "[ERROR] maven package project timeout !!!"
       exit 1 # 超时则报错退出脚本执行
     fi
-    sleep 1 # 每秒执行一次
+    sleep 2 # 循环每2秒执行一次
   done
   echo "[TIP]maven package finish!!!"
 }
