@@ -59,4 +59,4 @@ EXPOSE ${app_port}
 # 设置子级工作目录 ${workdir}/${app_name}
 WORKDIR ${app_name}
 # 运行应用程序
-ENTRYPOINT ["${workdir}/${app_name}/bin/service.sh","start"]
+ENTRYPOINT ["${workdir}/${app_name}/bin/app_service.sh","start"]
