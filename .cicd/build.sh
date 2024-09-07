@@ -29,9 +29,9 @@ file_dos2unix(){
 }
 
 #####################################
-## move deployment 函数
+## move file 函数
 #####################################
-move_deployment(){
+move_file(){
   if [ ! -d "${parent_dir}/.build/deployment" ];then
     echo "[Tip] ${parent_dir}/.build/deployment not exist!!!"
     exist 0
@@ -40,8 +40,8 @@ move_deployment(){
   sudo rm -rf "${parent_dir}/.build/deployment"
   file_dos2unix
 }
-# 执行 move deployment 函数
-move_deployment
+# 执行 move file 函数
+move_file
 
 # 项目名称
 app_name="$(awk -F '=' 'NR==2{print $2}' "${parent_dir}/.build/metadata.txt")"
