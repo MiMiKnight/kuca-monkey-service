@@ -25,7 +25,7 @@ LABEL cn.mimiknight.developer.image.maintainer=${maintainer}
 LABEL cn.mimiknight.developer.image.app_name=${app_name}
 LABEL cn.mimiknight.developer.image.app_version=${app_version}
 #
-RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak \
+RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
     && sed -i "s@http://.*archive.ubuntu.com@${apt_mirror}@g" /etc/apt/sources.list \
     && sed -i "s@http://.*security.ubuntu.com@${apt_mirror}@g" /etc/apt/sources.list \
     && sed -i "s@https://@http://@g" /etc/apt/sources.list \
