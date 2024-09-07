@@ -113,7 +113,7 @@ build_image(){
 build_image
 
 #####################################
-## 构建K8S部署配置 函数
+## 构建K8S部署 函数
 #####################################
 build_blueprint(){
   echo "build_blueprint"
