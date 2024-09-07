@@ -46,7 +46,7 @@ COPY ./${archive_file_name} ./
 RUN tar -xf ./${archive_file_name} -C ${workdir}/${app_name} \
     && rm -rf ./${archive_file_name} \
     && find "${workdir}/${app_name}" -type f -print0 | xargs -0 dos2unix -k -s \
-    && chown -R ${user}:${user} ${workdir}/${app_name} \
+    && chown -R ${user}:${user} ${workdir}/${app_name}
 # 环境变量
 ENV APP_HOME=${workdir}/${app_name}
 ENV PATH=$APP_HOME/bin:$PATH
