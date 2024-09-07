@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+#set -ex
 # 脚本当前所在目录
 current_dir=$(cd "$(dirname "$0")" && pwd)
 # 当前脚本所在目录的上一级目录
