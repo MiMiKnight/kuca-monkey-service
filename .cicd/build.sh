@@ -21,8 +21,7 @@ package
 ## dos2unix 函数
 #####################################
 file_dos2unix(){
- sudo dos2unix -k "${parent_dir}/.build/*.｛yaml,yml,txt,sh,xml,properties｝"
- sudo dos2unix -k "${parent_dir}/.build/Dockerfile"
+ sudo find "${parent_dir}/.build" -type f -print0 | xargs -0 dos2unix -k -s
 }
 
 #####################################

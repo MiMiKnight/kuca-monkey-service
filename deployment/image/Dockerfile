@@ -18,12 +18,22 @@ ARG workdir="/opt/app"
 ARG volume_log="${workdir}/${app_name}/log"
 # 项目端口号
 ARG app_port=8443
+# APT镜像
+ARG apt_mirror="https://mirrors.tuna.tsinghua.edu.cn"
 # 标签
 LABEL cn.mimiknight.developer.image.maintainer=${maintainer}
 LABEL cn.mimiknight.developer.image.app_name=${app_name}
 LABEL cn.mimiknight.developer.image.app_version=${app_version}
 #
-RUN apt-get install -y tar \
+RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak \
+    && sed -i "s@http://.*archive.ubuntu.com@${apt_mirror}@g" /etc/apt/sources.list \
+    && sed -i "s@http://.*security.ubuntu.com@${apt_mirror}@g" /etc/apt/sources.list \
+    && sed -i "s@https://@http://@g" /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y --reinstall ca-certificates \
+    && sed -i "s@http://@https://@g" /etc/apt/sources.list \
+    && apt-get install -y dos2unix tar \
+    && mv -f /etc/apt/sources.list.bak /etc/apt/sources.list \
     && echo "${timezone}" > /etc/timezone \
     && useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "JavaWebService" ${user} \
     && mkdir -p ${workdir}/${app_name} \
@@ -37,6 +47,7 @@ COPY ./${archive_file_name} ./
 #
 RUN tar -xf ./${archive_file_name} -C ${workdir}/${app_name} \
     && rm -rf ./${archive_file_name} \
+    && find "${workdir}/${app_name}" -type f -print0 | xargs -0 dos2unix -k -s \
     && chown -R ${user}:${user} ${workdir}/${app_name}
 # 定义匿名数据卷
 VOLUME ["${volume_log}"]
