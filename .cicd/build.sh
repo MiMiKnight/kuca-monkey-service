@@ -5,14 +5,42 @@ current_dir=$(cd "$(dirname "$0")" && pwd)
 # 当前脚本所在目录的上一级目录
 parent_dir=$(dirname "$current_dir")
 
+# maven配置文件路径
+maven_setting_config=$1
+
 #####################################
 ## maven package 函数
 #####################################
 package(){
+  local cmd="mvn clean compile package '-Dmaven.test.skip=true'";
+  # 如果外部传入的maven配置文件变量不为空且文件存在
+  if [ -z "${maven_setting_config}" ] && [ -f "${maven_setting_config}" ]; then
+    cmd="${cmd} --settings='${maven_setting_config}'"
+  fi
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk8-settings.xml"
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk17-settings.xml"
-  mvn clean compile package '-Dmaven.test.skip=true'
-  echo "[Tip]maven package finish!!!"
+  su -c "${cmd}"
+
+  # 循环等待打包结束
+  local timeout now start_time end_time duration;
+  timeout=300; # 打包超时时间（单位：秒）
+  now=$(date +'%Y-%m-%d %H:%M:%S');
+  start_time=$(date --date="${now}" +%s);
+  end_time=${start_time}
+  duration=0 # 持续时间
+  until [ ! -d "${parent_dir}/.build" ]
+  do
+    echo "[TIP] maven is packaging now ...."
+    now=$(date +'%Y-%m-%d %H:%M:%S')
+    end_time=$(date --date="$now" +%s);
+    duration=${end_time}-${start_time}
+    if [ ${duration} -ge ${timeout} ]; then
+      echo "[ERROR] maven package timeout !!!"
+      exit 1 # 超时则报错退出脚本执行
+    fi
+    sleep 1 # 每秒执行一次
+  done
+  echo "[TIP]maven package finish!!!"
 }
 # 执行项目打包
 package
@@ -22,7 +50,7 @@ package
 #####################################
 file_dos2unix(){
   if [ ! -d "${parent_dir}/.build" ]; then
-    echo "[Tip] ${parent_dir}/.build not exist!!!"
+    echo "[TIP] ${parent_dir}/.build not exist!!!"
     exist 0
   fi
  sudo find "${parent_dir}/.build" -type f -print0 | xargs -0 dos2unix -k -s
@@ -33,7 +61,7 @@ file_dos2unix(){
 #####################################
 move_file(){
   if [ ! -d "${parent_dir}/.build/deployment" ];then
-    echo "[Tip] ${parent_dir}/.build/deployment not exist!!!"
+    echo "[TIP] ${parent_dir}/.build/deployment not exist!!!"
     exist 0
   fi
   sudo mv -f ${parent_dir}/.build/deployment/* ${parent_dir}/.build/
