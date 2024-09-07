@@ -51,7 +51,7 @@ RUN tar -xf ./${archive_file_name} -C ${workdir}/${app_name} \
 USER ${user}:${user}
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD /bin/bash ${workdir}/${app_name}/bin/service.sh healtycheck
+  CMD /bin/bash ${workdir}/${app_name}/bin/service.sh healthcheck
 # 定义匿名数据卷
 VOLUME ["${volume_log}"]
 # 暴露应用程序的端口
