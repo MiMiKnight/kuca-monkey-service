@@ -11,7 +11,7 @@ maven_setting_config=$1
 #####################################
 ## maven package 函数
 #####################################
-package(){
+maven_package(){
   local cmd="mvn clean compile package '-Dmaven.test.skip=true'";
   # 如果外部传入的maven配置文件变量不为空且文件存在
   if [ -z "${maven_setting_config}" ] && [ -f "${maven_setting_config}" ]; then
@@ -29,7 +29,8 @@ package(){
   start_time=$(date --date="${now}" +%s);
   end_time=${start_time}
   duration=0 # 持续时间
-  until [ ! -d "${parent_dir}/.build" ]
+  # 构建产物不存在时则等待构建，执行循环体；构建产物存在，则跳出循环；
+  until [ -d "${parent_dir}/.build" ]
   do
     echo "[TIP] maven is packaging project now ...."
     now=$(date +'%Y-%m-%d %H:%M:%S')
@@ -43,8 +44,8 @@ package(){
   done
   echo "[TIP]maven package finish!!!"
 }
-# 执行项目打包
-package
+# 执行maven打包操作
+maven_package
 
 #####################################
 ## dos2unix 函数
