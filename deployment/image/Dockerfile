@@ -38,8 +38,6 @@ RUN cp -a /etc/apt/sources.list /etc/apt/sources.list.bak \
     && useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "JavaWebService" ${user} \
     && mkdir -p ${workdir}/${app_name} \
     && mkdir -p ${volume_log}
-# 屏蔽基础镜像的健康检查
-HEALTHCHECK NONE
 # 设置工作目录
 WORKDIR ${workdir}
 # 复制项目归档文件到容器工作目录
@@ -49,13 +47,16 @@ RUN tar -xf ./${archive_file_name} -C ${workdir}/${app_name} \
     && rm -rf ./${archive_file_name} \
     && find "${workdir}/${app_name}" -type f -print0 | xargs -0 dos2unix -k -s \
     && chown -R ${user}:${user} ${workdir}/${app_name}
+# 指定后续指令的用户上下文
+USER ${user}:${user}
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD /bin/bash ${workdir}/${app_name}/bin/service.sh healtycheck
 # 定义匿名数据卷
 VOLUME ["${volume_log}"]
 # 暴露应用程序的端口
 EXPOSE ${app_port}
 # 设置子级工作目录 ${workdir}/${app_name}
 WORKDIR ${app_name}
-# 指定后续指令的用户上下文
-USER ${user}:${user}
 # 运行应用程序
 ENTRYPOINT ["sh", "${workdir}/${app_name}/bin/service.sh","start"]

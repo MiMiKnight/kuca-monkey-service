@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -ex
 
 # 脚本当前所在目录
@@ -29,8 +29,11 @@ usage() {
   'status')
     status
     ;;
+  'healthcheck')
+    healthcheck
+    ;;
   *)
-    echo "service [info|start|stop|restart|status]"
+    echo "service [info|start|stop|restart|status|healthcheck]"
     ;;
   esac
 }
