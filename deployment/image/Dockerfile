@@ -1,5 +1,5 @@
 # 指定基础镜像
-FROM harbor.devops.vm.mimiknight.cn/library/oraclejre:1.8.0-202-ubuntu_v22.04 AS builder
+FROM harbor.devops.vm.mimiknight.cn/library/oraclejdk:1.8.0-202-ubuntu_v22.04 AS builder
 # 维护者
 ARG maintainer="victor2015yhm@gmail.com"
 # 时区参数

@@ -1,31 +1,29 @@
 #!/bin/bash
-set -ex
+#set -ex
 # 脚本当前所在目录
 current_dir=$(cd "$(dirname "$0")" && pwd)
 # 当前脚本所在目录的上一级目录
 parent_dir=$(dirname "$current_dir")
 
 ##################################
-# 正常提示函数
+# 友好提示函数
 ##################################
 tip() {
-  echo "TIP: $1"
-  exit 0
+  echo "[TIP]: $1"
 }
 
 ##################################
-# 告警提示函数
+# 警告提示函数
 ##################################
 warn() {
-  echo "WARN: $1"
-  exit 0
+  echo "[WARN]: $1"
 }
 
 ##################################
 # 错误提示退出函数
 ##################################
 error_exit() {
-  echo "ERROR: $1"
+  echo "[ERROR]: $1"
   exit 1
 }
 
@@ -33,10 +31,9 @@ error_exit() {
 # 设置JAVA环境变量函数
 # $1 参数1：JAVA安装目录（非必填参数）
 ##################################
-set_java_home() {
-  var_java_install_path=$1
-
-  [ -e "$var_java_install_path/bin/java" ] && JAVA_HOME=$var_java_install_path
+java_home() {
+  java_install_path=$1
+  [ -e "$java_install_path/bin/java" ] && JAVA_HOME=$java_install_path
   [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=$HOME/jdk/java
   [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/java
   [ ! -e "$JAVA_HOME/bin/java" ] && unset JAVA_HOME
@@ -61,35 +58,16 @@ set_java_home() {
 # $1 参数1：APP MainClass
 ##################################
 get_app_pid() {
+  local pid;
   p_app_mainclass=$1
-  p_psid=0
+  pid=0
   javaps=$($JAVA_HOME/bin/jps -l | grep $p_app_mainclass)
   if [ -n "$javaps" ]; then
-    p_psid=$(echo $javaps | awk '{print $1}')
+    pid=$(echo $javaps | awk '{print $1}')
   else
-    p_psid=0
+    pid=0
   fi
-  return $p_psid
-}
-
-##################################
-# 健康检查函数
-##################################
-healthcheck(){
-  exit 0
-}
-
-##################################
-# info函数
-##################################
-info() {
-  echo "System information:"
-  echo "***********************"
-  echo $(head -n 1 /etc/issue)
-  echo $(uname -a)
-  echo "JAVA_HOME = ${JAVA_HOME}"
-  echo "JAVA_VERSION = $(java -version)"
-  echo "***********************"
+  return $pid
 }
 
 ##################################
@@ -134,4 +112,24 @@ restart() {
 ##################################
 status() {
   echo 'status'
+}
+
+##################################
+# 健康检查函数
+##################################
+healthcheck(){
+  exit 0
+}
+
+##################################
+# info函数
+##################################
+info() {
+  echo "System information:"
+  echo "***********************"
+  echo $(head -n 1 /etc/issue)
+  echo $(uname -a)
+  echo "JAVA_HOME = ${JAVA_HOME}"
+  echo "JAVA_VERSION = $(java -version)"
+  echo "***********************"
 }
