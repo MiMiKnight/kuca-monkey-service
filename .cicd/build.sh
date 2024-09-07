@@ -109,8 +109,19 @@ build_image(){
  # 退出登陆docker
  sudo docker logout
 }
-
 # 执行镜像构建
 build_image
+
+#####################################
+## 构建K8S部署配置 函数
+#####################################
+build_blueprint(){
+  echo "build_blueprint"
+  # 替换镜像地址
+  sed -i "s{{image_tag}}@${image_tag}@g" ${parent_dir}/.build/blueprint.yaml
+  # 向k8s推送部署服务
+}
+build_blueprint
+
 # 执行清除构建内容
 sudo rm -rf "${parent_dir}/.build"
