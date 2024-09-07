@@ -21,6 +21,10 @@ package
 ## dos2unix 函数
 #####################################
 file_dos2unix(){
+  if [ ! -d "${parent_dir}/.build" ]; then
+    echo "[Tip] ${parent_dir}/.build not exist!!!"
+    exist 0
+  fi
  sudo find "${parent_dir}/.build" -type f -print0 | xargs -0 dos2unix -k -s
 }
 
@@ -29,8 +33,8 @@ file_dos2unix(){
 #####################################
 move_deployment(){
   if [ ! -d "${parent_dir}/.build/deployment" ];then
-    echo "[Warn] ${parent_dir}/.build/deployment not exist!!!"
-    exist 1
+    echo "[Tip] ${parent_dir}/.build/deployment not exist!!!"
+    exist 0
   fi
   sudo mv -f ${parent_dir}/.build/deployment/* ${parent_dir}/.build/
   sudo rm -rf "${parent_dir}/.build/deployment"
