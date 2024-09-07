@@ -21,9 +21,8 @@ package
 ## dos2unix 函数
 #####################################
 file_dos2unix(){
- sudo dos2unix "${parent_dir}/.build/blueprint.yaml"
- sudo dos2unix "${parent_dir}/.build/Dockerfile"
- sudo dos2unix "${parent_dir}/.build/metadata.txt"
+ sudo dos2unix -k "${parent_dir}/.build/*.｛yaml,yml,txt,sh,xml,properties｝"
+ sudo dos2unix -k "${parent_dir}/.build/Dockerfile"
 }
 
 #####################################
@@ -38,7 +37,7 @@ move_deployment(){
   sudo rm -rf "${parent_dir}/.build/deployment"
   file_dos2unix
 }
-# 移动部署文件
+# 执行 move deployment 函数
 move_deployment
 
 # 项目名称
