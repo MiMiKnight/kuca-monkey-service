@@ -149,7 +149,7 @@ BuildImage
 #####################################
 BuildBlueprint(){
   echo "build blueprint"
-  # 替换镜像地址
+  # 替换镜像坐标
   sed -i "s@{{image_coordinate}}@${image_coordinate}@g" ${CONST_PARENT_DIR}/.build/blueprint.yaml
 }
 BuildBlueprint
