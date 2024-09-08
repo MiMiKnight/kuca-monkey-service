@@ -1,95 +1,138 @@
 #!/bin/bash
 #set -ex
-# 脚本当前所在目录
-current_dir=$(cd "$(dirname "$0")" && pwd)
-# 当前脚本所在目录的上一级目录
-parent_dir=$(dirname "$current_dir")
+
+############全局变量常量############
+# 脚本当前所在目录 常量
+CONST_CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
+declare -r CONST_CURRENT_DIR;
+# 脚本所在的上一级目录 常量
+CONST_PARENT_DIR=$(dirname "$CONST_CURRENT_DIR")
+declare -r CONST_PARENT_DIR;
+# shell内的JAVA_HOME环境变量
+declare -x EVN_JAVA_HOME=""
+# app_pid 全局变量
+declare -i g_app_pid=0
+# 主类名 全局变量
+declare g_main_class="@app.main.class@"
+# 应用jar包名称 全局变量
+declare g_app_jar_path="${CONST_PARENT_DIR}/lib/@app.jar.name@.jar"
+# 启动日志路径
+declare g_app_startup_log_path="${CONST_PARENT_DIR}/log/startup.log"
 
 ##################################
 # 友好提示函数
 ##################################
-tip() {
+Tip() {
   echo "[TIP]: $1"
 }
 
 ##################################
 # 警告提示函数
 ##################################
-warn() {
+Warn() {
   echo "[WARN]: $1"
 }
 
 ##################################
 # 错误提示退出函数
 ##################################
-error_exit() {
+Error() {
   echo "[ERROR]: $1"
-  exit 1
 }
 
 ##################################
 # 设置JAVA环境变量函数
 # $1 参数1：JAVA安装目录（非必填参数）
 ##################################
-java_home() {
-  java_install_path=$1
-  [ -e "$java_install_path/bin/java" ] && JAVA_HOME=$java_install_path
-  [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=$HOME/jdk/java
-  [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/java
-  [ ! -e "$JAVA_HOME/bin/java" ] && unset JAVA_HOME
+GetJavaHome() {
+  # java安装位置
+  local java_install_path=$1;
 
-  if [ -z "$JAVA_HOME" ]; then
-    JAVA_PATH=$(which java)
-    if [ -z "$JAVA_PATH" ]; then
-      error_exit "Please set the JAVA_HOME variable in your environment, We need java(x64)! jdk8 or later is better!"
-    else
-      JAVA_HOME=$(dirname "$JAVA_PATH")
-      JAVA_HOME=$(cd "$JAVA_HOME" && pwd)
-      export PATH=$JAVA_HOME/bin:$PATH
-    fi
+  [ -e "${java_install_path}/bin/java" ] && JAVA_HOME=${java_install_path}
+  [ ! -e "${JAVA_HOME}/bin/java" ] && JAVA_HOME=$HOME/jdk/java
+  [ ! -e "${JAVA_HOME}/bin/java" ] && JAVA_HOME=/usr/java
+  [ ! -e "${JAVA_HOME}/bin/java" ] && unset JAVA_HOME
+
+  # JAVA_HOME 目录存在
+  if [ -d "${JAVA_HOME}" ]; then
+     EVN_JAVA_HOME=${JAVA_HOME}
+     return
   else
-    JAVA_HOME=$(cd "$JAVA_HOME" && pwd)
-    export PATH=$JAVA_HOME/bin:$PATH
+     JAVA_PATH=$(which java)
+     # 判断java执行文件是否存在
+     if [ -z "$JAVA_PATH" ]; then
+       error "Please install Java and set environment variables, We need java(x64) and jdk8 or later is better!"
+     else
+       JAVA_HOME=$(dirname "$JAVA_PATH")
+       JAVA_HOME=$(cd "$(dirname "$JAVA_HOME")" && pwd)
+       EVN_JAVA_HOME=${JAVA_HOME}
+       return
+     fi
+  fi
+}
+#
+GetJavaHome ''
+
+##################################
+# 获取应用PID 函数
+# $1 参数1：APP MainClass（必填参数）
+##################################
+GetJavaPID() {
+  local main_class=$1 jps_info='';
+  jps_info=$("${EVN_JAVA_HOME}/bin/jps" -l | grep "${main_class}")
+  if [ -n "${jps_info}" ]; then
+    g_app_pid=$(echo "${jps_info}" | awk '{print $1}')
+  else
+    g_app_pid=0
   fi
 }
 
 ##################################
-# 获取应用PID的函数
-# $1 参数1：APP MainClass
+# check应用PID 函数
+# $1 参数1：APP MainClass（必填参数）
 ##################################
-get_app_pid() {
-  local pid;
-  p_app_mainclass=$1
-  pid=0
-  javaps=$($JAVA_HOME/bin/jps -l | grep $p_app_mainclass)
-  if [ -n "$javaps" ]; then
-    pid=$(echo $javaps | awk '{print $1}')
-  else
-    pid=0
+CheckJavaPID(){
+  GetJavaPID "$1"
+  if [ ${g_app_pid} -gt 0 ]; then
+      Tip "Application already started !!! (pid=${g_app_pid})"
+      exit 0
   fi
-  return $pid
 }
 
 ##################################
 # start函数
-# $1 参数1：APP MainClass
 ##################################
-start() {
-  p_app_mainclass=$1
-  p_psid=$(get_app_pid $p_app_mainclass)
+Start() {
+  # 检查应用是否已经启动
+  CheckJavaPID ${g_main_class}
 
-  if [ $p_psid -ne 0 ]; then
-    tip_exit "$p_app_mainclass already started! (pid=$p_psid)"
+  local java_cmd='' java_opts='';
+  # 启动超时时间，单位：秒
+  local -i timeout=60;
+
+  java_opts="-Xms512m \
+  -Xmx1024m \
+  -XX:MetaspaceSize=512m \
+  -XX:MaxMetaspaceSize=1024m \
+  -server \
+  -Duser.language=en \
+  -Duser.timezone=GMT+00:00 \
+  -Dfile.encoding=utf-8 \
+  -Dspring.profiles.name=application \
+  -Dspring.profiles.active=debug"
+
+  classpath=".:${CONST_PARENT_DIR}/lib:"
+
+  java_cmd="nohup ${EVN_JAVA_HOME}/bin/java -jar ${java_opts} ${g_app_jar_path} > ${g_app_startup_log_path} 2>&1 &"
+  `${java_cmd}`
+
+  # 检查应用是否启动成功
+  GetJavaPID ${g_main_class}
+  if [ ${g_app_pid} -gt 0 ]; then
+      Tip "Application start successfully !!! (pid=${g_app_pid})"
+      exit 0
   else
-    echo "Starting $APP_MAINCLASS ..."
-    JAVA_CMD="nohup $JAVA_HOME/bin/java $JAVA_OPTS -classpath $CLASSPATH $APP_MAINCLASS >/dev/null 2>&1 &"
-    su - $RUN_USER -c "$JAVA_CMD"
-    checkpid
-    if [ $p_psid -ne 0 ]; then
-      echo "(pid=$p_psid) [OK]"
-    else
-      echo "[Failed]"
-    fi
+      Warn "Application start failed !!!"
   fi
 }
 

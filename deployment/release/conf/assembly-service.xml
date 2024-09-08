@@ -16,7 +16,7 @@
         <dependencySet>
             <outputDirectory>/lib</outputDirectory>
             <!--是否生成项目的jar-->
-            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectArtifact>true</useProjectArtifact>
             <scope>runtime</scope>
             <unpack>false</unpack>
             <fileMode>0640</fileMode>
@@ -25,30 +25,6 @@
     </dependencySets>
 
     <fileSets>
-        <!--手动打包项目jar至lib目录-->
-        <fileSet>
-            <directory>${project.parent.basedir}/service-core/target</directory>
-            <outputDirectory>/lib</outputDirectory>
-            <!--filtering标签 true:表示开启变量替换；false：表示关闭变量替换；非文本文件应该设置为false-->
-            <filtered>false</filtered>
-            <includes>
-                <include>${app.jar.name}.jar</include>
-            </includes>
-        </fileSet>
-        <!--添加项目配置文件至外部classpath-->
-        <fileSet>
-            <directory>${project.parent.basedir}/service-core/src/main/resources</directory>
-            <outputDirectory>/resources</outputDirectory>
-            <filtered>true</filtered>
-            <includes>
-                <include>config/application.properties</include>
-                <include>logback-spring.xml</include>
-                <include>mybatis/mapper/**/*Mapper.xml</include>
-                <include>mybatis/mybatis-config.xml</include>
-            </includes>
-            <fileMode>0640</fileMode>
-            <directoryMode>0750</directoryMode>
-        </fileSet>
         <!--打包项目bin脚本-->
         <fileSet>
             <directory>${project.parent.basedir}/deployment/release/bin</directory>
@@ -57,6 +33,17 @@
             <includes>
                 <include>**/*.sh</include>
                 <include>**/*.cmd</include>
+            </includes>
+            <fileMode>0750</fileMode>
+            <directoryMode>0750</directoryMode>
+        </fileSet>
+        <!--打包项目日志文件夹-->
+        <fileSet>
+            <directory>${project.parent.basedir}/deployment/release/logs</directory>
+            <outputDirectory>/logs</outputDirectory>
+            <filtered>true</filtered>
+            <includes>
+                <include>README.md</include>
             </includes>
             <fileMode>0750</fileMode>
             <directoryMode>0750</directoryMode>
@@ -72,10 +59,25 @@
                 <exclude>assembly-*.xml</exclude>
             </excludes>
         </fileSet>
+        <!--添加项目配置文件至外部classpath-->
+        <fileSet>
+            <directory>${project.parent.basedir}/service-core/src/main/resources</directory>
+            <outputDirectory>/conf</outputDirectory>
+            <filtered>true</filtered>
+            <includes>
+                <include>bootstrap.properties</include>
+                <include>application.properties</include>
+                <include>logback-spring.xml</include>
+                <include>mybatis/mapper/**/*Mapper.xml</include>
+                <include>mybatis/mybatis-config.xml</include>
+            </includes>
+            <fileMode>0640</fileMode>
+            <directoryMode>0750</directoryMode>
+        </fileSet>
         <!--打包db升级脚本至外部classpath-->
         <fileSet>
             <directory>${project.parent.basedir}/deployment/release/db</directory>
-            <outputDirectory>/resources/migration</outputDirectory>
+            <outputDirectory>/conf/db-migration</outputDirectory>
             <filtered>false</filtered>
             <includes>
                 <include>**/*.sql</include>
