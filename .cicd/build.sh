@@ -84,25 +84,22 @@ MoveFile(){
 MoveFile
 
 #####################################
-## 生成镜像标签 函数
+## 生成构建版本 函数
 #####################################
 BuildVersion(){
   # 生成构建版本
-  local build_version=""
+  local build_version="" cmd=""
   build_version="$(date +%Y%m%d%H%M%S%N)"
-  echo ${build_version}
   # 向JSON文件写入构建版本
-  cat "${CONST_PARENT_DIR}/.build/metadata.json" | jq ".APP_BUILD_VERSION = ${build_version}" > "${CONST_PARENT_DIR}/.build/metadata.json"
+  echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${CONST_PARENT_DIR}/.build/metadata.json)" > ${CONST_PARENT_DIR}/.build/metadata.json
 }
  # 生成构建版本
  BuildVersion
 
 # 项目名称
-#app_name="$(awk -F '=' 'NR==2{print $2}' "${CONST_PARENT_DIR}/.build/metadata.txt")"
-app_name="$(cat "${CONST_PARENT_DIR}/.build/metadata.json" | jq -r '.APP_NAME')"
-# 项目版本
-#app_version="$(awk -F '=' 'NR==4{print $2}' "${CONST_PARENT_DIR}/.build/metadata.txt")"
-app_version="$(cat "${CONST_PARENT_DIR}/.build/metadata.json" | jq -r '.APP_BUILD_VERSION')"
+app_name="$(jq -r '.APP_NAME' ${CONST_PARENT_DIR}/.build/metadata.json)"
+# 项目构建版本
+app_build_version="$(jq -r '.APP_BUILD_VERSION' ${CONST_PARENT_DIR}/.build/metadata.json)"
 # 镜像仓库用户名
 image_user="mmk"
 # 镜像仓库密码
@@ -111,8 +108,8 @@ image_password="Harbor12345"
 image_domain="harbor.devops.vm.mimiknight.cn"
 # 镜像仓库名
 image_library="mmkd"
-# 项目镜像标签
-image_tag="${image_domain}/${image_library}/${app_name}:${app_version}"
+# 项目镜像坐标
+image_coordinate="${image_domain}/${image_library}/${app_name}:${app_build_version}"
 
 #####################################
 ## 构建镜像函数
@@ -123,17 +120,17 @@ BuildImage(){
  # 构建docker镜像
  sudo docker build \
   --file "${CONST_PARENT_DIR}/.build/Dockerfile" \
-  --build-arg build_version="${app_version}" \
+  --build-arg build_version="${app_build_version}" \
   --build-arg timezone="Asia/Shanghai" \
-  --tag "${image_tag}" .
+  --tag "${image_coordinate}" .
  # 回到父级目录
  cd "${CONST_PARENT_DIR}"
  # 登陆docker
  sudo docker login ${image_domain} --username ${image_user} --password ${image_password}
  # 上传docker镜像
- sudo docker push "${image_tag}"
+ sudo docker push "${image_coordinate}"
  # 删除产物镜像
- sudo docker rmi "$(sudo docker images | grep "${app_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
+ sudo docker rmi "$(sudo docker images | grep "${app_build_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
  # 退出登陆docker
  sudo docker logout
 }
@@ -146,7 +143,7 @@ BuildImage
 BuildBlueprint(){
   echo "build blueprint"
   # 替换镜像地址
-  sed -i "s@{{image_tag}}@${image_tag}@g" ${CONST_PARENT_DIR}/.build/blueprint.yaml
+  sed -i "s@{{image_coordinate}}@${image_coordinate}@g" ${CONST_PARENT_DIR}/.build/blueprint.yaml
   # 向k8s推送部署服务
 }
 BuildBlueprint

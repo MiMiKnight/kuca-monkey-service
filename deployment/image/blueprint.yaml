@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: @app.name@  # 容器名称
-          image: {{image_tag}} # 镜像地址
+          image: {{image_coordinate}} # 镜像坐标
           ports:
             # 容器服务的端口号
             - containerPort: 8443
