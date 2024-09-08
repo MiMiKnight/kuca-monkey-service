@@ -149,4 +149,4 @@ BuildBlueprint(){
 BuildBlueprint
 
 # 执行清除构建内容
-#sudo rm -rf "${CONST_PARENT_DIR}/.build"
+sudo rm -rf "${CONST_PARENT_DIR}/.build"
