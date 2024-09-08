@@ -76,8 +76,8 @@ MoveFile(){
     echo "[TIP] ${CONST_PARENT_DIR}/.build/deployment not exist!!!"
     exist 0
   fi
-  sudo mv -f ${CONST_PARENT_DIR}/.build/deployment/* ${CONST_PARENT_DIR}/.build/
-  sudo rm -rf "${CONST_PARENT_DIR}/.build/deployment"
+  sudo cp -f ${CONST_PARENT_DIR}/.build/deployment/* ${CONST_PARENT_DIR}/.build/
+  #sudo rm -rf "${CONST_PARENT_DIR}/.build/deployment"
   FileDos2Unix
 }
 # 执行 move file 函数
