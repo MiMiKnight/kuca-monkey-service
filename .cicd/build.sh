@@ -22,7 +22,8 @@ declare -r CONST_MAVEN_SETTING_LOCATION;
 ## maven package 函数
 #####################################
 MavenPackage(){
-  local cmd="mvn clean compile package '-Dmaven.test.skip=true'";
+  #local cmd="mvn clean compile package \'-Dmaven.test.skip=true\'";
+  local cmd="mvn clean compile package";
   # 如果外部传入的maven配置文件变量不为空且文件存在
   if [ -z "${CONST_MAVEN_SETTING_LOCATION}" ] && [ -f "${CONST_MAVEN_SETTING_LOCATION}" ]; then
     cmd="${cmd} --settings='${CONST_MAVEN_SETTING_LOCATION}'"
@@ -30,7 +31,7 @@ MavenPackage(){
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk8-settings.xml"
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk17-settings.xml"
   # 执行打包命令
-  `${cmd}`
+  eval "${cmd}"
 
   # 循环等待打包结束
   local -i timeout now start_time end_time duration;
@@ -76,7 +77,7 @@ MoveFile(){
     exist 0
   fi
   sudo cp -f ${CONST_PARENT_DIR}/.build/deployment/* ${CONST_PARENT_DIR}/.build/
-  #sudo rm -rf "${CONST_PARENT_DIR}/.build/deployment"
+  sudo rm -rf "${CONST_PARENT_DIR}/.build/deployment"
   FileDos2Unix
 }
 MoveFile
@@ -154,4 +155,4 @@ BuildBlueprint(){
 BuildBlueprint
 
 # 执行清除构建内容
-#sudo rm -rf "${CONST_PARENT_DIR}/.build"
+sudo rm -rf "${CONST_PARENT_DIR}/.build"
