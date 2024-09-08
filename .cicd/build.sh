@@ -1,5 +1,10 @@
 #!/bin/bash
 set -ex
+#################################
+## 描述：项目打包构建脚本
+## $1 maven配置文件路径
+#################################
+
 ############全局变量常量############
 # 脚本当前所在目录 常量
 CONST_CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
@@ -7,17 +12,18 @@ declare -r CONST_CURRENT_DIR;
 # 脚本所在的上一级目录 常量
 CONST_PARENT_DIR=$(dirname "$CONST_CURRENT_DIR")
 declare -r CONST_PARENT_DIR;
-# maven配置文件路径 全局变量
-g_maven_setting_config=$1
+# maven配置文件路径 常量
+CONST_MAVEN_SETTING_LOCATION=$1
+declare -r CONST_MAVEN_SETTING_LOCATION;
 
 #####################################
 ## maven package 函数
 #####################################
-maven_package(){
+MavenPackage(){
   local cmd="mvn clean compile package '-Dmaven.test.skip=true'";
   # 如果外部传入的maven配置文件变量不为空且文件存在
-  if [ -z "${g_maven_setting_config}" ] && [ -f "${g_maven_setting_config}" ]; then
-    cmd="${cmd} --settings='${g_maven_setting_config}'"
+  if [ -z "${CONST_MAVEN_SETTING_LOCATION}" ] && [ -f "${CONST_MAVEN_SETTING_LOCATION}" ]; then
+    cmd="${cmd} --settings='${CONST_MAVEN_SETTING_LOCATION}'"
   fi
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk8-settings.xml"
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk17-settings.xml"
@@ -46,13 +52,13 @@ maven_package(){
   done
   echo "[TIP]maven package finish!!!"
 }
-# 执行maven打包操作
-maven_package
+# 执行maven打包构建操作
+MavenPackage
 
 #####################################
 ## dos2unix 函数
 #####################################
-file_dos2unix(){
+FileDos2Unix(){
   if [ ! -d "${CONST_PARENT_DIR}/.build" ]; then
     echo "[TIP] ${CONST_PARENT_DIR}/.build not exist!!!"
     exist 0
@@ -63,17 +69,17 @@ file_dos2unix(){
 #####################################
 ## move file 函数
 #####################################
-move_file(){
+MoveFile(){
   if [ ! -d "${CONST_PARENT_DIR}/.build/deployment" ];then
     echo "[TIP] ${CONST_PARENT_DIR}/.build/deployment not exist!!!"
     exist 0
   fi
   sudo mv -f ${CONST_PARENT_DIR}/.build/deployment/* ${CONST_PARENT_DIR}/.build/
   sudo rm -rf "${CONST_PARENT_DIR}/.build/deployment"
-  file_dos2unix
+  FileDos2Unix
 }
 # 执行 move file 函数
-move_file
+MoveFile
 
 # 项目名称
 app_name="$(awk -F '=' 'NR==2{print $2}' "${CONST_PARENT_DIR}/.build/metadata.txt")"
@@ -93,7 +99,7 @@ image_tag="${image_domain}/${image_library}/${app_name}:${app_version}"
 #####################################
 ## 构建镜像函数
 #####################################
-build_image(){
+BuildImage(){
  # 进入Dockerfile文件所在的同级目录
  cd "${CONST_PARENT_DIR}/.build"
  # 构建docker镜像
@@ -112,18 +118,18 @@ build_image(){
  sudo docker logout
 }
 # 执行镜像构建
-build_image
+BuildImage
 
 #####################################
 ## 构建K8S部署 函数
 #####################################
-build_blueprint(){
+BuildBlueprint(){
   echo "build blueprint"
   # 替换镜像地址
   sed -i "s@{{image_tag}}@${image_tag}@g" ${CONST_PARENT_DIR}/.build/blueprint.yaml
   # 向k8s推送部署服务
 }
-build_blueprint
+BuildBlueprint
 
 # 执行清除构建内容
 sudo rm -rf "${CONST_PARENT_DIR}/.build"
