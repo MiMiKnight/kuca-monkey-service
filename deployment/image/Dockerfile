@@ -15,7 +15,7 @@ ARG archive_file_name="@app.name@-@app.build.version@".tar.gz
 # 设置工作目录
 ARG workdir="/opt/app"
 # 日志数据卷
-ARG volume_log="${workdir}/${app_name}/log"
+ARG volume_log="${workdir}/${app_name}/logs"
 # 项目端口号
 ARG app_port=8443
 # APT镜像
