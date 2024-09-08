@@ -155,5 +155,16 @@ BuildBlueprint(){
 }
 BuildBlueprint
 
+#####################################
+## 生成部署包 函数
+#####################################
+BuildDeployPackage(){
+  local archive_name="${app_name}-deploy-${app_build_version}.tar.gz"
+  # 构建部署压缩包
+  tar czvf "${archive_name}" "${CONST_PARENT_DIR}/.build/blueprint.yaml" "${CONST_PARENT_DIR}/.build/metadata.json"
+  # 上传部署压缩包 向k8s部署服务
+}
+BuildDeployPackage
+
 # 执行清除构建内容
 sudo rm -rf "${CONST_PARENT_DIR}/.build"
