@@ -5,6 +5,8 @@ target/
 .build/
 /deployment/debug/*
 !/deployment/debug/README.md
+/deployment/release/logs/*
+!/deployment/release/README.md
 
 ### Maven ###
 .flattened-pom.xml
