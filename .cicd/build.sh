@@ -151,7 +151,6 @@ BuildBlueprint(){
   echo "build blueprint"
   # 替换镜像地址
   sed -i "s@{{image_coordinate}}@${image_coordinate}@g" ${CONST_PARENT_DIR}/.build/blueprint.yaml
-  # 向k8s推送部署服务
 }
 BuildBlueprint
 
@@ -173,5 +172,5 @@ BuildDeployPackage(){
 }
 BuildDeployPackage
 
-# 执行清除构建内容
-sudo rm -rf "${CONST_PARENT_DIR}/.build"
+#
+echo "[TIP] The project has been built completed and success !!!"
