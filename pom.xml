@@ -29,8 +29,6 @@
     <properties>
         <!--项目名称-->
         <app.name>kuca-monkey-service</app.name>
-        <!--项目构建版本-->
-        <app.build.version>${maven.build.timestamp}</app.build.version>
         <!--项目jar包名称-->
         <app.jar.name>${app.name}-${project.version}</app.jar.name>
         <!--项目日志根路径-->
@@ -39,8 +37,6 @@
         <app.log.trace-id-key>TRACE_ID</app.log.trace-id-key>
         <!--项目启动类包路径-->
         <app.main.class>cn.mimiknight.developer.monkey.core.Application</app.main.class>
-        <!--构建打包时间戳格式-->
-        <maven.build.timestamp.format>yyyyMMddHHmmssSSS</maven.build.timestamp.format>
 
         <!--kuca-->
         <kuca.version>1.0.0-SNAPSHOT</kuca.version>
