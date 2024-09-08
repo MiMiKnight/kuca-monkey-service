@@ -153,9 +153,19 @@
                         <!-- 生成的jar中，包含pom.xml和pom.properties这两个文件 -->
                         <addMavenDescriptor>true</addMavenDescriptor>
                         <manifest>
+                            <!--依赖唯一版本号-->
+                            <useUniqueVersions>false</useUniqueVersions>
+                            <!-- 为依赖包添加路径, 这些路径会写在MANIFEST文件的Class-Path下 -->
+                            <addClasspath>true</addClasspath>
+                            <!--依赖前缀-->
+                            <classpathPrefix>./</classpathPrefix>
                             <!-- 启动类包路径 -->
                             <mainClass>${app.main.class}</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <!--定义项目jar包的外部class-path路径-->
+                            <Class-Path>../conf/</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
