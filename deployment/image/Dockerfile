@@ -9,9 +9,9 @@ ARG user="service"
 # 项目名称
 ARG app_name="@app.name@"
 # 项目版本
-ARG app_version="@app.build.version@"
+ARG build_version=""
 # 项目归档文件名称
-ARG archive_file_name="@app.name@-@app.build.version@".tar.gz
+ARG archive_file_name="@app.name@".tar.gz
 # 设置工作目录
 ARG workdir="/opt/app"
 # 日志数据卷
@@ -23,7 +23,7 @@ ARG apt_mirror="https://mirrors.tuna.tsinghua.edu.cn"
 # 标签
 LABEL cn.mimiknight.developer.image.maintainer=${maintainer}
 LABEL cn.mimiknight.developer.image.app_name=${app_name}
-LABEL cn.mimiknight.developer.image.app_version=${app_version}
+LABEL cn.mimiknight.developer.image.build_version=${build_version}
 #
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
     && sed -i "s@http://.*archive.ubuntu.com@${apt_mirror}@g" /etc/apt/sources.list \
