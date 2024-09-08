@@ -54,7 +54,6 @@ MavenPackage(){
   done
   echo "[TIP]maven package finish!!!"
 }
-# 执行maven打包构建操作
 MavenPackage
 
 #####################################
@@ -80,7 +79,6 @@ MoveFile(){
   #sudo rm -rf "${CONST_PARENT_DIR}/.build/deployment"
   FileDos2Unix
 }
-# 执行 move file 函数
 MoveFile
 
 #####################################
@@ -90,11 +88,10 @@ BuildVersion(){
   # 生成构建版本
   local build_version="" cmd=""
   build_version="$(date +%Y%m%d%H%M%S%N)"
-  # 向JSON文件写入构建版本
+  # 写入项目构建版本信息
   echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${CONST_PARENT_DIR}/.build/metadata.json)" > ${CONST_PARENT_DIR}/.build/metadata.json
 }
- # 生成构建版本
- BuildVersion
+BuildVersion
 
 # 项目名称
 app_name="$(jq -r '.APP_NAME' ${CONST_PARENT_DIR}/.build/metadata.json)"
@@ -110,6 +107,15 @@ image_domain="harbor.devops.vm.mimiknight.cn"
 image_library="mmkd"
 # 项目镜像坐标
 image_coordinate="${image_domain}/${image_library}/${app_name}:${app_build_version}"
+
+#####################################
+## 写入元数据 函数
+#####################################
+WriteMetadata(){
+  # 写入项目镜像坐标信息
+  echo "$(jq --arg value ${image_coordinate} '.APP_IMAGE_COORDINATE = $value' ${CONST_PARENT_DIR}/.build/metadata.json)" > ${CONST_PARENT_DIR}/.build/metadata.json
+}
+WriteMetadata
 
 #####################################
 ## 构建镜像函数
@@ -134,7 +140,6 @@ BuildImage(){
  # 退出登陆docker
  sudo docker logout
 }
-# 执行镜像构建
 BuildImage
 
 #####################################
@@ -149,4 +154,4 @@ BuildBlueprint(){
 BuildBlueprint
 
 # 执行清除构建内容
-sudo rm -rf "${CONST_PARENT_DIR}/.build"
+#sudo rm -rf "${CONST_PARENT_DIR}/.build"
