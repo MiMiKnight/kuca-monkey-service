@@ -3,10 +3,9 @@
 HELP.md
 target/
 .build/
-/deployment/debug/*
-!/deployment/debug/README.md
 /deployment/release/logs/*
 !/deployment/release/README.md
+application-debug.properties
 
 ### Maven ###
 .flattened-pom.xml
