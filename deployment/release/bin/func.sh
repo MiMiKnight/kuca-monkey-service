@@ -109,7 +109,7 @@ Start() {
   # 检查应用是否已经启动
   GetJavaAppPID
   if [ ${g_app_pid} -gt 0 ]; then
-      Tip "Application is already started !!! (pid=${g_app_pid})"
+      Tip "${CONST_APP_NAME} application is already started !!! (pid=${g_app_pid})"
       return
   fi
 
@@ -125,20 +125,22 @@ Start() {
 ##################################
 # stop函数
 ##################################
-stop() {
+Stop() {
   # 检查应用是否已经启动
   GetJavaAppPID
   if [ ${g_app_pid} -gt 0 ]; then
       kill -9 ${g_app_pid}
+      echo "${CONST_APP_NAME} application stop successfully!!!"
       return
+  else
+      echo "${CONST_APP_NAME} application is not running!!!"
   fi
-  echo "${CONST_APP_NAME} application stop successfully!!!"
 }
 
 ##################################
 # restart函数
 ##################################
-restart() {
+Restart() {
   stop
   start
   echo "${CONST_APP_NAME} application restart successfully!!!"
@@ -147,7 +149,7 @@ restart() {
 ##################################
 # status函数
 ##################################
-status() {
+Status() {
   GetJavaAppPID
   if [ ${g_app_pid} -gt 0 ]; then
       echo "${CONST_APP_NAME} application is running,pid = ${g_app_pid}"
@@ -159,14 +161,14 @@ status() {
 ##################################
 # 健康检查函数
 ##################################
-healthcheck(){
+HealthCheck(){
   exit 0
 }
 
 ##################################
 # info函数
 ##################################
-info() {
+Info() {
   echo "System information:"
   echo "***********************"
   echo "JAVA_HOME = ${JAVA_HOME}"

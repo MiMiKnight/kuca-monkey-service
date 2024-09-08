@@ -13,25 +13,25 @@ parent_dir=$(dirname "$current_dir")
 usage() {
   case "$1" in
   'info')
-    info
+    Info
     ;;
   'start')
-    start
+    Start
     ;;
   'stop')
-    stop
+    Stop
     ;;
   'restart')
-    restart
+    Restart
     ;;
   'status')
-    status
+    Status
     ;;
   'healthcheck')
-    healthcheck
+    HealthCheck
     ;;
   *)
-    echo "service [info|start|stop|restart|status|healthcheck]"
+    echo "args [info|start|stop|restart|status|healthcheck]"
     ;;
   esac
 }
