@@ -34,7 +34,7 @@
         <!--项目jar包名称-->
         <app.jar.name>${app.name}-${project.version}</app.jar.name>
         <!--项目日志根路径-->
-        <app.log.path>/opt/app/${app.name}/log</app.log.path>
+        <app.log.path>/opt/app/${app.name}/logs</app.log.path>
         <!--项目日志跟踪ID键名-->
         <app.log.trace-id-key>TRACE_ID</app.log.trace-id-key>
         <!--项目启动类包路径-->

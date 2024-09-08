@@ -17,7 +17,7 @@ declare g_main_class="@app.main.class@"
 # 应用jar包名称 全局变量
 declare g_app_jar_path="${CONST_PARENT_DIR}/lib/@app.jar.name@.jar"
 # 启动日志路径
-declare g_app_startup_log_path="${CONST_PARENT_DIR}/log/startup.log"
+declare g_app_startup_log_path="${CONST_PARENT_DIR}/logs/startup.log"
 
 ##################################
 # 友好提示函数
