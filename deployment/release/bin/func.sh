@@ -76,7 +76,7 @@ GetJavaHome() {
      JAVA_PATH=$(which java)
      # 判断java执行文件是否存在
      if [ -z "$JAVA_PATH" ]; then
-       error "Please install Java and set environment variables, We need java(x64) and jdk8 or later is better!"
+       error "Please install Java and set environment variables, We need java(x64) and jdk8 or later is better !!!"
      else
        JAVA_HOME=$(dirname "$JAVA_PATH")
        JAVA_HOME=$(cd "$(dirname "$JAVA_HOME")" && pwd)
@@ -85,16 +85,15 @@ GetJavaHome() {
      fi
   fi
 }
-#
-GetJavaHome ''
 
 ##################################
 # 获取应用PID 函数
 # $1 参数1：进程名称（必填参数）
 ##################################
 GetJavaAppPID() {
+  GetJavaHome ''
   local process_Name="${CONST_APP_JAR_LOCATION}" jps_info='';
-  jps_info=$("${EVN_JAVA_HOME}/bin/jps" -l | grep "${process_Name}")
+  jps_info=$(${JAVA_HOME}/bin/jps -l | grep "${process_Name}")
   if [ -n "${jps_info}" ]; then
     g_app_pid=$(echo "${jps_info}" | awk '{print $1}')
   else
@@ -112,14 +111,10 @@ Start() {
       Tip "${CONST_APP_NAME} application is already started !!! (pid=${g_app_pid})"
       return
   fi
+  # 启动应用
+  nohup ${EVN_JAVA_HOME}/bin/java ${CONST_JAVA_OPTS} -jar ${CONST_APP_JAR_LOCATION} > ${CONST_APP_STARTUP_LOG_LOCATION} 2>&1 &
 
-  local java_cmd='';
-  # 启动超时时间，单位：秒
-  local -i timeout=60;
-
-  java_cmd="nohup ${EVN_JAVA_HOME}/bin/java ${CONST_JAVA_OPTS} -jar ${CONST_APP_JAR_LOCATION} > ${CONST_APP_STARTUP_LOG_LOCATION} 2>&1 &"
-  `${java_cmd}`
-  echo "${CONST_APP_NAME} application start successfully!!!"
+  echo "${CONST_APP_NAME} application start successfully !!!"
 }
 
 ##################################
@@ -130,10 +125,10 @@ Stop() {
   GetJavaAppPID
   if [ ${g_app_pid} -gt 0 ]; then
       kill -9 ${g_app_pid}
-      echo "${CONST_APP_NAME} application stop successfully!!!"
+      echo "${CONST_APP_NAME} application stop successfully !!!"
       return
   else
-      echo "${CONST_APP_NAME} application is not running!!!"
+      echo "${CONST_APP_NAME} application is not running !!!"
   fi
 }
 
@@ -141,9 +136,15 @@ Stop() {
 # restart函数
 ##################################
 Restart() {
-  stop
-  start
-  echo "${CONST_APP_NAME} application restart successfully!!!"
+  # 检查应用是否已经启动
+  GetJavaAppPID
+  if [ ${g_app_pid} -eq 0 ]; then
+      echo "${CONST_APP_NAME} application is not running, please start it first !!!"
+      return
+  fi
+  Stop
+  Start
+  echo "${CONST_APP_NAME} application restart successfully !!!"
 }
 
 ##################################
@@ -152,9 +153,9 @@ Restart() {
 Status() {
   GetJavaAppPID
   if [ ${g_app_pid} -gt 0 ]; then
-      echo "${CONST_APP_NAME} application is running,pid = ${g_app_pid}"
+      echo "${CONST_APP_NAME} application is running and pid = ${g_app_pid} !!!"
   else
-      echo "${CONST_APP_NAME} application is not running"
+      echo "${CONST_APP_NAME} application is not running !!!"
   fi
 }
 
