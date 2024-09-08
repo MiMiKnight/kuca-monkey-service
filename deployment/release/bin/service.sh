@@ -86,7 +86,7 @@ GetJavaHome() {
 ##################################
 Start() {
   GetJavaHome ''
-  # 启动应用
+  # 启动应用（不可后台启动，必须前台启动）
   nohup ${EVN_JAVA_HOME}/bin/java ${CONST_JAVA_OPTS} -jar ${CONST_APP_JAR_LOCATION} > ${CONST_APP_STARTUP_LOG_LOCATION} 2>&1
 }
 
