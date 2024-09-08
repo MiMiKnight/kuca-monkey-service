@@ -159,10 +159,17 @@ BuildBlueprint
 ## 生成部署包 函数
 #####################################
 BuildDeployPackage(){
-  local archive_name="${app_name}-deploy-${app_build_version}.tar.gz"
+  local current_dir="" archive_name="";
+  # 记录当前目录
+  current_dir=$(pwd)
+  # 切换到构建目录
+  cd "${CONST_PARENT_DIR}/.build"
   # 构建部署压缩包
-  tar czvf "${archive_name}" "${CONST_PARENT_DIR}/.build/blueprint.yaml" "${CONST_PARENT_DIR}/.build/metadata.json"
-  # 上传部署压缩包 向k8s部署服务
+  archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
+  tar czvf "${archive_name}" blueprint.yaml metadata.json
+  # TODO 上传部署压缩包 向k8s部署服务
+  # 切换到回原有的目录下
+  cd "${current_dir}"
 }
 BuildDeployPackage
 
