@@ -8,9 +8,6 @@ declare -r CONST_CURRENT_DIR;
 # 脚本所在的上一级目录 常量
 CONST_PARENT_DIR=$(dirname "$CONST_CURRENT_DIR")
 declare -r CONST_PARENT_DIR;
-# 项目名称 常量
-CONST_APP_NAME="@app.name@"
-declare -r CONST_APP_NAME;
 # 项目jar包路径 常量
 CONST_APP_JAR_LOCATION="${CONST_PARENT_DIR}/lib/@app.jar.name@.jar"
 declare -r CONST_APP_JAR_LOCATION;
@@ -19,8 +16,6 @@ CONST_APP_STARTUP_LOG_LOCATION="${CONST_PARENT_DIR}/logs/startup.log"
 declare -r CONST_APP_STARTUP_LOG_LOCATION;
 # shell内的JAVA_HOME环境变量
 declare -x EVN_JAVA_HOME="/opt/app/java"
-# app_pid 全局变量
-declare -i g_app_pid=0
 # JAVA_OPTS 常量
 CONST_JAVA_OPTS="-Xms512m \
   -Xmx1024m \
@@ -87,76 +82,12 @@ GetJavaHome() {
 }
 
 ##################################
-# 获取应用PID 函数
-# $1 参数1：进程名称（必填参数）
-##################################
-GetJavaAppPID() {
-  GetJavaHome ''
-  local process_Name="${CONST_APP_JAR_LOCATION}" jps_info='';
-  jps_info=$(${JAVA_HOME}/bin/jps -l | grep "${process_Name}")
-  if [ -n "${jps_info}" ]; then
-    g_app_pid=$(echo "${jps_info}" | awk '{print $1}')
-  else
-    g_app_pid=0
-  fi
-}
-
-##################################
 # start函数
 ##################################
 Start() {
-  # 检查应用是否已经启动
-  GetJavaAppPID
-  if [ ${g_app_pid} -gt 0 ]; then
-      Tip "${CONST_APP_NAME} application is already started !!! (pid=${g_app_pid})"
-      return
-  fi
+  GetJavaHome ''
   # 启动应用
-  nohup ${EVN_JAVA_HOME}/bin/java ${CONST_JAVA_OPTS} -jar ${CONST_APP_JAR_LOCATION} > ${CONST_APP_STARTUP_LOG_LOCATION} 2>&1 &
-
-  echo "${CONST_APP_NAME} application start successfully !!!"
-}
-
-##################################
-# stop函数
-##################################
-Stop() {
-  # 检查应用是否已经启动
-  GetJavaAppPID
-  if [ ${g_app_pid} -gt 0 ]; then
-      kill -9 ${g_app_pid}
-      echo "${CONST_APP_NAME} application stop successfully !!!"
-      return
-  else
-      echo "${CONST_APP_NAME} application is not running !!!"
-  fi
-}
-
-##################################
-# restart函数
-##################################
-Restart() {
-  # 检查应用是否已经启动
-  GetJavaAppPID
-  if [ ${g_app_pid} -eq 0 ]; then
-      echo "${CONST_APP_NAME} application is not running, please start it first !!!"
-      return
-  fi
-  Stop
-  Start
-  echo "${CONST_APP_NAME} application restart successfully !!!"
-}
-
-##################################
-# status函数
-##################################
-Status() {
-  GetJavaAppPID
-  if [ ${g_app_pid} -gt 0 ]; then
-      echo "${CONST_APP_NAME} application is running and pid = ${g_app_pid} !!!"
-  else
-      echo "${CONST_APP_NAME} application is not running !!!"
-  fi
+  nohup ${EVN_JAVA_HOME}/bin/java ${CONST_JAVA_OPTS} -jar ${CONST_APP_JAR_LOCATION} > ${CONST_APP_STARTUP_LOG_LOCATION} 2>&1
 }
 
 ##################################
@@ -167,12 +98,21 @@ HealthCheck(){
 }
 
 ##################################
-# info函数
+# usage函数
 ##################################
-Info() {
-  echo "System information:"
-  echo "***********************"
-  echo "JAVA_HOME = ${JAVA_HOME}"
-  echo "JAVA_VERSION = $(java -version)"
-  echo "***********************"
+usage() {
+  case "$1" in
+  'start')
+    Start
+    ;;
+  'healthcheck')
+    HealthCheck
+    ;;
+  *)
+    echo "args [start|healthcheck]"
+    ;;
+  esac
 }
+
+# 调用usage函数
+usage "$1"

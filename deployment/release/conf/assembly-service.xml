@@ -42,7 +42,6 @@
             <filtered>true</filtered>
             <includes>
                 <include>**/*.sh</include>
-                <include>**/*.cmd</include>
             </includes>
             <fileMode>0750</fileMode>
             <directoryMode>0750</directoryMode>

@@ -54,7 +54,7 @@ ENV PATH=$APP_HOME/bin:$PATH
 USER ${user}:${user}
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD /bin/bash ${workdir}/${app_name}/bin/app_service.sh healthcheck
+  CMD /bin/bash ${workdir}/${app_name}/bin/service.sh healthcheck
 # 定义匿名数据卷
 VOLUME ["${volume_log}"]
 # 暴露应用程序的端口
@@ -62,4 +62,4 @@ EXPOSE ${app_port}
 # 设置子级工作目录 ${workdir}/${app_name}
 WORKDIR ${app_name}
 # 运行应用程序
-ENTRYPOINT ["/bin/bash","./bin/app_service.sh","start"]
+ENTRYPOINT ["/bin/bash","./bin/service.sh","start"]
