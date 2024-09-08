@@ -3,7 +3,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd">
     <!--后缀-->
-    <id>release</id>
+    <id>service</id>
     <!--打包压缩文件格式-->
     <formats>
         <format>tar.gz</format>
@@ -37,14 +37,13 @@
             <fileMode>0750</fileMode>
             <directoryMode>0750</directoryMode>
         </fileSet>
-        <!--打包项目日志文件夹-->
+        <!--生成项目日志文件夹-->
         <fileSet>
-            <directory>${project.parent.basedir}/deployment/release/logs</directory>
+            <directory/>
             <outputDirectory>/logs</outputDirectory>
-            <filtered>true</filtered>
-            <includes>
-                <include>README.md</include>
-            </includes>
+            <excludes>
+                <exclude>/**/*</exclude>
+            </excludes>
             <fileMode>0750</fileMode>
             <directoryMode>0750</directoryMode>
         </fileSet>
