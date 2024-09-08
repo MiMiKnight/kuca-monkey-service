@@ -31,17 +31,18 @@ MavenPackage(){
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk8-settings.xml"
   #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk17-settings.xml"
   # 执行打包命令
-  eval "${cmd}"
+  #eval "${cmd}"
+  eval "${cmd}" > /dev/null 2>&1 &
 
   # 循环等待打包结束
-  local -i timeout now start_time end_time duration;
+  local timeout now start_time end_time duration;
   timeout=300; # 打包超时时间（单位：秒）
   now=$(date +'%Y-%m-%d %H:%M:%S');
   start_time=$(date --date="${now}" +%s);
   end_time=${start_time}
   duration=0 # 持续时间
   # 构建产物不存在时则等待构建，执行循环体；构建产物存在，则跳出循环；
-  until [ -d "${CONST_PARENT_DIR}/.build" ]
+  until [ -f "${CONST_PARENT_DIR}/.build/deployment/metadata.json" ]
   do
     echo "[TIP] maven is packaging project now ...."
     now=$(date +'%Y-%m-%d %H:%M:%S')
