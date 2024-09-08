@@ -8,16 +8,31 @@ declare -r CONST_CURRENT_DIR;
 # 脚本所在的上一级目录 常量
 CONST_PARENT_DIR=$(dirname "$CONST_CURRENT_DIR")
 declare -r CONST_PARENT_DIR;
+# 项目名称 常量
+CONST_APP_NAME="@app.name@"
+declare -r CONST_APP_NAME;
+# 项目jar包路径 常量
+CONST_APP_JAR_LOCATION="${CONST_PARENT_DIR}/lib/@app.jar.name@.jar"
+declare -r CONST_APP_JAR_LOCATION;
+# 启动日志位置 常量
+CONST_APP_STARTUP_LOG_LOCATION="${CONST_PARENT_DIR}/logs/startup.log"
+declare -r CONST_APP_STARTUP_LOG_LOCATION;
 # shell内的JAVA_HOME环境变量
-declare -x EVN_JAVA_HOME=""
+declare -x EVN_JAVA_HOME="/opt/app/java"
 # app_pid 全局变量
 declare -i g_app_pid=0
-# 主类名 全局变量
-declare g_main_class="@app.main.class@"
-# 应用jar包名称 全局变量
-declare g_app_jar_path="${CONST_PARENT_DIR}/lib/@app.jar.name@.jar"
-# 启动日志路径
-declare g_app_startup_log_path="${CONST_PARENT_DIR}/logs/startup.log"
+# JAVA_OPTS 常量
+CONST_JAVA_OPTS="-Xms512m \
+  -Xmx1024m \
+  -XX:MetaspaceSize=512m \
+  -XX:MaxMetaspaceSize=1024m \
+  -server \
+  -Duser.language=en \
+  -Duser.timezone=GMT+00:00 \
+  -Dfile.encoding=utf-8 \
+  -Dspring.profiles.name=application \
+  -Dspring.profiles.active=debug"
+declare -r CONST_JAVA_OPTS;
 
 ##################################
 # 友好提示函数
@@ -75,11 +90,11 @@ GetJavaHome ''
 
 ##################################
 # 获取应用PID 函数
-# $1 参数1：APP MainClass（必填参数）
+# $1 参数1：进程名称（必填参数）
 ##################################
-GetJavaPID() {
-  local main_class=$1 jps_info='';
-  jps_info=$("${EVN_JAVA_HOME}/bin/jps" -l | grep "${main_class}")
+GetJavaAppPID() {
+  local process_Name="${CONST_APP_JAR_LOCATION}" jps_info='';
+  jps_info=$("${EVN_JAVA_HOME}/bin/jps" -l | grep "${process_Name}")
   if [ -n "${jps_info}" ]; then
     g_app_pid=$(echo "${jps_info}" | awk '{print $1}')
   else
@@ -88,73 +103,57 @@ GetJavaPID() {
 }
 
 ##################################
-# check应用PID 函数
-# $1 参数1：APP MainClass（必填参数）
-##################################
-CheckJavaPID(){
-  GetJavaPID "$1"
-  if [ ${g_app_pid} -gt 0 ]; then
-      Tip "Application already started !!! (pid=${g_app_pid})"
-      exit 0
-  fi
-}
-
-##################################
 # start函数
 ##################################
 Start() {
   # 检查应用是否已经启动
-  CheckJavaPID ${g_main_class}
+  GetJavaAppPID
+  if [ ${g_app_pid} -gt 0 ]; then
+      Tip "Application is already started !!! (pid=${g_app_pid})"
+      return
+  fi
 
-  local java_cmd='' java_opts='';
+  local java_cmd='';
   # 启动超时时间，单位：秒
   local -i timeout=60;
 
-  java_opts="-Xms512m \
-  -Xmx1024m \
-  -XX:MetaspaceSize=512m \
-  -XX:MaxMetaspaceSize=1024m \
-  -server \
-  -Duser.language=en \
-  -Duser.timezone=GMT+00:00 \
-  -Dfile.encoding=utf-8 \
-  -Dspring.profiles.name=application \
-  -Dspring.profiles.active=debug"
-
-  classpath=".:${CONST_PARENT_DIR}/lib:"
-
-  java_cmd="nohup ${EVN_JAVA_HOME}/bin/java -jar ${java_opts} ${g_app_jar_path} > ${g_app_startup_log_path} 2>&1 &"
+  java_cmd="nohup ${EVN_JAVA_HOME}/bin/java ${CONST_JAVA_OPTS} -jar ${CONST_APP_JAR_LOCATION} > ${CONST_APP_STARTUP_LOG_LOCATION} 2>&1 &"
   `${java_cmd}`
-
-  # 检查应用是否启动成功
-  GetJavaPID ${g_main_class}
-  if [ ${g_app_pid} -gt 0 ]; then
-      Tip "Application start successfully !!! (pid=${g_app_pid})"
-      exit 0
-  else
-      Warn "Application start failed !!!"
-  fi
+  echo "${CONST_APP_NAME} application start successfully!!!"
 }
 
 ##################################
 # stop函数
 ##################################
 stop() {
-  echo 'stop'
+  # 检查应用是否已经启动
+  GetJavaAppPID
+  if [ ${g_app_pid} -gt 0 ]; then
+      kill -9 ${g_app_pid}
+      return
+  fi
+  echo "${CONST_APP_NAME} application stop successfully!!!"
 }
 
 ##################################
 # restart函数
 ##################################
 restart() {
-  echo 'restart'
+  stop
+  start
+  echo "${CONST_APP_NAME} application restart successfully!!!"
 }
 
 ##################################
 # status函数
 ##################################
 status() {
-  echo 'status'
+  GetJavaAppPID
+  if [ ${g_app_pid} -gt 0 ]; then
+      echo "${CONST_APP_NAME} application is running,pid = ${g_app_pid}"
+  else
+      echo "${CONST_APP_NAME} application is not running"
+  fi
 }
 
 ##################################
@@ -170,8 +169,6 @@ healthcheck(){
 info() {
   echo "System information:"
   echo "***********************"
-  echo $(head -n 1 /etc/issue)
-  echo $(uname -a)
   echo "JAVA_HOME = ${JAVA_HOME}"
   echo "JAVA_VERSION = $(java -version)"
   echo "***********************"
