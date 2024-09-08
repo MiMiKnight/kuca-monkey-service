@@ -96,7 +96,7 @@
                 <targetPath>${project.build.outputDirectory}</targetPath>
                 <filtering>false</filtering>
                 <includes>
-                    <include>SSL.keystore</include>
+                    <include>https.keystore</include>
                 </includes>
             </resource>
             <!--文本文件-->
