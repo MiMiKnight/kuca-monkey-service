@@ -28,6 +28,9 @@ declare -r C_CODE_BRANCH;
 # 用户Git密码
 C_USER_GIT_PASSWORD=$4
 declare -r C_USER_GIT_PASSWORD;
+# deploy.json 文件名
+C_DEPLOY_JSON_FILE_NAME="deploy.json"
+declare -r C_DEPLOY_JSON_FILE_NAME;
 
 #####################################
 ## Check Arg 函数
@@ -94,10 +97,12 @@ EOF
 
 #####################################
 ## 传包 函数
+## $1 deploy.json 文件路径
+## $2 deploy-xxx.tar.gz 包文件路径
 #####################################
 UploadPackage(){
+ local deploy_json_location="$1" deploy_package_location="$2";
  #sshpass -p "vagrant" scp -c "${random_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${random_dir}/${deploy_archive_name}
- local deploy_archive_name=$(ls -A ${random_dir} | grep ".tar.gz" | grep "deploy" | awk "NR==1{print}")
  echo "UploadPackage"
 }
 
@@ -106,28 +111,40 @@ UploadPackage(){
 #####################################
 Deploy(){
   # 生成随机目录名称
-  local random_dir="" current_dir="";
-  current_dir="$(pwd)"
+  local random_dir="";
   random_dir="${C_SCRIPT_CURRENT_DIR}/$(pwgen -ABns0 16 1 | tr a-z A-Z)"
   mkdir -p "${random_dir}"
-  # 切换到随机目录下
-  cd "${random_dir}"
   # 从git仓库拉取代码
   local project_dir="${random_dir}/${C_REPOSITORY_NAME}";
   GitClone "${project_dir}"
+  if [ $? -ne 0 ];then
+    # 删除生成的随机目录
+    rm -rf "${random_dir}"
+    exit 1
+  fi
+
   # dos2unix chmod
   find "${project_dir}/.cicd" -type f -print0 | xargs -0 dos2unix -k -s
   chmod +x "${project_dir}/.cicd/build.sh"
+
   # 执行构建打包
   /bin/bash "${project_dir}/.cicd/build.sh"
-  # 拷贝包
-  local deploy_archive_location="${project_dir}/${G_DEPLOY_ARCHIVE_NAME}"
-  cp -f ${deploy_archive_location} ${random_dir}
-  deploy_archive_location="${random_dir}/${G_DEPLOY_ARCHIVE_NAME}"
+  # 如果上一步构建失败则执行if
+  if [ $? -ne 0 ];then
+    # 删除生成的随机目录
+    rm -rf "${random_dir}"
+    exit 1
+  fi
+
+  local deploy_json_location="" deploy_package_name="" deploy_package_location=""
+  # deploy.json文件路径
+  deploy_json_location="${random_dir}/${C_DEPLOY_JSON_FILE_NAME}"
+  # 读取部署包名
+  deploy_package_name="$(jq -r '.DEPLOY_PACKAGE_NAME' "${deploy_json_location}")"
+  # 部署包路径
+  deploy_package_location="${random_dir}/${deploy_package_name}"
   # TODO 传包部署
-  UploadPackage
-  # 切回原目录
-  cd "${current_dir}"
+  UploadPackage "${deploy_json_location}" "${deploy_package_location}"
   # 删除随机目录
   rm -rf "${random_dir}"
 }
