@@ -34,12 +34,6 @@ spec:
             requests:               #资源请求的设置
               cpu: "1"              #cpu请求，容器启动的初始可用数量
               memory: 512Mib      #内存清楚，容器启动的初始可用数量
-          volumeMounts:             #挂载到容器内部的存储卷配置
-            - name: log-volume
-              mountPath: /opt/app/@app.name@/logs
-              readOnly: false       #是否为只读模式
-            - name: tmp-volume
-              mountPath: /tmp
           livenessProbe:
             exec:
               command: [ string ]   #exec方式需要制定的命令或脚本
@@ -50,6 +44,16 @@ spec:
             failureThreshold: 1
           # Pod的重启策略，Always表示一旦不管以何种方式终止运行，kubelet都将重启，OnFailure表示只有Pod以非0退出码退出才重启，Never表示不再重启该Pod
           restartPolicy: OnFailure
+          env: #容器运行前需设置的环境变量列表
+            - name: string     #环境变量名称
+              value: string    #环境变量的值
+          volumeMounts:             #挂载到容器内部的存储卷配置
+            - name: log-volume # 日志数据卷
+              mountPath: /opt/app/@app.name@/logs
+              readOnly: false  #是否为只读模式
+            - name: tmp-volume
+              mountPath: /tmp  # 临时目录数据卷
+              readOnly: false
       volumes: #在该pod上定义共享存储卷列表
         - name: log-volume   #共享存储卷名称 （volumes类型有很多种）
           hostPath:     #类型为hostPath的存储卷，表示挂载Pod所在宿主机的目录
