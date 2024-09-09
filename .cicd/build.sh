@@ -206,9 +206,9 @@ BuildImage
 ## 构建K8S部署 函数
 #####################################
 BuildBlueprint(){
-  echo "build blueprint"
+  Info "Start build blueprint !!!"
   # 替换镜像坐标
-  sed -i "s@{{image_coordinate}}@${image_coordinate}@g" "${C_SCRIPT_PARENT_DIR}/.build/blueprint.yaml"
+  sed -i "s@image_coordinate@${image_coordinate}@g" "${C_SCRIPT_PARENT_DIR}/.build/blueprint.yaml"
 }
 BuildBlueprint
 
@@ -224,7 +224,7 @@ BuildDeployPackage(){
   # 压缩包名
   archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
   # 生成部署压缩包
-  tar czvf "${archive_name}" blueprint.yaml metadata.json
+  tar czvf "${archive_name}" ./blueprint.yaml ./metadata.json
   # 将部署包拷贝到"部署文件夹"
   cp -f "${C_SCRIPT_PARENT_DIR}/.build/${archive_name}" "$(dirname $C_SCRIPT_PARENT_DIR)"
   # 在"部署文件夹"生成deploy.json
