@@ -30,21 +30,43 @@ declare -r C_USER_GIT_PASSWORD;
 C_DEPLOY_JSON_FILE_NAME="deploy.json"
 declare -r C_DEPLOY_JSON_FILE_NAME;
 
+
+##################################
+# 友好提示函数
+##################################
+Info() {
+  echo -e "\e[1;32;49m[INFO] \e[1;39;49m$1\e[0m";
+}
+
+##################################
+# 警告提示函数
+##################################
+Warn() {
+  echo -e "\e[1;33;49m[WARN] \e[1;39;49m$1\e[0m";
+}
+
+##################################
+# 错误提示退出函数
+##################################
+Error() {
+  echo -e "\e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
+}
+
 #####################################
 ## Check Arg 函数
 #####################################
 CheckArg(){
   if [ -z "${C_REPOSITORY_NAME}" ]; then
-      echo "[Warn] repository name must not be empty !!!"
-      exit 0
+      Warn "Argument \'REPOSITORY_NAME\' must not be empty !!!"
+      exit 1
   fi
   if [ -z "${C_CODE_REPOSITORY}" ]; then
-      echo "[Warn] code repository url must not be empty !!!"
-      exit 0
+      Warn "Argument \'CODE_REPOSITORY\' must not be empty !!!"
+      exit 1
   fi
   if [ -z "${C_CODE_BRANCH}" ]; then
-      echo "[Warn] code branch must not be empty !!!"
-      exit 0
+      Warn "Argument \'CODE_BRANCH\' must not be empty !!!"
+      exit 1
   fi
 }
 CheckArg
@@ -55,7 +77,7 @@ CheckArg
 CheckJava(){
   local java_location="${JAVA_HOME}/bin/java"
   if [ ! -e "${java_location}" ] || [ ! -x "${java_location}" ]; then
-     echo "[Warn] Please install Java and set environment variables or check it !!!"
+     Error "Please install Java and set environment variables or check it !!!"
      exit 1
   fi
 }
@@ -67,7 +89,7 @@ CheckMaven(){
   CheckJava
   local mvn_location="${MAVEN_HOME}/bin/mvn"
   if [ ! -e "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
-     echo "[Warn] Please install Maven and set environment variables or check it !!!"
+     Error "Please install Maven and set environment variables or check it !!!"
      exit 1
   fi
 }
@@ -88,7 +110,7 @@ expect "Enter passphrase for key" { send "HNNUjsjx1\r" }
 expect eof
 EOF
   if [ $? -ne 0 ];then
-     echo "[Warn] clone failed !!!"
+     Error "code clone failed !!!"
      exit 1
   fi
 }
@@ -131,6 +153,7 @@ Deploy(){
   /bin/bash "${project_dir}/.cicd/build.sh"
   # 如果上一步构建失败则执行if
   if [ $? -ne 0 ];then
+    Warn "The package failed !!!"
     # 删除生成的随机目录
     rm -rf "${random_dir}"
     exit 1
@@ -151,4 +174,4 @@ Deploy(){
 Deploy
 
 #
-echo "Run deploy task finished !!!"
+Info "Run deploy task finished !!!"
