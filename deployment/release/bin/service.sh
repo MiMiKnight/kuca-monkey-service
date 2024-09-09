@@ -13,6 +13,9 @@ declare -r C_APP_JAR_LOCATION;
 # 启动日志位置 常量
 C_APP_STARTUP_LOG_LOCATION="${C_SCRIPT_PARENT_DIR}/logs/startup.log"
 declare -r C_APP_STARTUP_LOG_LOCATION;
+# 健康检查接口URL 厂里
+C_CHECK_URL="https://127.0.0.1:8443/rest/developer/monkey-service/health/servlet/v1/check";
+declare  -r C_CHECK_URL;
 # shell内的JAVA_HOME环境变量
 declare -x EVN_JAVA_HOME="/opt/app/java"
 # JAVA_OPTS 常量
@@ -94,7 +97,10 @@ Start() {
 # 健康检查函数
 ##################################
 HealthCheck(){
-  exit 0
+  local check_url="" http_code=0
+  check_url="${C_CHECK_URL}"
+  http_code=`curl -s -k -X GET -w %{http_code} -o /dev/null "${check_url}"`;
+  [ ${http_code} -ne 200 ] || exit 1
 }
 
 ##################################
