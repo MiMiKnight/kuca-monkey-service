@@ -13,7 +13,7 @@ declare -r C_APP_JAR_LOCATION;
 # 启动日志位置 常量
 C_APP_STARTUP_LOG_LOCATION="${C_SCRIPT_PARENT_DIR}/logs/startup.log"
 declare -r C_APP_STARTUP_LOG_LOCATION;
-# 健康检查接口URL 厂里
+# 健康检查接口URL 常量
 C_CHECK_URL="https://127.0.0.1:8443/rest/developer/monkey-service/health/servlet/v1/check";
 declare  -r C_CHECK_URL;
 # shell内的JAVA_HOME环境变量
