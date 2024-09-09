@@ -38,10 +38,10 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
         </dependency>
-        <dependency>
-            <groupId>cn.mimiknight.developer.kuca</groupId>
-            <artifactId>kuca-ecology-boot-starter</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cn.mimiknight.developer.kuca</groupId>-->
+<!--            <artifactId>kuca-ecology-boot-starter</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-json</artifactId>

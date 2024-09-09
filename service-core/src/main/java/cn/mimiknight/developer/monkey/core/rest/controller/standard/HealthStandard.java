@@ -8,8 +8,7 @@ import cn.mimiknight.developer.monkey.core.rest.model.response.HealthCheckRespon
  * @author MiMiKnight victor2015yhm@gmail.com
  * @since 2023-11-11 09:35:07
  */
-//@Tag(name = "健康检查模块前端控制器")
 public interface HealthStandard {
-    //    @Operation(summary = "健康检查接口", description = "查看项目运行状态")
+
     HealthCheckResponse check() throws Exception;
 }
