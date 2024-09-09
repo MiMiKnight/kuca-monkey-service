@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+#set -ex
 #################################
 ## build.sh
 ## 描述：项目打包构建脚本
@@ -16,13 +16,34 @@ C_SCRIPT_PARENT_DIR=$(dirname "$C_SCRIPT_CURRENT_DIR")
 declare -r C_SCRIPT_PARENT_DIR;
 
 
+##################################
+# 友好提示函数
+##################################
+Info() {
+  echo -e "\e[1;32;49m[INFO] \e[1;39;49m$1\e[0m";
+}
+
+##################################
+# 警告提示函数
+##################################
+Warn() {
+  echo -e "\e[1;33;49m[WARN] \e[1;39;49m$1\e[0m";
+}
+
+##################################
+# 错误提示退出函数
+##################################
+Error() {
+  echo -e "\e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
+}
+
 #####################################
 ## Check Java 函数
 #####################################
 CheckJava(){
   local java_location="${JAVA_HOME}/bin/java"
   if [ ! -e "${java_location}" ] || [ ! -x "${java_location}" ]; then
-     echo "[Warn] Please install Java and set environment variables or check it !!!"
+     Error "Please install Java and set environment variables or check it !!!"
      exit 1
   fi
 }
@@ -34,7 +55,7 @@ CheckMaven(){
   CheckJava
   local mvn_location="${MAVEN_HOME}/bin/mvn"
   if [ ! -e "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
-     echo "[Warn] Please install Maven and set environment variables or check it !!!"
+     Error "Please install Maven and set environment variables or check it !!!"
      exit 1
   fi
 }
@@ -81,17 +102,17 @@ MavenPackage(){
   local metadata_file_location="${C_SCRIPT_PARENT_DIR}/.build/deployment/metadata.json"
   until [ -f "${metadata_file_location}" ]
   do
-    echo "[TIP] maven is packaging project now ...."
+    Info "maven is packaging project now ...."
     now=$(date +'%Y-%m-%d %H:%M:%S')
     end_time=$(date --date="$now" +%s);
     duration=$((${end_time}-${start_time}))
     if [ ${duration} -gt ${timeout} ]; then
-      echo "[ERROR] maven package project timeout !!!"
+      Error "maven package project timeout !!!"
       exit 1 # 超时则报错退出脚本执行
     fi
     sleep 2 # 循环每2秒执行一次
   done
-  echo "[TIP]maven package finish!!!"
+  Info "maven package finish!!!"
 }
 MavenPackage
 
@@ -100,8 +121,8 @@ MavenPackage
 #####################################
 FileDos2Unix(){
   if [ ! -d "${C_SCRIPT_PARENT_DIR}/.build" ]; then
-    echo "[TIP] ${C_SCRIPT_PARENT_DIR}/.build not exist!!!"
-    exist 0
+    Warn "${C_SCRIPT_PARENT_DIR}/.build not exist !!!"
+    exist 1
   fi
   find "${C_SCRIPT_PARENT_DIR}/.build" -type f -print0 | xargs -0 dos2unix -k -s
 }
@@ -111,8 +132,8 @@ FileDos2Unix(){
 #####################################
 MoveFile(){
   if [ ! -d "${C_SCRIPT_PARENT_DIR}/.build/deployment" ];then
-    echo "[TIP] ${C_SCRIPT_PARENT_DIR}/.build/deployment not exist!!!"
-    exist 0
+    Warn "${C_SCRIPT_PARENT_DIR}/.build/deployment not exist !!!"
+    exist 1
   fi
   sudo cp -f ${C_SCRIPT_PARENT_DIR}/.build/deployment/* ${C_SCRIPT_PARENT_DIR}/.build/
   sudo rm -rf "${C_SCRIPT_PARENT_DIR}/.build/deployment"
@@ -216,4 +237,4 @@ BuildDeployPackage
 
 #
 rm -rf "${C_SCRIPT_PARENT_DIR}/.build"
-echo "[TIP] The project has been built completed and success !!!"
+Info "The project has been built completed and success !!!"

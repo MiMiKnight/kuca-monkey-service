@@ -32,22 +32,22 @@ declare -r CONST_JAVA_OPTS;
 ##################################
 # 友好提示函数
 ##################################
-Tip() {
-  echo "[TIP]: $1"
+Info() {
+  echo -e "\e[1;32;49m[INFO] \e[1;39;49m$1\e[0m";
 }
 
 ##################################
 # 警告提示函数
 ##################################
 Warn() {
-  echo "[WARN]: $1"
+  echo -e "\e[1;33;49m[WARN] \e[1;39;49m$1\e[0m";
 }
 
 ##################################
 # 错误提示退出函数
 ##################################
 Error() {
-  echo "[ERROR]: $1"
+  echo -e "\e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
 }
 
 ##################################
@@ -71,7 +71,8 @@ GetJavaHome() {
      JAVA_PATH=$(which java)
      # 判断java执行文件是否存在
      if [ -z "$JAVA_PATH" ]; then
-       error "Please install Java and set environment variables, We need java(x64) and jdk8 or later is better !!!"
+       Error "Please install Java and set environment variables, We need java(x64) and jdk8 or later is better !!!"
+       exit 1
      else
        JAVA_HOME=$(dirname "$JAVA_PATH")
        JAVA_HOME=$(cd "$(dirname "$JAVA_HOME")" && pwd)
