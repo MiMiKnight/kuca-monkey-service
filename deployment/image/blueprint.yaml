@@ -47,7 +47,7 @@ spec:
           env: #容器运行前需设置的环境变量列表
             - name: string     #环境变量名称
               value: string    #环境变量的值
-          volumeMounts:             #挂载到容器内部的存储卷配置
+          volumeMounts:        #挂载到容器内部的存储卷配置
             - name: log-volume # 日志数据卷
               mountPath: /opt/app/@app.name@/logs
               readOnly: false  #是否为只读模式

@@ -2,21 +2,21 @@
 #set -ex
 ############全局变量常量############
 # 脚本当前所在目录 常量
-CONST_CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
-declare -r CONST_CURRENT_DIR;
+C_SCRIPT_CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
+declare -r C_SCRIPT_CURRENT_DIR;
 # 脚本所在的上一级目录 常量
-CONST_PARENT_DIR=$(dirname "$CONST_CURRENT_DIR")
-declare -r CONST_PARENT_DIR;
+C_SCRIPT_PARENT_DIR=$(dirname "$C_SCRIPT_CURRENT_DIR")
+declare -r C_SCRIPT_PARENT_DIR;
 # 项目jar包路径 常量
-CONST_APP_JAR_LOCATION="${CONST_PARENT_DIR}/lib/@app.jar.name@.jar"
-declare -r CONST_APP_JAR_LOCATION;
+C_APP_JAR_LOCATION="${C_SCRIPT_PARENT_DIR}/lib/@app.jar.name@.jar"
+declare -r C_APP_JAR_LOCATION;
 # 启动日志位置 常量
-CONST_APP_STARTUP_LOG_LOCATION="${CONST_PARENT_DIR}/logs/startup.log"
-declare -r CONST_APP_STARTUP_LOG_LOCATION;
+C_APP_STARTUP_LOG_LOCATION="${C_SCRIPT_PARENT_DIR}/logs/startup.log"
+declare -r C_APP_STARTUP_LOG_LOCATION;
 # shell内的JAVA_HOME环境变量
 declare -x EVN_JAVA_HOME="/opt/app/java"
 # JAVA_OPTS 常量
-CONST_JAVA_OPTS="-Xms512m \
+C_JAVA_OPTS="-Xms512m \
   -Xmx1024m \
   -XX:MetaspaceSize=512m \
   -XX:MaxMetaspaceSize=1024m \
@@ -26,7 +26,7 @@ CONST_JAVA_OPTS="-Xms512m \
   -Dfile.encoding=utf-8 \
   -Dspring.profiles.name=application \
   -Dspring.profiles.active=debug"
-declare -r CONST_JAVA_OPTS;
+declare -r C_JAVA_OPTS;
 
 ##################################
 # 友好提示函数
@@ -87,7 +87,7 @@ GetJavaHome() {
 Start() {
   GetJavaHome ''
   # 启动应用（不可后台启动，必须前台启动）
-  nohup ${EVN_JAVA_HOME}/bin/java ${CONST_JAVA_OPTS} -jar ${CONST_APP_JAR_LOCATION} > ${CONST_APP_STARTUP_LOG_LOCATION} 2>&1
+  nohup ${EVN_JAVA_HOME}/bin/java ${C_JAVA_OPTS} -jar ${C_APP_JAR_LOCATION} > ${C_APP_STARTUP_LOG_LOCATION} 2>&1
 }
 
 ##################################
@@ -109,7 +109,7 @@ usage() {
     HealthCheck
     ;;
   *)
-    echo "args [start|healthcheck]"
+    echo "usage: service [start|healthcheck]"
     ;;
   esac
 }
