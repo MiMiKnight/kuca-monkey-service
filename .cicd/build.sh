@@ -3,7 +3,6 @@ set -ex
 #################################
 ## 描述：项目打包构建脚本
 ## $1 maven配置文件路径
-## jq工具，apt-get install -y jq
 #################################
 #sudo apt-get install -y jq
 
@@ -14,22 +13,50 @@ declare -r CONST_CURRENT_DIR;
 # 脚本所在的上一级目录 常量
 CONST_PARENT_DIR=$(dirname "$CONST_CURRENT_DIR")
 declare -r CONST_PARENT_DIR;
-# maven配置文件路径 常量
-CONST_MAVEN_SETTING_LOCATION=$1
-declare -r CONST_MAVEN_SETTING_LOCATION;
+
+
+#####################################
+## Check Java 函数
+#####################################
+CheckJava(){
+  local java_location="${JAVA_HOME}\bin\java"
+  if [ ! -f "${java_location}" ] || [ ! -x "${java_location}" ]; then
+     echo "[Warn] Please install Java and set environment variables or check it !!!"
+     exit 1
+  fi
+}
+
+#####################################
+## Check Maven 函数
+#####################################
+CheckMaven(){
+  CheckJava
+  local mvn_location="${MAVEN_HOME}\bin\mvn"
+  if [ ! -f "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
+     echo "[Warn] Please install Maven and set environment variables or check it !!!"
+     exit 1
+  fi
+}
 
 #####################################
 ## maven package 函数
 #####################################
 MavenPackage(){
-  #local cmd="mvn clean compile package \'-Dmaven.test.skip=true\'";
-  local cmd="mvn clean compile package";
-  # 如果外部传入的maven配置文件变量不为空且文件存在
-  if [ -z "${CONST_MAVEN_SETTING_LOCATION}" ] && [ -f "${CONST_MAVEN_SETTING_LOCATION}" ]; then
-    cmd="${cmd} --settings='${CONST_MAVEN_SETTING_LOCATION}'"
-  fi
-  #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk8-settings.xml"
-  #mvn clean compile package '-Dmaven.test.skip=true' --settings="xxx/jdk17-settings.xml"
+  # 检查Maven
+  CheckMaven
+  # 构建打包命令
+  local cmd=""
+  cmd="${JAVA_HOME}/bin/java \
+  -Dmaven.multiModuleProjectDirectory=${CONST_PARENT_DIR} \
+  -Dmaven.home=${MAVEN_HOME} \
+  -Dclassworlds.conf=${MAVEN_HOME}\bin\m2.conf \
+  -Dfile.encoding=UTF-8 \
+  -classpath ${MAVEN_HOME}/boot
+  org.codehaus.classworlds.Launcher \
+  --settings ${MAVEN_HOME}\conf\settings.xml \
+  -DskipTests=true \
+  clean compile package"
+
   # 执行打包命令
   #eval "${cmd}"
   eval "${cmd}" > /dev/null 2>&1 &
