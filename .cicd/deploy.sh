@@ -103,6 +103,8 @@ EOF
 UploadPackage(){
  local deploy_json_location="$1" deploy_package_location="$2";
  #sshpass -p "vagrant" scp -c "${random_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${random_dir}/${deploy_archive_name}
+ cp -f ${deploy_json_location} ${C_SCRIPT_CURRENT_DIR}
+ cp -f ${deploy_package_location} ${C_SCRIPT_CURRENT_DIR}
  echo "UploadPackage"
 }
 
@@ -143,7 +145,7 @@ Deploy(){
   deploy_package_name="$(jq -r '.DEPLOY_PACKAGE_NAME' "${deploy_json_location}")"
   # 部署包路径
   deploy_package_location="${random_dir}/${deploy_package_name}"
-  # TODO 传包部署
+  # 传包部署
   UploadPackage "${deploy_json_location}" "${deploy_package_location}"
   # 删除随机目录
   rm -rf "${random_dir}"
