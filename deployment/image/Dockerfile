@@ -32,7 +32,7 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
     && apt-get update \
     && apt-get install -y --reinstall ca-certificates \
     && sed -i "s@http://@https://@g" /etc/apt/sources.list \
-    && apt-get install -y dos2unix tar vim \
+    && apt-get install -y dos2unix tar vim curl wget \
     && mv -f /etc/apt/sources.list.bak /etc/apt/sources.list \
     && echo "${timezone}" > /etc/timezone \
     && useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "JavaWebService" ${user} \
@@ -56,6 +56,9 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
 VOLUME ["${volume_log}"]
 # 暴露应用程序的端口
 EXPOSE ${app_port}
+# 环境变量
+ENV APP_HOME=${workdir}/${app_name}
+ENV PATH=$APP_HOME/bin:$PATH
 # 设置子级工作目录 ${workdir}/${app_name}
 WORKDIR ${app_name}
 # 运行应用程序

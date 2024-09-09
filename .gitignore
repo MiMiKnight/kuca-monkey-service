@@ -5,7 +5,7 @@ target/
 .build/
 /deployment/release/logs/*
 !/deployment/release/README.md
-#application-debug.properties
+application-debug.properties
 
 ### Maven ###
 .flattened-pom.xml
