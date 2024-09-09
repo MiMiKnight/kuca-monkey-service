@@ -117,8 +117,8 @@ UploadPackage(){
   Info "Start upload package !!!"
   local deploy_json_location="$1" deploy_package_location="$2";
   #sshpass -p "vagrant" scp -c "${random_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${random_dir}/${deploy_archive_name}
-  cp -f ${deploy_json_location} ${C_SCRIPT_CURRENT_DIR}
-  cp -f ${deploy_package_location} ${C_SCRIPT_CURRENT_DIR}
+  #cp -f ${deploy_json_location} ${C_SCRIPT_CURRENT_DIR}
+  #cp -f ${deploy_package_location} ${C_SCRIPT_CURRENT_DIR}
   Info "The upload package finished and success !!!"
 }
 

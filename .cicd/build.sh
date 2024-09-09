@@ -72,7 +72,7 @@ MavenPackage(){
   # 记录当前目录
   current_dir=$(pwd)
   # 切换到项目目录
-  cd "${project_dir}"
+  cd "${project_dir}" || exit  1
 
   local cmd="${JAVA_HOME}/bin/java \
   -Dmaven.multiModuleProjectDirectory=${C_SCRIPT_PARENT_DIR} \
@@ -89,7 +89,7 @@ MavenPackage(){
   eval "${cmd}"
   #eval "${cmd}" > /dev/null 2>&1 &
   # 切换到回原有的目录下
-  cd "${current_dir}"
+  cd "${current_dir}" || exit  1
 
   # 循环等待打包结束
   local timeout now start_time end_time duration;
@@ -182,7 +182,7 @@ WriteMetadata
 #####################################
 BuildImage(){
  # 进入Dockerfile文件所在的同级目录
- cd "${C_SCRIPT_PARENT_DIR}/.build"
+ cd "${C_SCRIPT_PARENT_DIR}/.build" || exit 1
  # 构建docker镜像
  sudo docker build \
   --file "${C_SCRIPT_PARENT_DIR}/.build/Dockerfile" \
@@ -190,7 +190,7 @@ BuildImage(){
   --build-arg timezone="Asia/Shanghai" \
   --tag "${image_coordinate}" .
  # 回到父级目录
- cd "${C_SCRIPT_PARENT_DIR}"
+ cd "${C_SCRIPT_PARENT_DIR}" || exit 1
  # 登陆docker
  sudo docker login ${image_domain} --username ${image_user} --password ${image_password}
  # 上传docker镜像
@@ -220,7 +220,7 @@ BuildDeployPackage(){
   # 记录当前目录
   current_dir=$(pwd)
   # 切换到.build目录
-  cd "${C_SCRIPT_PARENT_DIR}/.build"
+  cd "${C_SCRIPT_PARENT_DIR}/.build" || exit 1
   # 压缩包名
   archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
   # 生成部署压缩包
@@ -231,7 +231,7 @@ BuildDeployPackage(){
   local json_txt="{\"DEPLOY_PACKAGE_NAME\":\"${archive_name}\"}"
   echo "${json_txt}" >> "$(dirname $C_SCRIPT_PARENT_DIR)/deploy.json"
   # 切换到回原有的目录下
-  cd "${current_dir}"
+  cd "${current_dir}" || exit 1
 }
 BuildDeployPackage
 
