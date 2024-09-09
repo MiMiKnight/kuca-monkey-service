@@ -189,8 +189,8 @@ BuildDeployPackage(){
   local current_dir="" archive_name="";
   # 记录当前目录
   current_dir=$(pwd)
-  # 切换到构建目录
-  cd "${C_SCRIPT_CURRENT_DIR}"
+  # 切换到.build目录
+  cd "${C_SCRIPT_PARENT_DIR}/.build"
   # 构建部署压缩包
   archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
   tar czvf "${archive_name}" blueprint.yaml metadata.json
