@@ -59,8 +59,8 @@ MavenPackage(){
   clean compile package"
 
   # 执行打包命令
-  #eval "${cmd}"
-  eval "${cmd}" > /dev/null 2>&1 &
+  eval "${cmd}"
+  #eval "${cmd}" > /dev/null 2>&1 &
 
   # 循环等待打包结束
   local timeout now start_time end_time duration;
