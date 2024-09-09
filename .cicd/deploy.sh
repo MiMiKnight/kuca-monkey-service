@@ -23,9 +23,6 @@ declare -r C_CODE_REPOSITORY;
 # 代码分支
 C_CODE_BRANCH=$3
 declare -r C_CODE_BRANCH;
-# 用户Git密码
-C_USER_GIT_PASSWORD=$4
-declare -r C_USER_GIT_PASSWORD;
 # deploy.json 文件名
 C_DEPLOY_JSON_FILE_NAME="deploy.json"
 declare -r C_DEPLOY_JSON_FILE_NAME;
@@ -102,13 +99,7 @@ CheckMaven
 GitClone(){
   # 目的文件夹
   local dest=$1
-  #git clone "${C_CODE_REPOSITORY}" --branch "${C_CODE_BRANCH}" "${dest}"
-sudo /usr/bin/expect << EOF
-set timeout 60
-spawn git clone "${C_CODE_REPOSITORY}" --branch "${C_CODE_BRANCH}" "${dest}"
-expect "Enter passphrase for key" { send "HNNUjsjx1\r" }
-expect eof
-EOF
+  git clone "${C_CODE_REPOSITORY}" --branch "${C_CODE_BRANCH}" "${dest}"
   if [ $? -ne 0 ];then
      Error "code clone failed !!!"
      exit 1
