@@ -51,7 +51,7 @@ MavenPackage(){
   -Dmaven.home=${MAVEN_HOME} \
   -Dclassworlds.conf=${MAVEN_HOME}/bin/m2.conf \
   -Dfile.encoding=UTF-8 \
-  -classpath ${MAVEN_HOME}/boot \
+  -classpath ${MAVEN_HOME}/boot/plexus-classworlds-2.7.0.jar:${MAVEN_HOME}/boot/plexus-classworlds.license \
   org.codehaus.classworlds.Launcher \
   --settings ${MAVEN_HOME}/conf/settings.xml \
   -DskipTests=true \
