@@ -9,15 +9,14 @@ metadata:
 spec:
   selector:
     matchLabels:    #必填，通过此标签匹配对应pod<key: value>
-      octopusexport: OctopusExport
+      app: web
   replicas: 2   #必填，副本数量
   strategy:
     type: RollingUpdate
   template:   #必填，应用容器模版定义
     metadata:
-      labels:   #必填，遇上面matchLabels的标签相同
+      labels:   #必填，与上面matchLabels的标签相同
         app: web
-        octopusexport: OctopusExport
     spec:
       containers:   #必填，定义容器列表
         - name: @app.name@            #必填，容器名称
