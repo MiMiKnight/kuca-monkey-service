@@ -46,7 +46,13 @@ MavenPackage(){
   # 检查Maven
   CheckMaven
   # 构建打包命令
-  local cmd=""
+  local cmd="" project_dir="" current_dir=""
+  project_dir=${C_SCRIPT_PARENT_DIR}
+  # 切换到项目目录
+  cd "${project_dir}"
+  # 记录当前目录
+  current_dir=$(pwd)
+
   cmd="${JAVA_HOME}/bin/java \
   -Dmaven.multiModuleProjectDirectory=${C_SCRIPT_PARENT_DIR} \
   -Dmaven.home=${MAVEN_HOME} \
@@ -61,6 +67,8 @@ MavenPackage(){
   # 执行打包命令
   eval "${cmd}"
   #eval "${cmd}" > /dev/null 2>&1 &
+  # 切换到回原有的目录下
+  cd "${current_dir}"
 
   # 循环等待打包结束
   local timeout now start_time end_time duration;
