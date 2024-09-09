@@ -95,7 +95,7 @@ FileDos2Unix(){
     echo "[TIP] ${C_SCRIPT_PARENT_DIR}/.build not exist!!!"
     exist 0
   fi
- sudo find "${C_SCRIPT_PARENT_DIR}/.build" -type f -print0 | xargs -0 dos2unix -k -s
+  find "${C_SCRIPT_PARENT_DIR}/.build" -type f -print0 | xargs -0 dos2unix -k -s
 }
 
 #####################################
