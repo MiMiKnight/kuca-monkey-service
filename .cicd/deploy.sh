@@ -97,6 +97,7 @@ CheckMaven
 ## $1 克隆至目的文件夹（必填）
 #####################################
 GitClone(){
+  Info "Start clone code !!!"
   # 目的文件夹
   local dest=$1
   git clone "${C_CODE_REPOSITORY}" --branch "${C_CODE_BRANCH}" "${dest}"
@@ -104,6 +105,7 @@ GitClone(){
      Error "code clone failed !!!"
      exit 1
   fi
+  Info "The code clone finished and success !!!"
 }
 
 #####################################
@@ -112,17 +114,19 @@ GitClone(){
 ## $2 deploy-xxx.tar.gz 包文件路径
 #####################################
 UploadPackage(){
- local deploy_json_location="$1" deploy_package_location="$2";
- #sshpass -p "vagrant" scp -c "${random_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${random_dir}/${deploy_archive_name}
- cp -f ${deploy_json_location} ${C_SCRIPT_CURRENT_DIR}
- cp -f ${deploy_package_location} ${C_SCRIPT_CURRENT_DIR}
- echo "UploadPackage"
+  Info "Start upload package !!!"
+  local deploy_json_location="$1" deploy_package_location="$2";
+  #sshpass -p "vagrant" scp -c "${random_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${random_dir}/${deploy_archive_name}
+  cp -f ${deploy_json_location} ${C_SCRIPT_CURRENT_DIR}
+  cp -f ${deploy_package_location} ${C_SCRIPT_CURRENT_DIR}
+  Info "The upload package finished and success !!!"
 }
 
 #####################################
 ## Deploy 函数
 #####################################
 Deploy(){
+  Info "Start run deploy task !!!"
   # 生成随机目录名称
   local random_dir="";
   random_dir="${C_SCRIPT_CURRENT_DIR}/$(pwgen -ABns0 16 1 | tr a-z A-Z)"
@@ -144,7 +148,7 @@ Deploy(){
   /bin/bash "${project_dir}/.cicd/build.sh"
   # 如果上一步构建失败则执行if
   if [ $? -ne 0 ];then
-    Warn "The package failed !!!"
+    Warn "The build package failed !!!"
     # 删除生成的随机目录
     rm -rf "${random_dir}"
     exit 1
@@ -161,8 +165,7 @@ Deploy(){
   UploadPackage "${deploy_json_location}" "${deploy_package_location}"
   # 删除随机目录
   rm -rf "${random_dir}"
+  #
+  Info "The deploy task run finished and success !!!"
 }
 Deploy
-
-#
-Info "Run deploy task finished !!!"
