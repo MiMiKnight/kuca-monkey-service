@@ -8,11 +8,11 @@ set -ex
 
 ############全局变量常量############
 # 脚本当前所在目录 常量
-CONST_CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
-declare -r CONST_CURRENT_DIR;
+C_SCRIPT_CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
+declare -r C_SCRIPT_CURRENT_DIR;
 # 脚本所在的上一级目录 常量
-CONST_PARENT_DIR=$(dirname "$CONST_CURRENT_DIR")
-declare -r CONST_PARENT_DIR;
+C_SCRIPT_PARENT_DIR=$(dirname "$C_SCRIPT_CURRENT_DIR")
+declare -r C_SCRIPT_PARENT_DIR;
 
 
 #####################################
@@ -47,7 +47,7 @@ MavenPackage(){
   # 构建打包命令
   local cmd=""
   cmd="${JAVA_HOME}/bin/java \
-  -Dmaven.multiModuleProjectDirectory=${CONST_PARENT_DIR} \
+  -Dmaven.multiModuleProjectDirectory=${C_SCRIPT_PARENT_DIR} \
   -Dmaven.home=${MAVEN_HOME} \
   -Dclassworlds.conf=${MAVEN_HOME}\bin\m2.conf \
   -Dfile.encoding=UTF-8 \
@@ -69,7 +69,7 @@ MavenPackage(){
   end_time=${start_time}
   duration=0 # 持续时间
   # 构建产物不存在时则等待构建，执行循环体；构建产物存在，则跳出循环；
-  local metadata_file_path="${CONST_PARENT_DIR}/.build/deployment/metadata.json"
+  local metadata_file_path="${C_SCRIPT_PARENT_DIR}/.build/deployment/metadata.json"
   until [ -f "${metadata_file_path}" ]
   do
     echo "[TIP] maven is packaging project now ...."
@@ -90,23 +90,23 @@ MavenPackage
 ## dos2unix 函数
 #####################################
 FileDos2Unix(){
-  if [ ! -d "${CONST_PARENT_DIR}/.build" ]; then
-    echo "[TIP] ${CONST_PARENT_DIR}/.build not exist!!!"
+  if [ ! -d "${C_SCRIPT_PARENT_DIR}/.build" ]; then
+    echo "[TIP] ${C_SCRIPT_PARENT_DIR}/.build not exist!!!"
     exist 0
   fi
- sudo find "${CONST_PARENT_DIR}/.build" -type f -print0 | xargs -0 dos2unix -k -s
+ sudo find "${C_SCRIPT_PARENT_DIR}/.build" -type f -print0 | xargs -0 dos2unix -k -s
 }
 
 #####################################
 ## move file 函数
 #####################################
 MoveFile(){
-  if [ ! -d "${CONST_PARENT_DIR}/.build/deployment" ];then
-    echo "[TIP] ${CONST_PARENT_DIR}/.build/deployment not exist!!!"
+  if [ ! -d "${C_SCRIPT_PARENT_DIR}/.build/deployment" ];then
+    echo "[TIP] ${C_SCRIPT_PARENT_DIR}/.build/deployment not exist!!!"
     exist 0
   fi
-  sudo cp -f ${CONST_PARENT_DIR}/.build/deployment/* ${CONST_PARENT_DIR}/.build/
-  sudo rm -rf "${CONST_PARENT_DIR}/.build/deployment"
+  sudo cp -f ${C_SCRIPT_PARENT_DIR}/.build/deployment/* ${C_SCRIPT_PARENT_DIR}/.build/
+  sudo rm -rf "${C_SCRIPT_PARENT_DIR}/.build/deployment"
   FileDos2Unix
 }
 MoveFile
@@ -119,14 +119,14 @@ BuildVersion(){
   local build_version="" cmd=""
   build_version="$(date +%Y%m%d%H%M%S%N)"
   # 写入项目构建版本信息
-  echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${CONST_PARENT_DIR}/.build/metadata.json)" > ${CONST_PARENT_DIR}/.build/metadata.json
+  echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)" > ${C_SCRIPT_PARENT_DIR}/.build/metadata.json
 }
 BuildVersion
 
 # 项目名称
-app_name="$(jq -r '.APP_NAME' ${CONST_PARENT_DIR}/.build/metadata.json)"
+app_name="$(jq -r '.APP_NAME' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)"
 # 项目构建版本
-app_build_version="$(jq -r '.APP_BUILD_VERSION' ${CONST_PARENT_DIR}/.build/metadata.json)"
+app_build_version="$(jq -r '.APP_BUILD_VERSION' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)"
 # 镜像仓库用户名
 image_user="mmk"
 # 镜像仓库密码
@@ -143,7 +143,7 @@ image_coordinate="${image_domain}/${image_library}/${app_name}:${app_build_versi
 #####################################
 WriteMetadata(){
   # 写入项目镜像坐标信息
-  echo "$(jq --arg value ${image_coordinate} '.APP_IMAGE_COORDINATE = $value' ${CONST_PARENT_DIR}/.build/metadata.json)" > ${CONST_PARENT_DIR}/.build/metadata.json
+  echo "$(jq --arg value ${image_coordinate} '.APP_IMAGE_COORDINATE = $value' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)" > ${C_SCRIPT_PARENT_DIR}/.build/metadata.json
 }
 WriteMetadata
 
@@ -152,15 +152,15 @@ WriteMetadata
 #####################################
 BuildImage(){
  # 进入Dockerfile文件所在的同级目录
- cd "${CONST_PARENT_DIR}/.build"
+ cd "${C_SCRIPT_PARENT_DIR}/.build"
  # 构建docker镜像
  sudo docker build \
-  --file "${CONST_PARENT_DIR}/.build/Dockerfile" \
+  --file "${C_SCRIPT_PARENT_DIR}/.build/Dockerfile" \
   --build-arg build_version="${app_build_version}" \
   --build-arg timezone="Asia/Shanghai" \
   --tag "${image_coordinate}" .
  # 回到父级目录
- cd "${CONST_PARENT_DIR}"
+ cd "${C_SCRIPT_PARENT_DIR}"
  # 登陆docker
  sudo docker login ${image_domain} --username ${image_user} --password ${image_password}
  # 上传docker镜像
@@ -178,7 +178,7 @@ BuildImage
 BuildBlueprint(){
   echo "build blueprint"
   # 替换镜像坐标
-  sed -i "s@{{image_coordinate}}@${image_coordinate}@g" ${CONST_PARENT_DIR}/.build/blueprint.yaml
+  sed -i "s@{{image_coordinate}}@${image_coordinate}@g" ${C_SCRIPT_PARENT_DIR}/.build/blueprint.yaml
 }
 BuildBlueprint
 
@@ -190,7 +190,7 @@ BuildDeployPackage(){
   # 记录当前目录
   current_dir=$(pwd)
   # 切换到构建目录
-  cd "${CONST_PARENT_DIR}/.build"
+  cd "${C_SCRIPT_CURRENT_DIR}"
   # 构建部署压缩包
   archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
   tar czvf "${archive_name}" blueprint.yaml metadata.json
