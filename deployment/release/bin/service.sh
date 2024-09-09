@@ -1,6 +1,5 @@
 #!/bin/bash
 #set -ex
-
 ############全局变量常量############
 # 脚本当前所在目录 常量
 CONST_CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
