@@ -3,8 +3,12 @@
 #################################
 ## build.sh
 ## 描述：项目打包构建脚本
+## $1: 镜像仓库域名
+## $2: 镜像仓库用户名
+## $3: 镜像仓库用户密码
+## $4: 镜像仓库指定库名
 #################################
-#sudo apt-get install -y jq
+# sudo apt-get install -y jq
 # sudo apt-get install pwgen
 
 ############全局变量常量############
@@ -14,6 +18,18 @@ declare -r C_SCRIPT_CURRENT_DIR;
 # 脚本所在的上一级目录 常量
 C_SCRIPT_PARENT_DIR=$(dirname "$C_SCRIPT_CURRENT_DIR")
 declare -r C_SCRIPT_PARENT_DIR;
+# 镜像仓库域名
+C_IMAGE_DOMAIN=$1
+declare -r C_IMAGE_DOMAIN;
+# 镜像仓库用户名
+C_IMAGE_USER=$2
+declare -r C_IMAGE_USER;
+# 镜像仓库密码
+C_IMAGE_PASSWORD=$3
+declare -r C_IMAGE_PASSWORD;
+# 镜像仓库名
+C_IMAGE_LIBRARY=$4
+declare -r C_IMAGE_LIBRARY;
 
 
 ##################################
@@ -154,26 +170,18 @@ BuildVersion(){
 BuildVersion
 
 # 项目名称
-app_name="$(jq -r '.APP_NAME' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)"
+C_APP_NAME="$(jq -r '.APP_NAME' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)"
 # 项目构建版本
-app_build_version="$(jq -r '.APP_BUILD_VERSION' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)"
-# 镜像仓库用户名
-image_user="mmk"
-# 镜像仓库密码
-image_password="Harbor12345"
-# 镜像仓库域名
-image_domain="harbor.devops.vm.mimiknight.cn"
-# 镜像仓库名
-image_library="mmkd"
+C_APP_BUILD_VERSION="$(jq -r '.APP_BUILD_VERSION' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)"
 # 项目镜像坐标
-image_coordinate="${image_domain}/${image_library}/${app_name}:${app_build_version}"
+C_IMAGE_COORDINATE="${C_IMAGE_DOMAIN}/${C_IMAGE_LIBRARY}/${C_APP_NAME}:${C_APP_BUILD_VERSION}"
 
 #####################################
 ## 写入元数据 函数
 #####################################
 WriteMetadata(){
   # 写入项目镜像坐标信息
-  echo "$(jq --arg value ${image_coordinate} '.APP_IMAGE_COORDINATE = $value' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)" > ${C_SCRIPT_PARENT_DIR}/.build/metadata.json
+  echo "$(jq --arg value ${C_IMAGE_COORDINATE} '.APP_IMAGE_COORDINATE = $value' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)" > ${C_SCRIPT_PARENT_DIR}/.build/metadata.json
 }
 WriteMetadata
 
@@ -186,17 +194,17 @@ BuildImage(){
  # 构建docker镜像
  sudo docker build \
   --file "${C_SCRIPT_PARENT_DIR}/.build/Dockerfile" \
-  --build-arg build_version="${app_build_version}" \
+  --build-arg build_version="${C_APP_BUILD_VERSION}" \
   --build-arg timezone="Asia/Shanghai" \
-  --tag "${image_coordinate}" .
+  --tag "${C_IMAGE_COORDINATE}" .
  # 回到父级目录
  cd "${C_SCRIPT_PARENT_DIR}" || exit 1
  # 登陆docker
- sudo docker login ${image_domain} --username ${image_user} --password ${image_password}
+ sudo docker login ${C_IMAGE_DOMAIN} --username ${C_IMAGE_USER} --password ${C_IMAGE_PASSWORD}
  # 上传docker镜像
- sudo docker push "${image_coordinate}"
+ sudo docker push "${C_IMAGE_COORDINATE}"
  # 删除产物镜像
- sudo docker rmi "$(sudo docker images | grep "${app_build_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
+ sudo docker rmi "$(sudo docker images | grep "${C_APP_BUILD_VERSION}" | grep "${C_IMAGE_DOMAIN}/${C_IMAGE_LIBRARY}/${C_APP_NAME}" | awk '{print $3}')"
  # 退出登陆docker
  sudo docker logout
 }
@@ -208,7 +216,7 @@ BuildImage
 BuildBlueprint(){
   Info "Start build blueprint !!!"
   # 替换镜像坐标
-  sed -i "s@image_coordinate:tag@${image_coordinate}@g" "${C_SCRIPT_PARENT_DIR}/.build/blueprint.yaml"
+  sed -i "s@image_coordinate:tag@${C_IMAGE_COORDINATE}@g" "${C_SCRIPT_PARENT_DIR}/.build/blueprint.yaml"
 }
 BuildBlueprint
 
@@ -222,7 +230,7 @@ BuildDeployPackage(){
   # 切换到.build目录
   cd "${C_SCRIPT_PARENT_DIR}/.build" || exit 1
   # 压缩包名
-  archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
+  archive_name="deploy-${C_APP_NAME}-${C_APP_BUILD_VERSION}.tar.gz"
   # 生成部署压缩包
   tar czf "${archive_name}" blueprint.yaml metadata.json
   # 将部署包拷贝到"部署文件夹"

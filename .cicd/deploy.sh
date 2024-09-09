@@ -3,6 +3,13 @@
 #################################
 ## deploy.sh
 ## 描述：部署脚本
+## $1: 代码仓库名称
+## $2: 代码仓库地址
+## $3: 代码分支名称
+## $4: 镜像仓库域名
+## $5: 镜像仓库用户名
+## $6: 镜像仓库用户密码
+## $7: 镜像仓库指定库名
 #################################
 # sudo apt-get install pwgen
 # sudo apt-get install sshpass
@@ -15,17 +22,21 @@ declare -r C_SCRIPT_CURRENT_DIR;
 C_SCRIPT_PARENT_DIR=$(dirname "$C_SCRIPT_CURRENT_DIR")
 declare -r C_SCRIPT_PARENT_DIR;
 # 代码仓库名称
-C_REPOSITORY_NAME=$1
-declare -r C_REPOSITORY_NAME;
+declare -r C_REPOSITORY_NAME=$1
 # 代码仓库地址
-C_CODE_REPOSITORY=$2
-declare -r C_CODE_REPOSITORY;
+declare -r C_CODE_REPOSITORY=$2
 # 代码分支
-C_CODE_BRANCH=$3
-declare -r C_CODE_BRANCH;
+declare -r C_CODE_BRANCH=$3
+# 镜像仓库域名
+declare -r C_IMAGE_DOMAIN=$4
+# 镜像仓库用户名
+declare -r C_IMAGE_USER=$5
+# 镜像仓库密码
+declare -r C_IMAGE_PASSWORD=$6
+# 镜像仓库名
+declare -r C_IMAGE_LIBRARY=$7
 # deploy.json 文件名
-C_DEPLOY_JSON_FILE_NAME="deploy.json"
-declare -r C_DEPLOY_JSON_FILE_NAME;
+declare -r C_DEPLOY_JSON_FILE_NAME="deploy.json"
 
 
 ##################################
@@ -145,7 +156,7 @@ Deploy(){
   chmod +x "${project_dir}/.cicd/build.sh"
 
   # 执行构建打包
-  /bin/bash "${project_dir}/.cicd/build.sh"
+  /bin/bash "${project_dir}/.cicd/build.sh" "${C_IMAGE_DOMAIN}" "${C_IMAGE_USER}" "${C_IMAGE_PASSWORD}" "${C_IMAGE_LIBRARY}"
   # 如果上一步构建失败则执行if
   if [ $? -ne 0 ];then
     Warn "The build package failed !!!"
