@@ -14,8 +14,6 @@ declare -r C_SCRIPT_CURRENT_DIR;
 # 脚本所在的上一级目录 常量
 C_SCRIPT_PARENT_DIR=$(dirname "$C_SCRIPT_CURRENT_DIR")
 declare -r C_SCRIPT_PARENT_DIR;
-# 部署包名称
-declare G_DEPLOY_ARCHIVE_NAME="deploy-*.tar.gz"
 # 代码仓库名称
 C_REPOSITORY_NAME=$1
 declare -r C_REPOSITORY_NAME;
