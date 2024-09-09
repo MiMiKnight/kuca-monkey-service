@@ -4,5 +4,7 @@
   "APP_MAIN_CLASS": "@app.main.class@",
   "APP_JAR_NAME":"@app.jar.name@.jar",
   "APP_BUILD_VERSION": "",
-  "APP_IMAGE_COORDINATE": ""
+  "APP_IMAGE_COORDINATE": "",
+  "POD_NAME":"@app.name@",
+  "CLUSTER_NAMESPACE": "backend"
 }

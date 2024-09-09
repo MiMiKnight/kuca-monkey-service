@@ -1,0 +1,16 @@
+# 项目名称
+APP_NAME: "@app.name@"
+# 项目归档文件名
+APP_ARCHIVE_FILE_NAME: "@app.name@.tar.gz"
+# 主类路径
+APP_MAIN_CLASS: "@app.main.class@"
+# 项目jar包名称
+APP_JAR_NAME: "@app.jar.name@.jar"
+# 项目构建版本
+APP_BUILD_VERSION: ""
+# 项目镜像坐标
+APP_IMAGE_COORDINATE: ""
+# 项目POD名称
+POD_NAME: "@app.name@"
+# 集群命名空间
+CLUSTER_NAMESPACE: "backend"

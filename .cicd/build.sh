@@ -208,7 +208,7 @@ BuildImage
 BuildBlueprint(){
   Info "Start build blueprint !!!"
   # 替换镜像坐标
-  sed -i "s@image_coordinate@${image_coordinate}@g" "${C_SCRIPT_PARENT_DIR}/.build/blueprint.yaml"
+  sed -i "s@image_coordinate:tag@${image_coordinate}@g" "${C_SCRIPT_PARENT_DIR}/.build/blueprint.yaml"
 }
 BuildBlueprint
 
