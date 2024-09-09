@@ -1,8 +1,8 @@
 #!/bin/bash
 set -ex
 #################################
+## build.sh
 ## 描述：项目打包构建脚本
-## $1 maven配置文件路径
 #################################
 #sudo apt-get install -y jq
 
@@ -19,8 +19,8 @@ declare -r C_SCRIPT_PARENT_DIR;
 ## Check Java 函数
 #####################################
 CheckJava(){
-  local java_location="${JAVA_HOME}\bin\java"
-  if [ ! -f "${java_location}" ] || [ ! -x "${java_location}" ]; then
+  local java_location="${JAVA_HOME}/bin/java"
+  if [ ! -e "${java_location}" ] || [ ! -x "${java_location}" ]; then
      echo "[Warn] Please install Java and set environment variables or check it !!!"
      exit 1
   fi
@@ -31,8 +31,8 @@ CheckJava(){
 #####################################
 CheckMaven(){
   CheckJava
-  local mvn_location="${MAVEN_HOME}\bin\mvn"
-  if [ ! -f "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
+  local mvn_location="${MAVEN_HOME}/bin/mvn"
+  if [ ! -e "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
      echo "[Warn] Please install Maven and set environment variables or check it !!!"
      exit 1
   fi
@@ -49,11 +49,11 @@ MavenPackage(){
   cmd="${JAVA_HOME}/bin/java \
   -Dmaven.multiModuleProjectDirectory=${C_SCRIPT_PARENT_DIR} \
   -Dmaven.home=${MAVEN_HOME} \
-  -Dclassworlds.conf=${MAVEN_HOME}\bin\m2.conf \
+  -Dclassworlds.conf=${MAVEN_HOME}/bin/m2.conf \
   -Dfile.encoding=UTF-8 \
-  -classpath ${MAVEN_HOME}/boot
+  -classpath ${MAVEN_HOME}/boot \
   org.codehaus.classworlds.Launcher \
-  --settings ${MAVEN_HOME}\conf\settings.xml \
+  --settings ${MAVEN_HOME}/conf/settings.xml \
   -DskipTests=true \
   clean compile package"
 
@@ -178,7 +178,7 @@ BuildImage
 BuildBlueprint(){
   echo "build blueprint"
   # 替换镜像坐标
-  sed -i "s@{{image_coordinate}}@${image_coordinate}@g" ${C_SCRIPT_PARENT_DIR}/.build/blueprint.yaml
+  sed -i "s@{{image_coordinate}}@${image_coordinate}@g" "${C_SCRIPT_PARENT_DIR}/.build/blueprint.yaml"
 }
 BuildBlueprint
 
@@ -194,11 +194,12 @@ BuildDeployPackage(){
   # 构建部署压缩包
   archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
   tar czvf "${archive_name}" blueprint.yaml metadata.json
-  # TODO 上传部署压缩包 向k8s部署服务
+  cp -f "${C_SCRIPT_PARENT_DIR}/.build/${archive_name}" "${C_SCRIPT_PARENT_DIR}"
   # 切换到回原有的目录下
   cd "${current_dir}"
 }
 BuildDeployPackage
 
 #
+rm -rf "${C_SCRIPT_PARENT_DIR}/.build"
 echo "[TIP] The project has been built completed and success !!!"
