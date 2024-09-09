@@ -5,6 +5,7 @@ set -ex
 ## 描述：项目打包构建脚本
 #################################
 #sudo apt-get install -y jq
+# sudo apt-get install pwgen
 
 ############全局变量常量############
 # 脚本当前所在目录 常量
@@ -116,8 +117,8 @@ MoveFile
 #####################################
 BuildVersion(){
   # 生成构建版本
-  local build_version="" cmd=""
-  build_version="$(date +%Y%m%d%H%M%S%N)"
+  local build_version="" cmd="";
+  build_version="$(date +%Y%m%d%H%M%S)$(pwgen -ABns0 8 1 | tr a-z A-Z)"
   # 写入项目构建版本信息
   echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${C_SCRIPT_PARENT_DIR}/.build/metadata.json)" > ${C_SCRIPT_PARENT_DIR}/.build/metadata.json
 }
