@@ -46,14 +46,14 @@ MavenPackage(){
   # 检查Maven
   CheckMaven
   # 构建打包命令
-  local cmd="" project_dir="" current_dir=""
+  local project_dir="" current_dir=""
   project_dir=${C_SCRIPT_PARENT_DIR}
-  # 切换到项目目录
-  cd "${project_dir}"
   # 记录当前目录
   current_dir=$(pwd)
+  # 切换到项目目录
+  cd "${project_dir}"
 
-  cmd="${JAVA_HOME}/bin/java \
+  local cmd="${JAVA_HOME}/bin/java \
   -Dmaven.multiModuleProjectDirectory=${C_SCRIPT_PARENT_DIR} \
   -Dmaven.home=${MAVEN_HOME} \
   -Dclassworlds.conf=${MAVEN_HOME}/bin/m2.conf \
@@ -78,8 +78,8 @@ MavenPackage(){
   end_time=${start_time}
   duration=0 # 持续时间
   # 构建产物不存在时则等待构建，执行循环体；构建产物存在，则跳出循环；
-  local metadata_file_path="${C_SCRIPT_PARENT_DIR}/.build/deployment/metadata.json"
-  until [ -f "${metadata_file_path}" ]
+  local metadata_file_location="${C_SCRIPT_PARENT_DIR}/.build/deployment/metadata.json"
+  until [ -f "${metadata_file_location}" ]
   do
     echo "[TIP] maven is packaging project now ...."
     now=$(date +'%Y-%m-%d %H:%M:%S')
@@ -200,10 +200,15 @@ BuildDeployPackage(){
   current_dir=$(pwd)
   # 切换到.build目录
   cd "${C_SCRIPT_PARENT_DIR}/.build"
-  # 构建部署压缩包
+  # 压缩包名
   archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
+  # 生成部署压缩包
   tar czvf "${archive_name}" blueprint.yaml metadata.json
-  cp -f "${C_SCRIPT_PARENT_DIR}/.build/${archive_name}" "${C_SCRIPT_PARENT_DIR}"
+  # 将部署包拷贝到"部署文件夹"
+  cp -f "${C_SCRIPT_PARENT_DIR}/.build/${archive_name}" "$(dirname $C_SCRIPT_PARENT_DIR)"
+  # 在"部署文件夹"生成deploy.json
+  local json_txt="{\"DEPLOY_PACKAGE_NAME\":\"${archive_name}\"}"
+  echo "${json_txt}" >> "$(dirname $C_SCRIPT_PARENT_DIR)/deploy.json"
   # 切换到回原有的目录下
   cd "${current_dir}"
 }
