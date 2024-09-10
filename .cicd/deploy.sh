@@ -156,11 +156,11 @@ LogoutDocker(){
 ## login docker 函数
 #####################################
 LoginDocker(){
-  # 捕捉脚本退出信号，登出docker
-  trap '$(LogoutDocker)' exit
   # 登陆docker
   sudo docker login "${image_domain}" --username "${image_user}" --password "${image_password}"
   Info "login docker success !!!"
+  # 捕捉脚本退出信号，登出docker
+  trap '$(LogoutDocker)' exit
 }
 
 #####################################
