@@ -89,6 +89,15 @@ Unlock(){
 }
 
 #####################################
+## trace error 函数
+## 显示错误位置，打印错误内容
+#####################################
+TraceError(){
+  Warn "error on line $1 , Command: '$2'"
+  exit 0
+}
+
+#####################################
 ## Check Arg 函数
 #####################################
 CheckArg(){
@@ -210,6 +219,8 @@ CreateBuildDir(){
 TrapSignal(){
   # 捕捉信号，删除临时构建目录,退出docker登陆;脚本解锁
   trap 'DeleteBuildDir;LogoutDocker;Unlock;exit 0;' EXIT SIGINT
+  # 捕捉错误发生位置
+  trap 'TraceError $LINENO $BASH_COMMAND' ERR
 }
 
 #####################################
