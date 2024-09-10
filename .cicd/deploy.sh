@@ -66,16 +66,13 @@ Error() {
 #####################################
 CheckArg(){
   if [ -z "${repository_name}" ]; then
-      Warn "Argument \'REPOSITORY_NAME\' must not be empty !!!"
-      exit 1
+      Error "Argument \'REPOSITORY_NAME\' must not be empty !!!"
   fi
   if [ -z "${code_repository}" ]; then
-      Warn "Argument \'CODE_REPOSITORY\' must not be empty !!!"
-      exit 1
+      Error "Argument \'CODE_REPOSITORY\' must not be empty !!!"
   fi
   if [ -z "${code_branch}" ]; then
-      Warn "Argument \'CODE_BRANCH\' must not be empty !!!"
-      exit 1
+      Error "Argument \'CODE_BRANCH\' must not be empty !!!"
   fi
 }
 CheckArg
@@ -108,6 +105,7 @@ CheckMaven
 #####################################
 GitClone(){
   Info "Start clone code !!!"
+  Info "repository: ${code_repository}  branch: ${code_branch}"
   # 目的文件夹
   local dest=$1
   git clone "${code_repository}" --branch "${code_branch}" "${dest}"
