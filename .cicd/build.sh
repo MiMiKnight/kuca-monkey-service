@@ -197,7 +197,7 @@ BuildImage(){
  # 回到父级目录
  cd "${app_dir}" || exit 1
  # 登陆docker
- sudo docker login ${image_domain} --username ${image_user} --password ${image_password}
+ sudo docker login "${image_domain}" --username "${image_user}" --password "${image_password}"
  # 上传docker镜像
  sudo docker push "${image_coordinate}"
  # 删除产物镜像
