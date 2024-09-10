@@ -12,6 +12,10 @@ app_jar_location="${app_dir}/lib/@app.jar.name@.jar"
 app_startup_log_location="${app_dir}/logs/startup.log"
 # 健康检查接口URL
 health_check_url="https://127.0.0.1:8443/rest/developer/monkey-service/health/servlet/v1/check";
+# 项目端口号
+app_port=8443
+# 项目启动超时时间,单位：秒
+app_startup_timeout=300
 # JAVA_OPTS
 java_opts="-Xms512m \
   -Xmx1024m \
@@ -28,21 +32,24 @@ java_opts="-Xms512m \
 # 友好提示函数
 ##################################
 Info() {
-  echo -e "\e[1;32;49m[INFO] \e[1;39;49m$1\e[0m";
+  now=$(date +'%Y-%m-%d %H:%M:%S')
+  echo -e "\e[1;90;49m[${now}] \e[1;32;49m[INFO] \e[1;39;49m$1\e[0m";
 }
 
 ##################################
 # 警告提示函数
 ##################################
 Warn() {
-  echo -e "\e[1;33;49m[WARN] \e[1;39;49m$1\e[0m";
+  now=$(date +'%Y-%m-%d %H:%M:%S')
+  echo -e "\e[1;90;49m[${now}] \e[1;33;49m[WARN] \e[1;39;49m$1\e[0m";
 }
 
 ##################################
 # 错误提示退出函数
 ##################################
 Error() {
-  echo -e "\e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
+  now=$(date +'%Y-%m-%d %H:%M:%S')
+  echo -e "\e[1;90;49m[${now}] \e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
   exit 1
 }
 
@@ -99,13 +106,44 @@ GetJavaPID(){
 }
 
 ##################################
+# CheckAlive 函数
+# 描述：根据端口号和进程PID双重检测应用是否存活
+# false：失活  true：存活
+##################################
+CheckAlive(){
+  # 获取进程PID
+  local pid="0"
+  pid=$(GetJavaPID "${app_jar_location}")
+  # pid = 0，表示程序未启动
+  if [[ ${pid} == "0" ]]; then
+    echo false
+    return
+  fi
+  local port=${app_port}
+  # 再根据端口号检测
+  local result="" port="0" p_name=""
+  port=${app_port}
+  p_name="${pid}/java"
+  result=$(netstat -ntlp | awk -v p_name="${p_name}" '{ if($6=="LISTEN" && $7==p_name) print $4}' | grep "${port}")
+  if [ -z "${result}" ]; then
+     echo false
+  else
+     echo true
+  fi
+}
+
+##################################
 # start函数
 ##################################
 Start() {
+  # 捕捉脚本退出信号，杀死指定的后台Java进程
+  trap 'kill -9 $(GetJavaPID "${app_jar_location}")' exit
+
   CheckEnv
   local pid=0;
 
   # 检测程序是否已启动
+  local pid=""
   pid=$(GetJavaPID "${app_jar_location}")
   # pid 大于0，表示程序已启动
   if [[ ${pid} -gt 0 ]]; then
@@ -116,17 +154,30 @@ Start() {
   # 启动应用并设置后台运行
   nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1 &
 
+  # 启动超时 循环等待启动成功
+  local timeout=0 now start_time=0 end_time=0 duration=0;
+  timeout=${app_startup_timeout}; # 打包超时时间（单位：秒）
+  now=$(date +'%Y-%m-%d %H:%M:%S');
+  start_time=$(date --date="${now}" +%s);
+  end_time=${start_time}
+  duration=0 # 持续时间
+  while [ "false" == "$(CheckAlive)" ]; do
+    now=$(date +'%Y-%m-%d %H:%M:%S')
+    end_time=$(date --date="$now" +%s);
+    duration=$((end_time-start_time))
+    # 超时则报错退出脚本执行
+    pid=$(GetJavaPID "${app_jar_location}")
+    if [[ ${pid} -eq "0" ]] || [[ ${duration} -gt ${timeout} ]]; then
+      Warn "the application startup failed !!!"
+      exit 1
+    fi
+    Info "the application is starting !!!"
+    sleep 2 # 循环每2秒打印一次，启动中日志
+  done
   pid=$(GetJavaPID "${app_jar_location}")
-  # pid 大于0，表示程序已启动成功
-  if [[ ${pid} -gt 0 ]]; then
-    Info "the application startup success and pid = ${pid} !!!"
-  else
-    # 启动失败
-    Warn "the application startup failed !!!"
-  fi
-  # 捕捉脚本退出信号，杀死指定的后台Java进程
-  trap 'kill -9 ${pid}' exit
-  # 保活（docker需要一个运行中的前台进程）
+  Info "the application startup success and pid = ${pid} !!!"
+
+  # keepalive操作（docker中运行时需要）
   read -r -n 1
 }
 
@@ -167,6 +218,9 @@ usage() {
     ;;
   'stop')
     Stop
+    ;;
+  'alive')
+    CheckAlive
     ;;
   'healthcheck')
     HealthCheck

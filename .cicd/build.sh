@@ -117,7 +117,7 @@ MavenPackage(){
   duration=0 # 持续时间
   # 构建产物不存在时则等待构建，执行循环体；构建产物存在，则跳出循环；
   local metadata_file_location="${C_SCRIPT_PARENT_DIR}/.build/deployment/metadata.json"
-  until [ -f "${metadata_file_location}" ]
+  while [ -f "${metadata_file_location}" ];
   do
     Info "maven is packaging project now ...."
     now=$(date +'%Y-%m-%d %H:%M:%S')
