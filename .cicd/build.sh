@@ -167,18 +167,18 @@ BuildVersion(){
 BuildVersion
 
 # 项目名称
-C_APP_NAME="$(jq -r '.APP_NAME' ${app_dir}/.build/metadata.json)"
+app_name="$(jq -r '.APP_NAME' ${app_dir}/.build/metadata.json)"
 # 项目构建版本
-C_APP_BUILD_VERSION="$(jq -r '.APP_BUILD_VERSION' ${app_dir}/.build/metadata.json)"
+app_build_version="$(jq -r '.APP_BUILD_VERSION' ${app_dir}/.build/metadata.json)"
 # 项目镜像坐标
-C_IMAGE_COORDINATE="${image_domain}/${image_library}/${C_APP_NAME}:${C_APP_BUILD_VERSION}"
+image_coordinate="${image_domain}/${image_library}/${app_name}:${app_build_version}"
 
 #####################################
 ## 写入元数据 函数
 #####################################
 WriteMetadata(){
   # 写入项目镜像坐标信息
-  echo "$(jq --arg value ${C_IMAGE_COORDINATE} '.APP_IMAGE_COORDINATE = $value' ${app_dir}/.build/metadata.json)" > ${app_dir}/.build/metadata.json
+  echo "$(jq --arg value ${image_coordinate} '.APP_IMAGE_COORDINATE = $value' ${app_dir}/.build/metadata.json)" > ${app_dir}/.build/metadata.json
 }
 WriteMetadata
 
@@ -191,17 +191,17 @@ BuildImage(){
  # 构建docker镜像
  sudo docker build \
   --file "${app_dir}/.build/Dockerfile" \
-  --build-arg build_version="${C_APP_BUILD_VERSION}" \
+  --build-arg build_version="${app_build_version}" \
   --build-arg timezone="Asia/Shanghai" \
-  --tag "${C_IMAGE_COORDINATE}" .
+  --tag "${image_coordinate}" .
  # 回到父级目录
  cd "${app_dir}" || exit 1
  # 登陆docker
  sudo docker login ${image_domain} --username ${image_user} --password ${image_password}
  # 上传docker镜像
- sudo docker push "${C_IMAGE_COORDINATE}"
+ sudo docker push "${image_coordinate}"
  # 删除产物镜像
- sudo docker rmi "$(sudo docker images | grep "${C_APP_BUILD_VERSION}" | grep "${image_domain}/${image_library}/${C_APP_NAME}" | awk '{print $3}')"
+ sudo docker rmi "$(sudo docker images | grep "${app_build_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
  # 退出登陆docker
  sudo docker logout
 }
@@ -213,7 +213,7 @@ BuildImage
 BuildBlueprint(){
   Info "Start build blueprint !!!"
   # 替换镜像坐标
-  sed -i "s@image_coordinate:tag@${C_IMAGE_COORDINATE}@g" "${app_dir}/.build/blueprint.yaml"
+  sed -i "s@image_coordinate:tag@${image_coordinate}@g" "${app_dir}/.build/blueprint.yaml"
 }
 BuildBlueprint
 
@@ -227,7 +227,7 @@ BuildDeployPackage(){
   # 切换到.build目录
   cd "${app_dir}/.build" || exit 1
   # 压缩包名
-  archive_name="deploy-${C_APP_NAME}-${C_APP_BUILD_VERSION}.tar.gz"
+  archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
   # 生成部署压缩包
   tar czf "${archive_name}" blueprint.yaml metadata.json
   # 将部署包拷贝到"部署文件夹"
