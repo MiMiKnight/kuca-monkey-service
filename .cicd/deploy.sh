@@ -68,13 +68,25 @@ Error() {
 #####################################
 CheckArg(){
   if [ -z "${repository_name}" ]; then
-      Error "Argument \'REPOSITORY_NAME\' must not be empty !!!"
+      Error "Arg: 'repository_name' value invalid !!!"
   fi
   if [ -z "${code_repository}" ]; then
-      Error "Argument \'CODE_REPOSITORY\' must not be empty !!!"
+      Error "Arg: 'code_repository' value invalid !!!"
   fi
   if [ -z "${code_branch}" ]; then
-      Error "Argument \'CODE_BRANCH\' must not be empty !!!"
+      Error "Arg: 'code_branch' value invalid !!!"
+  fi
+  if [ -z "${image_domain}" ]; then
+      Error "Arg: 'image_domain' value invalid !!!"
+  fi
+  if [ -z "${image_user}" ]; then
+      Error "Arg: 'image_user' value invalid !!!"
+  fi
+  if [ -z "${image_password}" ]; then
+      Error "Arg: 'image_password' value invalid !!!"
+  fi
+  if [ -z "${image_library}" ]; then
+      Error "Arg: 'image_library' value invalid !!!"
   fi
 }
 CheckArg
@@ -112,7 +124,7 @@ GitClone(){
   local dest=$1
   git clone "${code_repository}" --branch "${code_branch}" "${dest}"
   if [ $? -ne 0 ];then
-     Error "code clone failed !!!"
+     Error "Code clone failed !!!"
   fi
   Info "The code clone finished and success !!!"
 }
@@ -155,6 +167,9 @@ LoginDocker(){
 CreateBuildDir(){
   loca dir="${script_current_dir}/$(pwgen -ABns0 16 1 | tr a-z A-Z)"
   mkdir -p "${dir}"
+  temp_build_dir=build_dir
+  # 捕捉脚本退出信号，删除临时构建目录
+  trap '$(DeleteBuildDir)' exit
   Info "Create build dir success,dir='${dir}' !!!"
 }
 
@@ -176,9 +191,6 @@ Deploy(){
   # 生成随机目录名称
   local build_dir="";
   build_dir=$(CreateBuildDir)
-  temp_build_dir=build_dir
-  # 捕捉脚本退出信号，删除临时构建目录
-  trap '$(DeleteBuildDir)' exit
 
   # 从git仓库拉取代码
   local project_dir="${build_dir}/${repository_name}";
