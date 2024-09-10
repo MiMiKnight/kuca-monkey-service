@@ -87,7 +87,7 @@ CheckEnv(){
 # GetJavaPid 函数
 # $1 Java进程名
 ##################################
-GetJavaPid(){
+GetJavaPID(){
   local pid=0 p_name=$1;
   jps_info=$("${JAVA_HOME}"/bin/jps -l | grep "${p_name}")
   if [ -z "${jps_info}" ]; then
@@ -106,17 +106,17 @@ Start() {
   local pid=0;
 
   # 检测程序是否已启动
-  pid=$(GetJavaPid "${app_jar_location}")
+  pid=$(GetJavaPID "${app_jar_location}")
   # pid 大于0，表示程序已启动
   if [[ ${pid} -gt 0 ]]; then
     Info "the application has started and pid = ${pid} !!!"
     return 0
   fi
 
-  # 启动应用
+  # 启动应用并设置后台运行
   nohup "${JAVA_HOME}/bin/java" "${java_opts}" -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1 &
 
-  pid=$(GetJavaPid "${app_jar_location}")
+  pid=$(GetJavaPID "${app_jar_location}")
   # pid 大于0，表示程序已启动成功
   if [[ ${pid} -gt 0 ]]; then
     Info "the application startup success and pid = ${pid} !!!"
@@ -124,8 +124,25 @@ Start() {
     # 启动失败
     Warn "the application startup failed !!!"
   fi
-  # 进程保活
+  # 保活（docker需要一个运行中的前台进程）
   read -r -n 1
+}
+
+##################################
+# stop函数
+##################################
+Stop() {
+  CheckEnv
+  local pid=0;
+  # 检测程序是否已启动
+  pid=$(GetJavaPID "${app_jar_location}")
+  # pid 大于0，表示程序已启动
+  if [[ ${pid} -gt 0 ]]; then
+    kill -9 "${pid}"
+    Info "the application stopped success and pid = ${pid} !!!"
+  else
+    Info "the application is not running !!!"
+  fi
 }
 
 ##################################
@@ -146,11 +163,14 @@ usage() {
   'start')
     Start
     ;;
+  'stop')
+    Stop
+    ;;
   'healthcheck')
     HealthCheck
     ;;
   *)
-    echo "usage: service [start|healthcheck]"
+    echo "usage: service [start|stop|healthcheck]"
     ;;
   esac
 }
