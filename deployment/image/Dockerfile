@@ -29,10 +29,10 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
     && sed -i "s@http://.*archive.ubuntu.com@${apt_mirror}@g" /etc/apt/sources.list \
     && sed -i "s@http://.*security.ubuntu.com@${apt_mirror}@g" /etc/apt/sources.list \
     && sed -i "s@https://@http://@g" /etc/apt/sources.list \
-    && apt-get update \
-    && apt-get install -y --reinstall ca-certificates \
+    && apt update \
+    && apt install -y --reinstall ca-certificates \
     && sed -i "s@http://@https://@g" /etc/apt/sources.list \
-    && apt-get install -y dos2unix tar vim curl wget \
+    && apt install -y dos2unix tar vim curl wget net-tools \
     && mv -f /etc/apt/sources.list.bak /etc/apt/sources.list \
     && echo "${timezone}" > /etc/timezone \
     && useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "JavaWebService" ${user} \
