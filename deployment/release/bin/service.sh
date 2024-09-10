@@ -113,19 +113,9 @@ Start() {
     return 0
   fi
 
-  # 启动应用并设置后台运行
-  nohup "${JAVA_HOME}/bin/java" "${java_opts}" -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1 &
-
-  pid=$(GetJavaPID "${app_jar_location}")
-  # pid 大于0，表示程序已启动成功
-  if [[ ${pid} -gt 0 ]]; then
-    Info "the application startup success and pid = ${pid} !!!"
-  else
-    # 启动失败
-    Warn "the application startup failed !!!"
-  fi
-  # 保活（docker需要一个运行中的前台进程）
-  read -r -n 1
+  # 启动应用
+  #nohup "${JAVA_HOME}/bin/java" "${java_opts}" -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1 &
+  "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1
 }
 
 ##################################
