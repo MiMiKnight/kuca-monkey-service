@@ -138,10 +138,8 @@ CheckAlive(){
 Start() {
   # 捕捉脚本退出信号，杀死指定的后台Java进程
   #trap 'kill -9 $(GetJavaPID "${app_jar_location}")' exit
-
   CheckEnv
   local pid=0;
-
   # 检测程序是否已启动
   local pid=""
   pid=$(GetJavaPID "${app_jar_location}")
@@ -150,7 +148,6 @@ Start() {
     Info "the application has started and pid = ${pid} !!!"
     return 0
   fi
-
   # 启动应用
   nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1
 }
