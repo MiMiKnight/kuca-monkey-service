@@ -31,21 +31,25 @@ image_library=$4
 # 友好提示函数
 ##################################
 Info() {
-  echo -e "\e[1;32;49m[INFO] \e[1;39;49m$1\e[0m";
+  now=$(date +'%Y-%m-%d %H:%M:%S')
+  echo -e "\e[1;90;49m[${now}] \e[1;32;49m[INFO] \e[1;39;49m$1\e[0m";
 }
 
 ##################################
 # 警告提示函数
 ##################################
 Warn() {
-  echo -e "\e[1;33;49m[WARN] \e[1;39;49m$1\e[0m";
+  now=$(date +'%Y-%m-%d %H:%M:%S')
+  echo -e "\e[1;90;49m[${now}] \e[1;33;49m[WARN] \e[1;39;49m$1\e[0m";
 }
 
 ##################################
 # 错误提示退出函数
 ##################################
 Error() {
-  echo -e "\e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
+  now=$(date +'%Y-%m-%d %H:%M:%S')
+  echo -e "\e[1;90;49m[${now}] \e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
+  exit 1
 }
 
 #####################################
@@ -55,7 +59,6 @@ CheckJava(){
   local java_location="${JAVA_HOME}/bin/java"
   if [ ! -e "${java_location}" ] || [ ! -x "${java_location}" ]; then
      Error "Please install Java and set environment variables or check it !!!"
-     exit 1
   fi
 }
 
@@ -67,7 +70,6 @@ CheckMaven(){
   local mvn_location="${MAVEN_HOME}/bin/mvn"
   if [ ! -e "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
      Error "Please install Maven and set environment variables or check it !!!"
-     exit 1
   fi
 }
 
@@ -118,8 +120,8 @@ MavenPackage(){
     end_time=$(date --date="$now" +%s);
     duration=$((end_time-start_time))
     if [ ${duration} -gt ${timeout} ]; then
+      # 超时则报错退出脚本执行
       Error "maven package project timeout !!!"
-      exit 1 # 超时则报错退出脚本执行
     fi
     sleep 2 # 循环每2秒执行一次
   done
