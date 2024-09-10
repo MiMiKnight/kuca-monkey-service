@@ -149,7 +149,7 @@ UploadPackage(){
 LogoutDocker(){
   # 退出登陆docker
   sudo docker logout
-  Info "logout docker success !!!"
+  #Info "logout docker success !!!"
 }
 
 #####################################
@@ -160,16 +160,17 @@ LoginDocker(){
   sudo docker login "${image_domain}" --username "${image_user}" --password "${image_password}"
   Info "login docker success !!!"
   # 捕捉脚本退出信号，登出docker
-  trap '$(LogoutDocker)' exit
+  #trap '$(LogoutDocker)' exit
 }
 
 #####################################
-## 删除临时构建目录 函数
+## 删除目录 函数
 #####################################
-DeleteBuildDir(){
-  if [ -n "${temp_build_dir}" ] && [ -d "${temp_build_dir}" ]; then
-      rm -rf "${temp_build_dir}"
-      Info "delete temp build dir success ,dir=${temp_build_dir} !!!"
+DeleteDir(){
+  local dir=$1
+  if [ -n "${dir}" ] && [ -d "${dir}" ]; then
+      rm -rf "${dir}"
+      #Info "delete temp build dir success ,dir=${dir} !!!"
   fi
 }
 
@@ -181,7 +182,7 @@ CreateBuildDir(){
   mkdir -p "${dir}"
   temp_build_dir="${dir}"
   # 捕捉脚本退出信号，删除临时构建目录
-  trap '$(DeleteBuildDir)' exit
+  trap '$(DeleteDir ${temp_build_dir})' exit
 }
 
 #####################################
