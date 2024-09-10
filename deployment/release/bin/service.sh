@@ -12,10 +12,6 @@ app_jar_location="${app_dir}/lib/@app.jar.name@.jar"
 app_startup_log_location="${app_dir}/logs/startup.log"
 # 健康检查接口URL
 health_check_url="https://127.0.0.1:8443/rest/developer/monkey-service/health/servlet/v1/check";
-# 项目端口号
-app_port=8443
-# 项目启动超时时间,单位：秒
-app_startup_timeout=300
 # JAVA_OPTS
 java_opts="-Xms512m \
   -Xmx1024m \
