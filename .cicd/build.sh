@@ -19,12 +19,8 @@ script_current_dir=$(cd "$(dirname "$0")" && pwd)
 app_dir=$(dirname "$script_current_dir")
 # 镜像仓库域名
 image_domain=$1
-# 镜像仓库用户名
-image_user=$2
-# 镜像仓库密码
-image_password=$3
 # 镜像仓库名
-image_library=$4
+image_library=$2
 
 
 ##################################
@@ -196,14 +192,10 @@ BuildImage(){
   --tag "${image_coordinate}" .
  # 回到父级目录
  cd "${app_dir}" || exit 1
- # 登陆docker
- sudo docker login "${image_domain}" --username "${image_user}" --password "${image_password}"
  # 上传docker镜像
  sudo docker push "${image_coordinate}"
  # 删除产物镜像
  sudo docker rmi "$(sudo docker images | grep "${app_build_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
- # 退出登陆docker
- sudo docker logout
 }
 BuildImage
 

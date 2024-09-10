@@ -34,6 +34,8 @@ image_password=$6
 image_library=$7
 # deploy.json 文件名
 deploy_json_file_name="deploy.json"
+# 临时构建目录
+temp_build_dir=""
 
 
 ##################################
@@ -123,10 +125,47 @@ GitClone(){
 UploadPackage(){
   Info "Start upload package !!!"
   local deploy_json_location="$1" deploy_package_location="$2";
-  #sshpass -p "vagrant" scp -c "${random_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${random_dir}/${deploy_archive_name}
+  #sshpass -p "vagrant" scp -c "${build_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${build_dir}/${deploy_archive_name}
   #cp -f ${deploy_json_location} ${script_current_dir}
   #cp -f ${deploy_package_location} ${script_current_dir}
   Info "The upload package finished and success !!!"
+}
+
+#####################################
+## logout docker 函数
+#####################################
+LogoutDocker(){
+  # 退出登陆docker
+  sudo docker logout
+}
+
+#####################################
+## login docker 函数
+#####################################
+LoginDocker(){
+  # 捕捉脚本退出信号，登出docker
+  trap '$(LogoutDocker)' exit
+  # 登陆docker
+  sudo docker login "${image_domain}" --username "${image_user}" --password "${image_password}"
+}
+
+#####################################
+## 生成临时构建目录 函数
+#####################################
+CreateBuildDir(){
+  loca dir="${script_current_dir}/$(pwgen -ABns0 16 1 | tr a-z A-Z)"
+  mkdir -p "${dir}"
+  Info "Create build dir success,dir='${dir}' !!!"
+}
+
+#####################################
+## 删除临时构建目录 函数
+#####################################
+DeleteBuildDir(){
+  if [ -d "${temp_build_dir}" ]; then
+      rm -rf "${temp_build_dir}"
+      Info "Delete build dir success,dir='${dir}' !!!"
+  fi
 }
 
 #####################################
@@ -135,43 +174,36 @@ UploadPackage(){
 Deploy(){
   Info "Start run deploy task !!!"
   # 生成随机目录名称
-  local random_dir="";
-  random_dir="${script_current_dir}/$(pwgen -ABns0 16 1 | tr a-z A-Z)"
-  mkdir -p "${random_dir}"
+  local build_dir="";
+  build_dir=$(CreateBuildDir)
+  temp_build_dir=build_dir
+  # 捕捉脚本退出信号，删除临时构建目录
+  trap '$(DeleteBuildDir)' exit
+
   # 从git仓库拉取代码
-  local project_dir="${random_dir}/${repository_name}";
+  local project_dir="${build_dir}/${repository_name}";
   GitClone "${project_dir}"
-  if [ $? -ne 0 ];then
-    # 删除生成的随机目录
-    rm -rf "${random_dir}"
-    exit 1
-  fi
 
   # dos2unix chmod
   find "${project_dir}/.cicd" -type f -print0 | xargs -0 dos2unix -k -s
   chmod +x "${project_dir}/.cicd/build.sh"
 
+  # 登录docker
+  LoginDocker
   # 执行构建打包
-  /bin/bash "${project_dir}/.cicd/build.sh" "${image_domain}" "${image_user}" "${image_password}" "${image_library}"
-  # 如果上一步构建失败则执行if
-  if [ $? -ne 0 ];then
-    Warn "The build package failed !!!"
-    # 删除生成的随机目录
-    rm -rf "${random_dir}"
-    exit 1
-  fi
+  /bin/bash "${project_dir}/.cicd/build.sh" "${image_domain}" "${image_library}"
 
   local deploy_json_location="" deploy_package_name="" deploy_package_location=""
   # deploy.json文件路径
-  deploy_json_location="${random_dir}/${deploy_json_file_name}"
+  deploy_json_location="${build_dir}/${deploy_json_file_name}"
   # 读取部署包名
   deploy_package_name="$(jq -r '.DEPLOY_PACKAGE_NAME' "${deploy_json_location}")"
   # 部署包路径
-  deploy_package_location="${random_dir}/${deploy_package_name}"
+  deploy_package_location="${build_dir}/${deploy_package_name}"
   # 传包部署
   UploadPackage "${deploy_json_location}" "${deploy_package_location}"
   # 删除随机目录
-  rm -rf "${random_dir}"
+  #rm -rf "${build_dir}"
   #
   Info "The deploy task run finished and success !!!"
 }
