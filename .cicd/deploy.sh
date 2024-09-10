@@ -118,15 +118,15 @@ CheckMaven
 ## $1 克隆至目的文件夹（必填）
 #####################################
 GitClone(){
-  Info "Start clone code !!!"
+  Info "start clone code !!!"
   Info "repository: ${code_repository}  branch: ${code_branch}"
   # 目的文件夹
   local dest=$1
   git clone "${code_repository}" --branch "${code_branch}" "${dest}"
   if [ $? -ne 0 ];then
-     Error "Code clone failed !!!"
+     Error "code clone failed !!!"
   fi
-  Info "The code clone finished and success !!!"
+  Info "the code clone finished and success !!!"
 }
 
 #####################################
@@ -135,12 +135,12 @@ GitClone(){
 ## $2 deploy-xxx.tar.gz 包文件路径
 #####################################
 UploadPackage(){
-  Info "Start upload package !!!"
+  Info "start upload package !!!"
   local deploy_json_location="$1" deploy_package_location="$2";
   #sshpass -p "vagrant" scp -c "${build_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${build_dir}/${deploy_archive_name}
   #cp -f ${deploy_json_location} ${script_current_dir}
   #cp -f ${deploy_package_location} ${script_current_dir}
-  Info "The upload package finished and success !!!"
+  Info "the upload package finished and success !!!"
 }
 
 #####################################
@@ -149,7 +149,7 @@ UploadPackage(){
 LogoutDocker(){
   # 退出登陆docker
   sudo docker logout
-  #Info "logout docker success !!!"
+  Info "logout docker success !!!"
 }
 
 #####################################
@@ -159,18 +159,16 @@ LoginDocker(){
   # 登陆docker
   sudo docker login "${image_domain}" --username "${image_user}" --password "${image_password}"
   Info "login docker success !!!"
-  # 捕捉脚本退出信号，登出docker
-  #trap '$(LogoutDocker)' exit
 }
 
 #####################################
 ## 删除目录 函数
 #####################################
-DeleteDir(){
-  local dir=$1
+DeleteBuildDir(){
+  local dir=${temp_build_dir}
   if [ -n "${dir}" ] && [ -d "${dir}" ]; then
       rm -rf "${dir}"
-      #Info "delete temp build dir success ,dir=${dir} !!!"
+      Info "delete dir success ,dir=${dir} !!!"
   fi
 }
 
@@ -181,20 +179,28 @@ CreateBuildDir(){
   local dir="${script_current_dir}/$(pwgen -ABns0 16 1 | tr a-z A-Z)"
   mkdir -p "${dir}"
   temp_build_dir="${dir}"
-  # 捕捉脚本退出信号，删除临时构建目录
-  trap '$(DeleteDir ${temp_build_dir})' exit
+  Info "create build dir success,dir=${dir} !!!"
+}
+
+#####################################
+## trap signal 函数
+#####################################
+TrapSignal(){
+  # 捕捉信号，删除临时构建目录,退出docker登陆
+  trap 'DeleteBuildDir;LogoutDocker;exit 0;' EXIT SIGINT
+  # 捕捉信号 锁定程序执行，直至运行结束
 }
 
 #####################################
 ## Deploy 函数
 #####################################
 Deploy(){
-  Info "Start run deploy task !!!"
-  # 生成随机目录名称
-  local build_dir="";
+  Info "start run deploy task !!!"
+  TrapSignal
+  # 创建构建目录
   CreateBuildDir
+  local build_dir="";
   build_dir=${temp_build_dir}
-  Info "Create build dir success,dir=${build_dir} !!!"
 
   # 从git仓库拉取代码
   local project_dir="${build_dir}/${repository_name}";
@@ -206,6 +212,7 @@ Deploy(){
 
   # 登录docker
   LoginDocker
+
   # 执行构建打包
   /bin/bash "${project_dir}/.cicd/build.sh" "${image_domain}" "${image_library}"
 
@@ -221,6 +228,6 @@ Deploy(){
   # 删除随机目录
   #rm -rf "${build_dir}"
   #
-  Info "The deploy task run finished and success !!!"
+  Info "the deploy task run finished and success !!!"
 }
 Deploy
