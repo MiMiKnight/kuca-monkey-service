@@ -137,7 +137,7 @@ CheckAlive(){
 ##################################
 Start() {
   # 捕捉脚本退出信号，杀死指定的后台Java进程
-  trap 'kill -9 $(GetJavaPID "${app_jar_location}")' exit
+  #trap 'kill -9 $(GetJavaPID "${app_jar_location}")' exit
 
   CheckEnv
   local pid=0;
@@ -151,36 +151,8 @@ Start() {
     return 0
   fi
 
-  # 启动应用并设置后台运行
-  nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1 &
-
-  # 启动超时 循环等待启动成功
-  local timeout=0 now start_time=0 end_time=0 duration=0;
-  timeout=${app_startup_timeout}; # 打包超时时间（单位：秒）
-  now=$(date +'%Y-%m-%d %H:%M:%S');
-  start_time=$(date --date="${now}" +%s);
-  end_time=${start_time}
-  duration=0 # 持续时间
-  while [ "false" == "$(CheckAlive)" ]; do
-    now=$(date +'%Y-%m-%d %H:%M:%S')
-    end_time=$(date --date="$now" +%s);
-    duration=$((end_time-start_time))
-    # 超时则报错退出脚本执行
-    pid=$(GetJavaPID "${app_jar_location}")
-    if [[ ${pid} -eq "0" ]] || [[ ${duration} -gt ${timeout} ]]; then
-      Warn "the application startup failed !!!"
-      exit 1
-    fi
-    Info "the application is starting !!!"
-    sleep 2 # 循环每2秒打印一次，启动中日志
-  done
-  pid=$(GetJavaPID "${app_jar_location}")
-  Info "the application startup success and pid = ${pid} !!!"
-
-  # keepalive操作（docker中运行时需要）
-  while true ; do
-    true
-  done
+  # 启动应用
+  nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1
 }
 
 ##################################
