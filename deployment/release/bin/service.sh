@@ -1,25 +1,19 @@
 #!/bin/bash
-#set -ex
-############全局变量常量############
-# 脚本当前所在目录 常量
-C_SCRIPT_CURRENT_DIR=$(cd "$(dirname "$0")" && pwd)
-declare -r C_SCRIPT_CURRENT_DIR;
-# 脚本所在的上一级目录 常量
-C_SCRIPT_PARENT_DIR=$(dirname "$C_SCRIPT_CURRENT_DIR")
-declare -r C_SCRIPT_PARENT_DIR;
-# 项目jar包路径 常量
-C_APP_JAR_LOCATION="${C_SCRIPT_PARENT_DIR}/lib/@app.jar.name@.jar"
-declare -r C_APP_JAR_LOCATION;
-# 启动日志位置 常量
-C_APP_STARTUP_LOG_LOCATION="${C_SCRIPT_PARENT_DIR}/logs/startup.log"
-declare -r C_APP_STARTUP_LOG_LOCATION;
-# 健康检查接口URL 常量
-C_CHECK_URL="https://127.0.0.1:8443/rest/developer/monkey-service/health/servlet/v1/check";
-declare  -r C_CHECK_URL;
-# shell内的JAVA_HOME环境变量
-declare -x EVN_JAVA_HOME="/opt/app/java"
-# JAVA_OPTS 常量
-C_JAVA_OPTS="-Xms512m \
+set -eu
+# set -x 参数 作用：显示参数值（调试脚本时打开，平时注释）
+##############全局变量##############
+# 脚本当前所在目录
+script_current_dir="$(cd "$(dirname "$0")" && pwd)"
+# 项目目录
+app_dir="$(dirname "${script_current_dir}")"
+# 项目jar包路径
+app_jar_location="${app_dir}/lib/@app.jar.name@.jar"
+# 启动日志文件路径
+app_startup_log_location="${app_dir}/logs/startup.log"
+# 健康检查接口URL
+health_check_url="https://127.0.0.1:8443/rest/developer/monkey-service/health/servlet/v1/check";
+# JAVA_OPTS
+java_opts="-Xms512m \
   -Xmx1024m \
   -XX:MetaspaceSize=512m \
   -XX:MaxMetaspaceSize=1024m \
@@ -29,7 +23,6 @@ C_JAVA_OPTS="-Xms512m \
   -Dfile.encoding=utf-8 \
   -Dspring.profiles.name=application \
   -Dspring.profiles.active=debug"
-declare -r C_JAVA_OPTS;
 
 ##################################
 # 友好提示函数
@@ -50,6 +43,7 @@ Warn() {
 ##################################
 Error() {
   echo -e "\e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
+  exit 1
 }
 
 ##################################
@@ -57,30 +51,50 @@ Error() {
 # $1 参数1：JAVA安装目录（非必填参数）
 ##################################
 GetJavaHome() {
-  # java安装位置
-  local java_install_path=$1;
+  # java安装目录
+  local java_install_dir=$1 java_program_location="";
 
-  [ -e "${java_install_path}/bin/java" ] && JAVA_HOME=${java_install_path}
+  [ -e "${java_install_dir}/bin/java" ] && JAVA_HOME=${java_install_dir}
   [ ! -e "${JAVA_HOME}/bin/java" ] && JAVA_HOME=$HOME/jdk/java
   [ ! -e "${JAVA_HOME}/bin/java" ] && JAVA_HOME=/usr/java
   [ ! -e "${JAVA_HOME}/bin/java" ] && unset JAVA_HOME
 
-  # JAVA_HOME 目录存在
-  if [ -d "${JAVA_HOME}" ]; then
-     EVN_JAVA_HOME=${JAVA_HOME}
-     return
+  # 查找java执行程序路径
+  java_program_location=$(which java)
+  if [ -z "${java_program_location}" ] || [ ! -e "${java_program_location}" ]; then
+    # 返回输出空字符串
+    echo ""
   else
-     JAVA_PATH=$(which java)
-     # 判断java执行文件是否存在
-     if [ -z "$JAVA_PATH" ]; then
-       Error "Please install Java and set environment variables, We need java(x64) and jdk8 or later is better !!!"
-       exit 1
-     else
-       JAVA_HOME=$(dirname "$JAVA_PATH")
-       JAVA_HOME=$(cd "$(dirname "$JAVA_HOME")" && pwd)
-       EVN_JAVA_HOME=${JAVA_HOME}
-       return
-     fi
+    java_install_dir=$(dirname "$java_program_location")
+    java_install_dir=$(cd "$(dirname "${java_install_dir}")" && pwd)
+    # 生成JAVA_HOME环境变量
+    export JAVA_HOME=${java_install_dir}
+    # 返回输出Java安装目录
+    echo "${java_install_dir}"
+  fi
+}
+
+##################################
+# CheckEnv函数
+##################################
+CheckEnv(){
+  if [ -z "$(GetJavaHome '')" ]; then
+    Error "Please install Java and set environment variables, We need java(x64) and jdk8 or later is better !!!"
+  fi
+}
+
+##################################
+# GetJavaPid 函数
+# $1 Java进程名
+##################################
+GetJavaPid(){
+  local pid=0 p_name=$1;
+  jps_info=$("${JAVA_HOME}"/bin/jps -l | grep "${p_name}")
+  if [ -z "${jps_info}" ]; then
+    echo "${pid}"
+  else
+    pid=$(echo "${jps_info}" | awk '{print $1}')
+    echo "${pid}"
   fi
 }
 
@@ -88,9 +102,30 @@ GetJavaHome() {
 # start函数
 ##################################
 Start() {
-  GetJavaHome ''
-  # 启动应用（不可后台启动，必须前台启动）
-  nohup ${EVN_JAVA_HOME}/bin/java ${C_JAVA_OPTS} -jar ${C_APP_JAR_LOCATION} > ${C_APP_STARTUP_LOG_LOCATION} 2>&1
+  CheckEnv
+  local pid=0;
+
+  # 检测程序是否已启动
+  pid=$(GetJavaPid "${app_jar_location}")
+  # pid 大于0，表示程序已启动
+  if [[ ${pid} -gt 0 ]]; then
+    Info "the application has started and pid = ${pid} !!!"
+    return 0
+  fi
+
+  # 启动应用
+  nohup "${JAVA_HOME}/bin/java" "${java_opts}" -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1 &
+
+  pid=$(GetJavaPid "${app_jar_location}")
+  # pid 大于0，表示程序已启动成功
+  if [[ ${pid} -gt 0 ]]; then
+    Info "the application startup success and pid = ${pid} !!!"
+  else
+    # 启动失败
+    Warn "the application startup failed !!!"
+  fi
+  # 进程保活
+  read -r -n 1
 }
 
 ##################################
@@ -98,9 +133,9 @@ Start() {
 ##################################
 HealthCheck(){
   local check_url="" http_code=0
-  check_url="${C_CHECK_URL}"
-  http_code=`curl -s -k -X GET -w %{http_code} -o /dev/null "${check_url}"`;
-  [ ${http_code} -ne 200 ] || exit 1
+  check_url="${health_check_url}"
+  http_code=$(curl -s -k -X GET -w %{http_code} -o /dev/null "${check_url}");
+  [[ ${http_code} -ne 200 ]] || exit 1
 }
 
 ##################################
