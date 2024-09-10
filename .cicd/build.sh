@@ -234,7 +234,7 @@ BuildDeployPackage(){
   cp -f "${app_dir}/.build/${archive_name}" "$(dirname $app_dir)"
   # 在"部署文件夹"生成deploy.json
   local json_txt="{\"DEPLOY_PACKAGE_NAME\":\"${archive_name}\"}"
-  echo "${json_txt}" >> "$(dirname $app_dir)/deploy.json"
+  echo "${json_txt}" >> "$(dirname "${app_dir}")/deploy.json"
   # 切换到回原有的目录下
   cd "${current_dir}" || exit 1
 }
