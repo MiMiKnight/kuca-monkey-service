@@ -18,6 +18,8 @@ set -eu
 ##############全局变量##############
 # 脚本当前所在目录
 script_current_dir=$(cd "$(dirname "$0")" && pwd)
+# 程序锁文件路径
+lock_filename_location="${script_current_dir}/deploy-lj65p2dm7sxos9hqx6gw.lock"
 # 代码仓库名称
 repository_name=$1
 # 代码仓库地址
@@ -64,6 +66,29 @@ Error() {
 }
 
 #####################################
+## lock 函数
+#####################################
+Lock(){
+  if [ -f "${lock_filename_location}" ]; then
+     Warn "there are already running deploy task. please try again later!!!"
+     exit 0
+  else
+     # 创建锁文件
+     touch "${lock_filename_location}"
+  fi
+}
+
+#####################################
+## unlock 函数
+#####################################
+Unlock(){
+  if [ -f "${lock_filename_location}" ]; then
+     rm -rf "${lock_filename_location}"
+     exit 0
+  fi
+}
+
+#####################################
 ## Check Arg 函数
 #####################################
 CheckArg(){
@@ -89,7 +114,6 @@ CheckArg(){
       Error "Arg: 'image_library' value invalid !!!"
   fi
 }
-CheckArg
 
 #####################################
 ## Check Java 函数
@@ -105,13 +129,11 @@ CheckJava(){
 ## Check Maven 函数
 #####################################
 CheckMaven(){
-  CheckJava
   local mvn_location="${MAVEN_HOME}/bin/mvn"
   if [ ! -e "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
      Error "Please install Maven and set environment variables or check it !!!"
   fi
 }
-CheckMaven
 
 #####################################
 ## Git Clone 函数
@@ -186,9 +208,8 @@ CreateBuildDir(){
 ## trap signal 函数
 #####################################
 TrapSignal(){
-  # 捕捉信号，删除临时构建目录,退出docker登陆
-  trap 'DeleteBuildDir;LogoutDocker;exit 0;' EXIT SIGINT
-  # 捕捉信号 锁定程序执行，直至运行结束
+  # 捕捉信号，删除临时构建目录,退出docker登陆;脚本解锁
+  trap 'DeleteBuildDir;LogoutDocker;Unlock;exit 0;' EXIT SIGINT
 }
 
 #####################################
@@ -196,7 +217,6 @@ TrapSignal(){
 #####################################
 Deploy(){
   Info "start run deploy task !!!"
-  TrapSignal
   # 创建构建目录
   CreateBuildDir
   local build_dir="";
@@ -230,4 +250,18 @@ Deploy(){
   #
   Info "the deploy task run finished and success !!!"
 }
-Deploy
+
+#####################################
+## Run 函数
+#####################################
+Run(){
+  Lock
+  TrapSignal
+  CheckArg
+  CheckJava
+  CheckMaven
+  Deploy
+}
+Run
+
+
