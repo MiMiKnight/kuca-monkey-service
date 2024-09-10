@@ -93,7 +93,7 @@ CheckEnv(){
 # $1 Java进程名
 ##################################
 GetJavaPID(){
-  local pid=0 p_name=$1;
+  local pid=-1 p_name=$1;
   jps_info=$("${JAVA_HOME}"/bin/jps -l | grep "${p_name}")
   if [ -z "${jps_info}" ]; then
     echo "${pid}"
@@ -110,16 +110,16 @@ GetJavaPID(){
 ##################################
 CheckAlive(){
   # 获取进程PID
-  local pid="0"
+  local pid=-1
   pid=$(GetJavaPID "${app_jar_location}")
   # pid = 0，表示程序未启动
-  if [[ ${pid} == "0" ]]; then
+  if [[ ${pid} -le -1 ]]; then
     echo false
     return
   fi
   local port=${app_port}
   # 再根据端口号检测
-  local result="" port="0" p_name=""
+  local result="" port=0 p_name=""
   port=${app_port}
   p_name="${pid}/java"
   result=$(netstat -ntlp | awk -v p_name="${p_name}" '{ if($6=="LISTEN" && $7==p_name) print $4}' | grep "${port}")
@@ -137,9 +137,8 @@ Start() {
   # 捕捉脚本退出信号，杀死指定的后台Java进程
   #trap 'kill -9 $(GetJavaPID "${app_jar_location}")' exit
   CheckEnv
-  local pid=0;
   # 检测程序是否已启动
-  local pid=""
+  local pid=-1;
   pid=$(GetJavaPID "${app_jar_location}")
   # pid 大于0，表示程序已启动
   if [[ ${pid} -gt 0 ]]; then
