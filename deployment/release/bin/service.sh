@@ -178,7 +178,9 @@ Start() {
   Info "the application startup success and pid = ${pid} !!!"
 
   # keepalive操作（docker中运行时需要）
-  read -r -n 1
+  while true ; do
+    true
+  done
 }
 
 ##################################
