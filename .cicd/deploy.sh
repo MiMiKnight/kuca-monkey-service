@@ -157,12 +157,12 @@ GitClone(){
 ## $2 deploy-xxx.tar.gz 包文件路径
 #####################################
 UploadPackage(){
-  Info "start upload package !!!"
+  Info "start upload deploy package !!!"
   local deploy_json_location="$1" deploy_package_location="$2";
   #sshpass -p "vagrant" scp -c "${build_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${build_dir}/${deploy_archive_name}
   #cp -f ${deploy_json_location} ${script_current_dir}
   #cp -f ${deploy_package_location} ${script_current_dir}
-  Info "the upload package finished and success !!!"
+  Info "the upload deploy package finished and success !!!"
 }
 
 #####################################
