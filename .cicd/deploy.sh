@@ -149,6 +149,7 @@ UploadPackage(){
 LogoutDocker(){
   # 退出登陆docker
   sudo docker logout
+  Info "logout docker success !!!"
 }
 
 #####################################
@@ -159,28 +160,28 @@ LoginDocker(){
   trap '$(LogoutDocker)' exit
   # 登陆docker
   sudo docker login "${image_domain}" --username "${image_user}" --password "${image_password}"
-}
-
-#####################################
-## 生成临时构建目录 函数
-#####################################
-CreateBuildDir(){
-  loca dir="${script_current_dir}/$(pwgen -ABns0 16 1 | tr a-z A-Z)"
-  mkdir -p "${dir}"
-  temp_build_dir=build_dir
-  # 捕捉脚本退出信号，删除临时构建目录
-  trap '$(DeleteBuildDir)' exit
-  Info "Create build dir success,dir='${dir}' !!!"
+  Info "login docker success !!!"
 }
 
 #####################################
 ## 删除临时构建目录 函数
 #####################################
 DeleteBuildDir(){
-  if [ -d "${temp_build_dir}" ]; then
+  if [ -n "${temp_build_dir}" ] && [ -d "${temp_build_dir}" ]; then
       rm -rf "${temp_build_dir}"
-      Info "Delete build dir success,dir='${dir}' !!!"
+      Info "delete temp build dir success ,dir=${temp_build_dir} !!!"
   fi
+}
+
+#####################################
+## 生成临时构建目录 函数
+#####################################
+CreateBuildDir(){
+  local dir="${script_current_dir}/$(pwgen -ABns0 16 1 | tr a-z A-Z)"
+  mkdir -p "${dir}"
+  temp_build_dir="${dir}"
+  # 捕捉脚本退出信号，删除临时构建目录
+  trap '$(DeleteBuildDir)' exit
 }
 
 #####################################
@@ -190,7 +191,9 @@ Deploy(){
   Info "Start run deploy task !!!"
   # 生成随机目录名称
   local build_dir="";
-  build_dir=$(CreateBuildDir)
+  CreateBuildDir
+  build_dir=${temp_build_dir}
+  Info "Create build dir success,dir=${build_dir} !!!"
 
   # 从git仓库拉取代码
   local project_dir="${build_dir}/${repository_name}";
