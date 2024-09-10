@@ -70,7 +70,7 @@ Error() {
 #####################################
 Lock(){
   if [ -f "${lock_filename_location}" ]; then
-     Warn "there are already running deploy task. please try again later!!!"
+     Warn "there are already running deploy task. please try again later !!!"
      exit 0
   else
      # 创建锁文件
@@ -190,7 +190,7 @@ DeleteBuildDir(){
   local dir=${temp_build_dir}
   if [ -n "${dir}" ] && [ -d "${dir}" ]; then
       rm -rf "${dir}"
-      Info "delete dir success ,dir=${dir} !!!"
+      Info "delete build dir success ,dir=${dir} !!!"
   fi
 }
 
