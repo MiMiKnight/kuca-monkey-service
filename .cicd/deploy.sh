@@ -70,16 +70,18 @@ Error() {
 ## 只针对同一代码仓库同一代码分支项目进行脚本在执行时加锁
 #####################################
 Lock(){
+  local lock_file_name="${code_repository_name}-${code_branch}-lj65p2dm7sxos9hqx6gw.lock"
+  lock_file_location="${script_current_dir}/${lock_file_name}"
   if [ -f "${lock_file_location}" ]; then
      # 读取任务ID
      local task_id=""
      task_id="$(cat "${lock_file_location}")"
      Warn "there are already running deploy task ,task_id = '${task_id}'. please try again later !!!"
+     Warn "program lock = '${lock_file_name}'"
      # 脚本退出执行
      exit 0
   else
      # 创建锁文件
-     lock_file_location="${script_current_dir}/${code_repository_name}-${code_branch}-lj65p2dm7sxos9hqx6gw.lock"
      touch "${lock_file_location}"
      chattr +i "${lock_file_location}"
   fi
@@ -217,7 +219,7 @@ DeleteBuildDir(){
 #####################################
 WriteTaskID(){
   local task_id=$1
-  if [ -w "${lock_file_location}" ]; then
+  if [ -f "${lock_file_location}" ]; then
      chattr -i "${lock_file_location}"
      chmod 640 "${lock_file_location}"
      # 写入任务ID
