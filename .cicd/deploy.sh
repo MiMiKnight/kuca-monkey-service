@@ -38,6 +38,8 @@ image_library=$7
 deploy_json_file_name="deploy.json"
 # 临时构建目录
 temp_build_dir=""
+# 项目构建脚本相对路径（相对项目所在的位置）
+build_script_relative_dir=".cicd/build.sh"
 
 
 ##################################
@@ -259,13 +261,17 @@ Deploy(){
   GitClone "${project_dir}"
 
   # dos2unix chmod
-  find "${project_dir}/.cicd" -type f -print0 | xargs -0 dos2unix -k -s
-  chmod +x "${project_dir}/.cicd/build.sh"
+  local build_script_location="${project_dir}/${build_script_relative_dir}"
+  if [ ! -f "${build_script_location}" ]; then
+     Error "project build script file is missing !!!"
+  fi
+  dos2unix -k -s "${build_script_location}"
+  chmod +x "${project_dir}/${build_script_relative_dir}"
 
   # 登录docker
   LoginDocker
   # 执行构建打包
-  /bin/bash "${project_dir}/.cicd/build.sh" "${image_domain}" "${image_library}" "${build_dir}"
+  /bin/bash "${build_script_location}" "${image_domain}" "${image_library}" "${build_dir}"
 
   local deploy_json_location="" deploy_package_name="" deploy_package_location=""
   # deploy.json文件路径
