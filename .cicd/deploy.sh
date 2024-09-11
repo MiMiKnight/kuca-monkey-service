@@ -70,7 +70,10 @@ Error() {
 #####################################
 Lock(){
   if [ -f "${lock_filename_location}" ]; then
-     Warn "there are already running deploy task. please try again later !!!"
+     # 读取任务ID
+     local task_id=""
+     task_id="$(cat "${lock_filename_location}")"
+     Warn "there are already running deploy task ,task_id = '${task_id}'. please try again later !!!"
      exit 0
   else
      # 创建锁文件
@@ -83,6 +86,8 @@ Lock(){
 #####################################
 Unlock(){
   if [ -f "${lock_filename_location}" ]; then
+     # 修改文件可被删除编辑修改
+     chattr -i "${lock_filename_location}"
      rm -rf "${lock_filename_location}"
      exit 0
   fi
@@ -204,10 +209,28 @@ DeleteBuildDir(){
 }
 
 #####################################
+## 写入任务ID 函数
+#####################################
+WriteTaskID(){
+  local task_id=$1
+  if [ -w "${lock_filename_location}" ]; then
+     # 写入任务ID
+     echo "${task_id}" > "${lock_filename_location}"
+     # 修改文件只读
+     chmod 440 "${lock_filename_location}"
+     # 修改文件不可被删除编辑修改
+     chattr +i "${lock_filename_location}"
+  fi
+}
+
+#####################################
 ## 生成临时构建目录 函数
 #####################################
 CreateBuildDir(){
-  local dir="${script_current_dir}/$(pwgen -ABns0 16 1 | tr a-z A-Z)"
+  local random="" dir=""
+  random=$(pwgen -ABns0 16 1 | tr a-z A-Z)
+  WriteTaskID "${random}"
+  dir="${script_current_dir}/${random}"
   mkdir -p "${dir}"
   temp_build_dir="${dir}"
   Info "create build dir success,dir=${dir} !!!"
