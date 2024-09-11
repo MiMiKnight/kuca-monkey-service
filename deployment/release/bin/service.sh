@@ -48,7 +48,6 @@ Warn() {
 Error() {
   now=$(date +'%Y-%m-%d %H:%M:%S')
   echo -e "\e[1;90;49m[${now}] \e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
-  exit 1
 }
 
 #####################################
@@ -102,6 +101,7 @@ GetJavaHome() {
 CheckEnv(){
   if [ -z "$(GetJavaHome '')" ]; then
     Error "Please install Java and set environment variables, We need java(x64) and jdk8 or later is better !!!"
+    exit 1
   fi
 }
 

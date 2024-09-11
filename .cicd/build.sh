@@ -56,7 +56,6 @@ Warn() {
 Error() {
   now=$(date +'%Y-%m-%d %H:%M:%S')
   echo -e "\e[1;90;49m[${now}] \e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
-  exit 1
 }
 
 #####################################
@@ -111,6 +110,7 @@ CheckJava(){
   local java_location="${JAVA_HOME}/bin/java"
   if [ ! -e "${java_location}" ] || [ ! -x "${java_location}" ]; then
      Error "please install Java and set environment variables or check it !!!"
+     exit 1
   fi
 }
 
@@ -122,6 +122,7 @@ CheckMaven(){
   local mvn_location="${MAVEN_HOME}/bin/mvn"
   if [ ! -e "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
      Error "please install Maven and set environment variables or check it !!!"
+     exit 1
   fi
 }
 
@@ -174,6 +175,7 @@ MavenPackage(){
     if [ ${duration} -gt ${timeout} ]; then
       # 超时则报错退出脚本执行
       Error "maven package project timeout !!!"
+      exit 1
     fi
     sleep 2 # 循环每2秒执行一次
   done
@@ -185,8 +187,8 @@ MavenPackage(){
 #####################################
 FileDos2Unix(){
   if [ ! -d "${app_dir}/.build" ]; then
-    Warn "${app_dir}/.build not exist !!!"
-    exist 1
+    Error "${app_dir}/.build not exist !!!"
+    exit 1
   fi
   find "${app_dir}/.build" -type f -print0 | xargs -0 dos2unix -k -s
 }
@@ -194,13 +196,14 @@ FileDos2Unix(){
 #####################################
 ## move file 函数
 #####################################
-MoveFile(){
-  if [ ! -d "${app_dir}/.build/deployment" ];then
-    Warn "${app_dir}/.build/deployment not exist !!!"
-    exist 1
+HandleDeploymentArchiveFile(){
+  local deployment_archive_file_location="${app_dir}/.build/deployment.tar.gz"
+  if [ ! -f "${deployment_archive_file_location}" ];then
+    Error "${deployment_archive_file_location} not exist !!!"
+    exit 1
   fi
-  sudo cp -f ${app_dir}/.build/deployment/* ${app_dir}/.build/
-  sudo rm -rf "${app_dir}/.build/deployment"
+  tar xf "${deployment_archive_file_location}" "${app_dir}/.build"
+  sudo rm -rf "${deployment_archive_file_location}"
   FileDos2Unix
 }
 
@@ -312,7 +315,7 @@ Run(){
   CheckJava
   CheckMaven
   MavenPackage
-  MoveFile
+  HandleDeploymentArchiveFile
   WriteBuildVersion
   BuildInfo
   WriteMetadata

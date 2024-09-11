@@ -64,7 +64,6 @@ Warn() {
 Error() {
   now=$(date +'%Y-%m-%d %H:%M:%S')
   echo -e "\e[1;90;49m[${now}] \e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
-  exit 1
 }
 
 #####################################
@@ -126,24 +125,31 @@ Unlock(){
 CheckArg(){
   if [ -z "${code_repository_name}" ]; then
       Error "Arg: 'code_repository_name' value invalid !!!"
+      exit 1
   fi
   if [ -z "${code_repository_url}" ]; then
       Error "Arg: 'code_repository_url' value invalid !!!"
+      exit 1
   fi
   if [ -z "${code_branch}" ]; then
       Error "Arg: 'code_branch' value invalid !!!"
+      exit 1
   fi
   if [ -z "${image_domain}" ]; then
       Error "Arg: 'image_domain' value invalid !!!"
+      exit 1
   fi
   if [ -z "${image_user}" ]; then
       Error "Arg: 'image_user' value invalid !!!"
+      exit 1
   fi
   if [ -z "${image_password}" ]; then
       Error "Arg: 'image_password' value invalid !!!"
+      exit 1
   fi
   if [ -z "${image_library}" ]; then
       Error "Arg: 'image_library' value invalid !!!"
+      exit 1
   fi
 }
 
@@ -154,6 +160,7 @@ CheckJava(){
   local java_location="${JAVA_HOME}/bin/java"
   if [ ! -e "${java_location}" ] || [ ! -x "${java_location}" ]; then
      Error "Please install Java and set environment variables or check it !!!"
+     exit 1
   fi
 }
 
@@ -164,6 +171,7 @@ CheckMaven(){
   local mvn_location="${MAVEN_HOME}/bin/mvn"
   if [ ! -e "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
      Error "Please install Maven and set environment variables or check it !!!"
+     exit 1
   fi
 }
 
@@ -179,6 +187,7 @@ GitClone(){
   git clone "${code_repository_url}" --branch "${code_branch}" "${dest}"
   if [ $? -ne 0 ];then
      Error "code clone failed !!!"
+     exit 1
   fi
   Info "the code clone finished and success !!!"
 }
@@ -256,6 +265,7 @@ Deploy(){
   local build_script_location="${project_dir}/${build_script_relative_dir}"
   if [ ! -f "${build_script_location}" ]; then
      Error "project build script file is missing !!!"
+     exit 1
   fi
   dos2unix -k -s "${build_script_location}"
   chmod +x "${project_dir}/${build_script_relative_dir}"

@@ -6,7 +6,7 @@
     <id>deployment</id>
     <!--打包压缩文件格式-->
     <formats>
-        <format>dir</format>
+        <format>tar.gz</format>
     </formats>
     <!--是否生成基础目录-->
     <includeBaseDirectory>false</includeBaseDirectory>
