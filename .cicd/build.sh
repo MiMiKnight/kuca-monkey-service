@@ -307,8 +307,8 @@ TrapSignal(){
 ## Run 函数
 #####################################
 Run(){
-  Lock
   TrapSignal
+  Lock
   CheckJava
   CheckMaven
   MavenPackage

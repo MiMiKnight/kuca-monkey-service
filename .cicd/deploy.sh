@@ -69,22 +69,22 @@ Error() {
 
 #####################################
 ## lock 函数
-## 只针对同一代码仓库同一代码分支项目进行脚本在执行时加锁
+## 只针对相同代码仓库相同代码分支项目执行构建脚本时加锁互斥
 #####################################
 Lock(){
-  local lock_file_name="${code_repository_name}-${code_branch}-lj65p2dm7sxos9hqx6gw.lock"
+  local lock_file_name="${code_repository_url}-${code_branch}-lj65p2dm7sxos9hqx6gw"
+  lock_file_name="$(echo "${lock_file_name}" | md5sum | cut -d" " -f1)"".lock"
   lock_file_location="${script_current_dir}/${lock_file_name}"
   if [ -f "${lock_file_location}" ]; then
-     # 读取任务ID
-     local task_id=""
-     task_id="$(cat "${lock_file_location}")"
-     Warn "there are already running deploy task ,task_id = '${task_id}'. please try again later !!!"
-     Warn "program lock = '${lock_file_name}'"
+     Warn "there are already running deploy task. please try again later !!!"
+     Warn "current running task lock = '${lock_file_name}'"
+     Warn "current running task info = '$(cat "${lock_file_location}")'"
      # 脚本退出执行
      exit 0
   else
      # 创建锁文件
-     touch "${lock_file_location}"
+     echo "{\"code_repository_url\":\"${code_repository_url}\",\"code_branch\":\"${code_branch}\"}" > "${lock_file_location}"
+     chmod 440 "${lock_file_location}"
      chattr +i "${lock_file_location}"
   fi
 }
@@ -217,29 +217,11 @@ DeleteBuildDir(){
 }
 
 #####################################
-## 写入任务ID 函数
-#####################################
-WriteTaskID(){
-  local task_id=$1
-  if [ -f "${lock_file_location}" ]; then
-     chattr -i "${lock_file_location}"
-     chmod 640 "${lock_file_location}"
-     # 写入任务ID
-     echo "${task_id}" > "${lock_file_location}"
-     # 修改文件只读
-     chmod 440 "${lock_file_location}"
-     # 修改文件不可被删除编辑修改
-     chattr +i "${lock_file_location}"
-  fi
-}
-
-#####################################
 ## 生成临时构建目录 函数
 #####################################
 CreateBuildDir(){
   local random="" dir=""
   random=$(pwgen -ABns0 16 1 | tr a-z A-Z)
-  WriteTaskID "${random}"
   dir="${script_current_dir}/${random}"
   mkdir -p "${dir}"
   temp_build_dir="${dir}"
@@ -300,8 +282,8 @@ TrapSignal(){
 ## Run 函数
 #####################################
 Run(){
-  Lock
   TrapSignal
+  Lock
   CheckArg
   CheckJava
   CheckMaven
