@@ -200,6 +200,7 @@ WriteBuildVersion(){
   build_version="$(date +%Y%m%d%H%M%S)$(pwgen -ABns0 8 1 | tr a-z A-Z)"
   # 写入项目构建版本信息
   echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${app_dir}/.build/metadata.json)" > ${app_dir}/.build/metadata.json
+  Info "build version = '${build_version}'"
 }
 
 #####################################
@@ -226,20 +227,23 @@ WriteMetadata(){
 ## 构建镜像函数
 #####################################
 BuildImage(){
- # 进入Dockerfile文件所在的同级目录
- cd "${app_dir}/.build" || exit 1
- # 构建docker镜像
- sudo docker build \
-  --file "${app_dir}/.build/Dockerfile" \
-  --build-arg build_version="${app_build_version}" \
-  --build-arg timezone="Asia/Shanghai" \
-  --tag "${image_coordinate}" .
- # 回到父级目录
- cd "${app_dir}" || exit 1
- # 上传docker镜像
- sudo docker push "${image_coordinate}"
- # 删除产物镜像
- sudo docker rmi "$(sudo docker images | grep "${app_build_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
+  Info "start build app images !!!"
+  # 进入Dockerfile文件所在的同级目录
+  cd "${app_dir}/.build" || exit 1
+  # 构建docker镜像
+  sudo docker build \
+   --file "${app_dir}/.build/Dockerfile" \
+   --build-arg build_version="${app_build_version}" \
+   --build-arg timezone="Asia/Shanghai" \
+   --tag "${image_coordinate}" .
+  # 回到父级目录
+  cd "${app_dir}" || exit 1
+  # 上传docker镜像
+  sudo docker push "${image_coordinate}"
+  Info "push image success ,coordinate = '${image_coordinate}'"
+  # 删除本地产物镜像
+  sudo docker rmi "$(sudo docker images | grep "${app_build_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
+  Info "build app images finished and success !!!"
 }
 
 #####################################
