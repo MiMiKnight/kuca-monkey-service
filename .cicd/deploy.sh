@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -euE
 # set -x 参数 作用：显示参数值（调试脚本时打开，平时注释）
 #################################
 ## deploy.sh
@@ -68,6 +68,25 @@ Error() {
 }
 
 #####################################
+## trace error 函数
+## 显示错误位置，打印错误内容
+#####################################
+TraceError(){
+  Error "script: $0 ,error on line: $1 command: '$2'"
+  exit 0
+}
+
+#####################################
+## trap signal 函数
+#####################################
+TrapSignal(){
+  # 捕捉信号，删除临时构建目录,退出docker登陆;脚本解锁
+  trap 'DeleteBuildDir;LogoutDocker;Unlock;exit 0;' EXIT SIGINT
+  # 捕捉错误发生位置
+  trap 'TraceError $LINENO $BASH_COMMAND;exit 0' ERR
+}
+
+#####################################
 ## lock 函数
 ## 只针对相同代码仓库相同代码分支项目执行构建脚本时加锁互斥
 #####################################
@@ -99,15 +118,6 @@ Unlock(){
      rm -rf "${lock_file_location}"
      exit 0
   fi
-}
-
-#####################################
-## trace error 函数
-## 显示错误位置，打印错误内容
-#####################################
-TraceError(){
-  Warn "error on line: $1 ,command: '$2' ,script name: $0"
-  exit 0
 }
 
 #####################################
@@ -266,16 +276,6 @@ Deploy(){
   UploadPackage "${deploy_json_location}" "${deploy_package_location}"
   #
   Info "the deploy task run finished and success !!!"
-}
-
-#####################################
-## trap signal 函数
-#####################################
-TrapSignal(){
-  # 捕捉信号，删除临时构建目录,退出docker登陆;脚本解锁
-  trap 'DeleteBuildDir;LogoutDocker;Unlock;exit 0;' EXIT SIGINT
-  # 捕捉错误发生位置
-  trap 'TraceError $LINENO $BASH_COMMAND' ERR
 }
 
 #####################################

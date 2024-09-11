@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -euE
 # set -x 参数 作用：显示参数值（调试脚本时打开，平时注释）
 ##############全局变量##############
 # 脚本当前所在目录
@@ -56,8 +56,16 @@ Error() {
 ## 显示错误位置，打印错误内容
 #####################################
 TraceError(){
-  Warn "script name: $0 ,error on line $1 ,command: '$2'"
+  Error "script: $0 ,error on line: $1 command: '$2'"
   exit 0
+}
+
+#####################################
+## trap signal 函数
+#####################################
+TrapSignal(){
+  # 捕捉错误发生位置
+  trap 'TraceError $LINENO $BASH_COMMAND' ERR
 }
 
 ##################################
@@ -183,14 +191,6 @@ HealthCheck(){
   check_url="${health_check_url}"
   http_code=$(curl -s -k -X GET -w %{http_code} -o /dev/null "${check_url}");
   [[ ${http_code} -ne 200 ]] || exit 1
-}
-
-#####################################
-## trap signal 函数
-#####################################
-TrapSignal(){
-  # 捕捉错误发生位置
-  trap 'TraceError $LINENO $BASH_COMMAND' ERR
 }
 
 ##################################

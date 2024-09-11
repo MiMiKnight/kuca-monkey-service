@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -euE
 # set -x 参数 作用：显示参数值（调试脚本时打开，平时注释）
 #################################
 ## build.sh
@@ -60,6 +60,25 @@ Error() {
 }
 
 #####################################
+## trace error 函数
+## 显示错误位置，打印错误内容
+#####################################
+TraceError(){
+  Error "script: $0 ,error on line: $1 command: '$2'"
+  exit 0
+}
+
+#####################################
+## trap signal 函数
+#####################################
+TrapSignal(){
+  # 捕捉信号，清理任务;脚本解锁
+  trap 'Clean;Unlock;exit 0;' EXIT SIGINT
+  # 捕捉错误发生位置
+  trap 'TraceError $LINENO $BASH_COMMAND' ERR
+}
+
+#####################################
 ## lock 函数
 #####################################
 Lock(){
@@ -83,15 +102,6 @@ Unlock(){
      rm -rf "${lock_file_location}"
      exit 0
   fi
-}
-
-#####################################
-## trace error 函数
-## 显示错误位置，打印错误内容
-#####################################
-TraceError(){
-  Warn "script name: $0 ,error on line $1 ,command: '$2'"
-  exit 0
 }
 
 #####################################
@@ -291,16 +301,6 @@ Clean(){
       rm -rf "${dir}"
   fi
   Info "clean build package product"
-}
-
-#####################################
-## trap signal 函数
-#####################################
-TrapSignal(){
-  # 捕捉信号，清理任务;脚本解锁
-  trap 'Clean;Unlock;exit 0;' EXIT SIGINT
-  # 捕捉错误发生位置
-  trap 'TraceError $LINENO $BASH_COMMAND' ERR
 }
 
 #####################################
