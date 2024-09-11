@@ -80,7 +80,7 @@ TraceError(){
 #####################################
 TrapSignal(){
   # 捕捉信号，删除临时构建目录,退出docker登陆;脚本解锁
-  trap 'DeleteBuildDir;LogoutDocker;Unlock;exit 0;' EXIT SIGINT
+  trap 'DeleteBuildDir;LogoutDocker;Unlock;exit 0;' EXIT INT SIGHUP SIGQUIT
   # 捕捉错误发生位置
   trap 'TraceError $LINENO $BASH_COMMAND;exit 0' ERR
 }
