@@ -19,11 +19,11 @@ set -eu
 # 脚本当前所在目录
 script_current_dir=$(cd "$(dirname "$0")" && pwd)
 # 程序锁文件路径
-lock_filename_location="${script_current_dir}/deploy-lj65p2dm7sxos9hqx6gw.lock"
+lock_file_location=""
 # 代码仓库名称
-repository_name=$1
+code_repository_name=$1
 # 代码仓库地址
-code_repository=$2
+code_repository_url=$2
 # 代码分支
 code_branch=$3
 # 镜像仓库域名
@@ -67,17 +67,21 @@ Error() {
 
 #####################################
 ## lock 函数
+## 只针对同一代码仓库同一代码分支项目进行脚本在执行时加锁
 #####################################
 Lock(){
-  if [ -f "${lock_filename_location}" ]; then
+  if [ -f "${lock_file_location}" ]; then
      # 读取任务ID
      local task_id=""
-     task_id="$(cat "${lock_filename_location}")"
+     task_id="$(cat "${lock_file_location}")"
      Warn "there are already running deploy task ,task_id = '${task_id}'. please try again later !!!"
+     # 脚本退出执行
      exit 0
   else
      # 创建锁文件
-     touch "${lock_filename_location}"
+     lock_file_location="${script_current_dir}/${code_repository_name}-${code_branch}-lj65p2dm7sxos9hqx6gw.lock"
+     touch "${lock_file_location}"
+     chattr +i "${lock_file_location}"
   fi
 }
 
@@ -85,10 +89,10 @@ Lock(){
 ## unlock 函数
 #####################################
 Unlock(){
-  if [ -f "${lock_filename_location}" ]; then
+  if [ -f "${lock_file_location}" ]; then
      # 修改文件可被删除编辑修改
-     chattr -i "${lock_filename_location}"
-     rm -rf "${lock_filename_location}"
+     chattr -i "${lock_file_location}"
+     rm -rf "${lock_file_location}"
      exit 0
   fi
 }
@@ -106,11 +110,11 @@ TraceError(){
 ## Check Arg 函数
 #####################################
 CheckArg(){
-  if [ -z "${repository_name}" ]; then
-      Error "Arg: 'repository_name' value invalid !!!"
+  if [ -z "${code_repository_name}" ]; then
+      Error "Arg: 'code_repository_name' value invalid !!!"
   fi
-  if [ -z "${code_repository}" ]; then
-      Error "Arg: 'code_repository' value invalid !!!"
+  if [ -z "${code_repository_url}" ]; then
+      Error "Arg: 'code_repository_url' value invalid !!!"
   fi
   if [ -z "${code_branch}" ]; then
       Error "Arg: 'code_branch' value invalid !!!"
@@ -155,10 +159,10 @@ CheckMaven(){
 #####################################
 GitClone(){
   Info "start clone code !!!"
-  Info "repository: ${code_repository}  branch: ${code_branch}"
+  Info "repository: ${code_repository_url}  branch: ${code_branch}"
   # 目的文件夹
   local dest=$1
-  git clone "${code_repository}" --branch "${code_branch}" "${dest}"
+  git clone "${code_repository_url}" --branch "${code_branch}" "${dest}"
   if [ $? -ne 0 ];then
      Error "code clone failed !!!"
   fi
@@ -213,13 +217,15 @@ DeleteBuildDir(){
 #####################################
 WriteTaskID(){
   local task_id=$1
-  if [ -w "${lock_filename_location}" ]; then
+  if [ -w "${lock_file_location}" ]; then
+     chattr -i "${lock_file_location}"
+     chmod 640 "${lock_file_location}"
      # 写入任务ID
-     echo "${task_id}" > "${lock_filename_location}"
+     echo "${task_id}" > "${lock_file_location}"
      # 修改文件只读
-     chmod 440 "${lock_filename_location}"
+     chmod 440 "${lock_file_location}"
      # 修改文件不可被删除编辑修改
-     chattr +i "${lock_filename_location}"
+     chattr +i "${lock_file_location}"
   fi
 }
 
@@ -247,7 +253,7 @@ Deploy(){
   build_dir=${temp_build_dir}
 
   # 从git仓库拉取代码
-  local project_dir="${build_dir}/${repository_name}";
+  local project_dir="${build_dir}/${code_repository_name}";
   GitClone "${project_dir}"
 
   # dos2unix chmod

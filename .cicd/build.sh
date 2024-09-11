@@ -16,7 +16,7 @@ set -eu
 # 脚本当前所在目录
 script_current_dir=$(cd "$(dirname "$0")" && pwd)
 # 程序锁文件路径
-lock_filename_location="${script_current_dir}/build-bohpdqmvyxoflyqt310u.lock"
+lock_file_location="${script_current_dir}/build-bohpdqmvyxoflyqt310u.lock"
 # 项目目录
 app_dir=$(dirname "$script_current_dir")
 # 镜像仓库域名
@@ -63,12 +63,14 @@ Error() {
 ## lock 函数
 #####################################
 Lock(){
-  if [ -f "${lock_filename_location}" ]; then
+  if [ -f "${lock_file_location}" ]; then
      Warn "there are already running build task. please try again later !!!"
+     # 脚本退出执行
      exit 0
   else
      # 创建锁文件
-     touch "${lock_filename_location}"
+     touch "${lock_file_location}"
+     chattr +i "${lock_file_location}"
   fi
 }
 
@@ -76,8 +78,9 @@ Lock(){
 ## unlock 函数
 #####################################
 Unlock(){
-  if [ -f "${lock_filename_location}" ]; then
-     rm -rf "${lock_filename_location}"
+  if [ -f "${lock_file_location}" ]; then
+     chattr -i "${lock_file_location}"
+     rm -rf "${lock_file_location}"
      exit 0
   fi
 }
