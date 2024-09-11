@@ -93,7 +93,7 @@ Unlock(){
 ## 显示错误位置，打印错误内容
 #####################################
 TraceError(){
-  Warn "error on line $1 , Command: '$2'"
+  Warn "script name: $0 ,error on line $1 ,command: '$2'"
   exit 0
 }
 
@@ -233,9 +233,8 @@ Deploy(){
 
   # 登录docker
   LoginDocker
-
   # 执行构建打包
-  /bin/bash "${project_dir}/.cicd/build.sh" "${image_domain}" "${image_library}"
+  /bin/bash "${project_dir}/.cicd/build.sh" "${image_domain}" "${image_library}" "${build_dir}"
 
   local deploy_json_location="" deploy_package_name="" deploy_package_location=""
   # deploy.json文件路径
@@ -246,8 +245,6 @@ Deploy(){
   deploy_package_location="${build_dir}/${deploy_package_name}"
   # 传包部署
   UploadPackage "${deploy_json_location}" "${deploy_package_location}"
-  # 删除随机目录
-  #rm -rf "${build_dir}"
   #
   Info "the deploy task run finished and success !!!"
 }

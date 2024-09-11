@@ -56,7 +56,7 @@ Error() {
 ## 显示错误位置，打印错误内容
 #####################################
 TraceError(){
-  Warn "error on line $1 , Command: '$2'"
+  Warn "script name: $0 ,error on line $1 ,command: '$2'"
   exit 0
 }
 

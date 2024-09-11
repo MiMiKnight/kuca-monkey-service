@@ -23,6 +23,15 @@ app_dir=$(dirname "$script_current_dir")
 image_domain=$1
 # 镜像仓库名
 image_library=$2
+# 构建产物的存放目录
+product_dir=$3
+# 项目名称
+app_name=""
+# 项目构建版本
+app_build_version=""
+# 项目镜像坐标
+image_coordinate=""
+
 
 
 ##################################
@@ -78,7 +87,7 @@ Unlock(){
 ## 显示错误位置，打印错误内容
 #####################################
 TraceError(){
-  Warn "error on line $1 , Command: '$2'"
+  Warn "script name: $0 ,error on line $1 ,command: '$2'"
   exit 0
 }
 
@@ -183,9 +192,9 @@ MoveFile(){
 }
 
 #####################################
-## 生成构建版本 函数
+## 写入构建版本 函数
 #####################################
-BuildVersion(){
+WriteBuildVersion(){
   # 生成构建版本
   local build_version="" cmd="";
   build_version="$(date +%Y%m%d%H%M%S)$(pwgen -ABns0 8 1 | tr a-z A-Z)"
@@ -193,12 +202,17 @@ BuildVersion(){
   echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${app_dir}/.build/metadata.json)" > ${app_dir}/.build/metadata.json
 }
 
-# 项目名称
-app_name="$(jq -r '.APP_NAME' ${app_dir}/.build/metadata.json)"
-# 项目构建版本
-app_build_version="$(jq -r '.APP_BUILD_VERSION' ${app_dir}/.build/metadata.json)"
-# 项目镜像坐标
-image_coordinate="${image_domain}/${image_library}/${app_name}:${app_build_version}"
+#####################################
+## BuildInfo 函数
+#####################################
+BuildInfo(){
+ # 项目名称
+ app_name="$(jq -r '.APP_NAME' ${app_dir}/.build/metadata.json)"
+ # 项目构建版本
+ app_build_version="$(jq -r '.APP_BUILD_VERSION' ${app_dir}/.build/metadata.json)"
+ # 项目镜像坐标
+ image_coordinate="${image_domain}/${image_library}/${app_name}:${app_build_version}"
+}
 
 #####################################
 ## 写入元数据 函数
@@ -250,14 +264,11 @@ BuildDeployPackage(){
   archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
   # 生成部署压缩包
   tar czf "${archive_name}" blueprint.yaml metadata.json
-  # 部署文件夹
-  local deploy_dir=""
-  deploy_dir="$(cd "$(dirname "${app_dir}")" && pwd)"
-  # 将部署包拷贝到"部署文件夹"
-  cp -f "${app_dir}/.build/${archive_name}" "${deploy_dir}"
-  # 在"部署文件夹"生成deploy.json
+  # 将部署包拷贝到"产物目录"
+  cp -f "${app_dir}/.build/${archive_name}" "${product_dir}"
+  # 在"产物目录"下生成deploy.json
   local json_info="{\"DEPLOY_PACKAGE_NAME\":\"${archive_name}\"}"
-  echo "${json_info}" >> "${deploy_dir}/deploy.json"
+  echo "${json_info}" >> "${product_dir}/deploy.json"
   # 切换到回原有的目录下
   cd "${current_dir}" || exit 1
   Info "the project has been built completed and success !!!"
@@ -292,12 +303,12 @@ TrapSignal(){
 Run(){
   Lock
   TrapSignal
-  CheckArg
   CheckJava
   CheckMaven
   MavenPackage
   MoveFile
-  BuildVersion
+  WriteBuildVersion
+  BuildInfo
   WriteMetadata
   BuildImage
   BuildBlueprint
