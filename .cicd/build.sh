@@ -19,6 +19,8 @@ script_current_dir=$(cd "$(dirname "$0")" && pwd)
 lock_file_location="${script_current_dir}/build-bohpdqmvyxoflyqt310u.lock"
 # 项目目录
 app_dir=$(dirname "$script_current_dir")
+# 构建产物 deployment.tar.gz
+build_product_deployment_file_location="${app_dir}/.build/deployment.tar.gz"
 # 镜像仓库域名
 image_domain=$1
 # 镜像仓库名
@@ -165,8 +167,7 @@ MavenPackage(){
   end_time=${start_time}
   duration=0 # 持续时间
   # 构建产物不存在时则等待构建，执行循环体；构建产物存在，则跳出循环；
-  local metadata_file_location="${app_dir}/.build/deployment/metadata.json"
-  while [ ! -f "${metadata_file_location}" ];
+  while [ ! -f "${build_product_deployment_file_location}" ];
   do
     Info "maven is packaging project now ...."
     now=$(date +'%Y-%m-%d %H:%M:%S')
@@ -194,16 +195,15 @@ FileDos2Unix(){
 }
 
 #####################################
-## move file 函数
+## 处理产物文件 函数
 #####################################
-HandleDeploymentArchiveFile(){
-  local deployment_archive_file_location="${app_dir}/.build/deployment.tar.gz"
-  if [ ! -f "${deployment_archive_file_location}" ];then
-    Error "${deployment_archive_file_location} not exist !!!"
+HandleProductFile(){
+  if [ ! -f "${build_product_deployment_file_location}" ];then
+    Error "${build_product_deployment_file_location} not exist !!!"
     exit 1
   fi
-  tar xf "${deployment_archive_file_location}" "${app_dir}/.build"
-  sudo rm -rf "${deployment_archive_file_location}"
+  tar -xf "${build_product_deployment_file_location}" -C "${app_dir}/.build"
+  sudo rm -rf "${build_product_deployment_file_location}"
   FileDos2Unix
 }
 
@@ -315,7 +315,7 @@ Run(){
   CheckJava
   CheckMaven
   MavenPackage
-  HandleDeploymentArchiveFile
+  HandleProductFile
   WriteBuildVersion
   BuildInfo
   WriteMetadata
