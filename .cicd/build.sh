@@ -282,8 +282,6 @@ BuildDeployPackage(){
 ## Clean 函数
 #####################################
 Clean(){
-  # maven 清理
-  mvn clean
   # 删除构建文件夹
   local dir="${app_dir}/.build"
   if [ -d "${dir}" ]; then
