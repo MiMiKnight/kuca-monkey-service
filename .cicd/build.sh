@@ -15,6 +15,8 @@ set -eu
 ##############全局变量##############
 # 脚本当前所在目录
 script_current_dir=$(cd "$(dirname "$0")" && pwd)
+# 程序锁文件路径
+lock_filename_location="${script_current_dir}/build-bohpdqmvyxoflyqt310u.lock"
 # 项目目录
 app_dir=$(dirname "$script_current_dir")
 # 镜像仓库域名
@@ -22,22 +24,6 @@ image_domain=$1
 # 镜像仓库名
 image_library=$2
 
-
-##################################
-# 友好提示函数
-##################################
-Info() {
-  now=$(date +'%Y-%m-%d %H:%M:%S')
-  echo -e "\e[1;90;49m[${now}] \e[1;32;49m[INFO] \e[1;39;49m$1\e[0m";
-}
-
-##################################
-# 警告提示函数
-##################################
-Warn() {
-  now=$(date +'%Y-%m-%d %H:%M:%S')
-  echo -e "\e[1;90;49m[${now}] \e[1;33;49m[WARN] \e[1;39;49m$1\e[0m";
-}
 
 ##################################
 # 错误提示退出函数
@@ -49,12 +35,44 @@ Error() {
 }
 
 #####################################
+## lock 函数
+#####################################
+Lock(){
+  if [ -f "${lock_filename_location}" ]; then
+     Warn "there are already running build task. please try again later !!!"
+     exit 0
+  else
+     # 创建锁文件
+     touch "${lock_filename_location}"
+  fi
+}
+
+#####################################
+## unlock 函数
+#####################################
+Unlock(){
+  if [ -f "${lock_filename_location}" ]; then
+     rm -rf "${lock_filename_location}"
+     exit 0
+  fi
+}
+
+#####################################
+## trace error 函数
+## 显示错误位置，打印错误内容
+#####################################
+TraceError(){
+  Warn "error on line $1 , Command: '$2'"
+  exit 0
+}
+
+#####################################
 ## Check Java 函数
 #####################################
 CheckJava(){
   local java_location="${JAVA_HOME}/bin/java"
   if [ ! -e "${java_location}" ] || [ ! -x "${java_location}" ]; then
-     Error "Please install Java and set environment variables or check it !!!"
+     Error "please install Java and set environment variables or check it !!!"
   fi
 }
 
@@ -65,7 +83,7 @@ CheckMaven(){
   CheckJava
   local mvn_location="${MAVEN_HOME}/bin/mvn"
   if [ ! -e "${mvn_location}" ] || [ ! -x "${mvn_location}" ]; then
-     Error "Please install Maven and set environment variables or check it !!!"
+     Error "please install Maven and set environment variables or check it !!!"
   fi
 }
 
@@ -123,7 +141,6 @@ MavenPackage(){
   done
   Info "maven package finish!!!"
 }
-MavenPackage
 
 #####################################
 ## dos2unix 函数
@@ -148,7 +165,6 @@ MoveFile(){
   sudo rm -rf "${app_dir}/.build/deployment"
   FileDos2Unix
 }
-MoveFile
 
 #####################################
 ## 生成构建版本 函数
@@ -160,7 +176,6 @@ BuildVersion(){
   # 写入项目构建版本信息
   echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${app_dir}/.build/metadata.json)" > ${app_dir}/.build/metadata.json
 }
-BuildVersion
 
 # 项目名称
 app_name="$(jq -r '.APP_NAME' ${app_dir}/.build/metadata.json)"
@@ -176,7 +191,6 @@ WriteMetadata(){
   # 写入项目镜像坐标信息
   echo "$(jq --arg value ${image_coordinate} '.APP_IMAGE_COORDINATE = $value' ${app_dir}/.build/metadata.json)" > ${app_dir}/.build/metadata.json
 }
-WriteMetadata
 
 #####################################
 ## 构建镜像函数
@@ -197,17 +211,15 @@ BuildImage(){
  # 删除产物镜像
  sudo docker rmi "$(sudo docker images | grep "${app_build_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
 }
-BuildImage
 
 #####################################
 ## 构建K8S部署 函数
 #####################################
 BuildBlueprint(){
-  Info "Start build blueprint !!!"
+  Info "start build blueprint !!!"
   # 替换镜像坐标
   sed -i "s@image_coordinate:tag@${image_coordinate}@g" "${app_dir}/.build/blueprint.yaml"
 }
-BuildBlueprint
 
 #####################################
 ## 生成部署包 函数
@@ -222,16 +234,57 @@ BuildDeployPackage(){
   archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
   # 生成部署压缩包
   tar czf "${archive_name}" blueprint.yaml metadata.json
+  # 部署文件夹
+  local deploy_dir=""
+  deploy_dir="$(cd "$(dirname "${app_dir}")" && pwd)"
   # 将部署包拷贝到"部署文件夹"
-  cp -f "${app_dir}/.build/${archive_name}" "$(dirname $app_dir)"
+  cp -f "${app_dir}/.build/${archive_name}" "${deploy_dir}"
   # 在"部署文件夹"生成deploy.json
-  local json_txt="{\"DEPLOY_PACKAGE_NAME\":\"${archive_name}\"}"
-  echo "${json_txt}" >> "$(dirname "${app_dir}")/deploy.json"
+  local json_info="{\"DEPLOY_PACKAGE_NAME\":\"${archive_name}\"}"
+  echo "${json_info}" >> "${deploy_dir}/deploy.json"
   # 切换到回原有的目录下
   cd "${current_dir}" || exit 1
+  Info "the project has been built completed and success !!!"
 }
-BuildDeployPackage
 
-#
-rm -rf "${app_dir}/.build"
-Info "The project has been built completed and success !!!"
+#####################################
+## Clean 函数
+#####################################
+Clean(){
+  # maven 清理
+  mvn clean
+  # 删除构建文件夹
+  local dir="${app_dir}/.build"
+  if [ -d "${dir}" ]; then
+      rm -rf "${dir}"
+  fi
+}
+
+#####################################
+## trap signal 函数
+#####################################
+TrapSignal(){
+  # 捕捉信号，清理任务;脚本解锁
+  trap 'Clean;Unlock;exit 0;' EXIT SIGINT
+  # 捕捉错误发生位置
+  trap 'TraceError $LINENO $BASH_COMMAND' ERR
+}
+
+#####################################
+## Run 函数
+#####################################
+Run(){
+  Lock
+  TrapSignal
+  CheckArg
+  CheckJava
+  CheckMaven
+  MavenPackage
+  MoveFile
+  BuildVersion
+  WriteMetadata
+  BuildImage
+  BuildBlueprint
+  BuildDeployPackage
+}
+Run

@@ -214,16 +214,6 @@ CreateBuildDir(){
 }
 
 #####################################
-## trap signal 函数
-#####################################
-TrapSignal(){
-  # 捕捉信号，删除临时构建目录,退出docker登陆;脚本解锁
-  trap 'DeleteBuildDir;LogoutDocker;Unlock;exit 0;' EXIT SIGINT
-  # 捕捉错误发生位置
-  trap 'TraceError $LINENO $BASH_COMMAND' ERR
-}
-
-#####################################
 ## Deploy 函数
 #####################################
 Deploy(){
@@ -260,6 +250,16 @@ Deploy(){
   #rm -rf "${build_dir}"
   #
   Info "the deploy task run finished and success !!!"
+}
+
+#####################################
+## trap signal 函数
+#####################################
+TrapSignal(){
+  # 捕捉信号，删除临时构建目录,退出docker登陆;脚本解锁
+  trap 'DeleteBuildDir;LogoutDocker;Unlock;exit 0;' EXIT SIGINT
+  # 捕捉错误发生位置
+  trap 'TraceError $LINENO $BASH_COMMAND' ERR
 }
 
 #####################################
