@@ -106,7 +106,7 @@ Unlock(){
 ## 显示错误位置，打印错误内容
 #####################################
 TraceError(){
-  Warn "script name: $0 ,error on line $1 ,command: '$2'"
+  Warn "error on line: $1 ,command: '$2' ,script name: $0"
   exit 0
 }
 
@@ -193,7 +193,7 @@ UploadPackage(){
 LogoutDocker(){
   # 退出登陆docker
   sudo docker logout
-  Info "logout docker success !!!"
+  #Info "logout docker success !!!"
 }
 
 #####################################
