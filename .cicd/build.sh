@@ -227,7 +227,7 @@ WriteMetadata(){
 ## 构建镜像函数
 #####################################
 BuildImage(){
-  Info "start build app images !!!"
+  Info "start build app image !!!"
   # 进入Dockerfile文件所在的同级目录
   cd "${app_dir}/.build" || exit 1
   # 构建docker镜像
@@ -289,6 +289,7 @@ Clean(){
   if [ -d "${dir}" ]; then
       rm -rf "${dir}"
   fi
+  Info "clean build package product"
 }
 
 #####################################
