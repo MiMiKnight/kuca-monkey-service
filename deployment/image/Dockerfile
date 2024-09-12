@@ -11,7 +11,7 @@ ARG app_name="@app.name@"
 # 项目版本
 ARG build_version=""
 # 项目归档文件名称
-ARG archive_file_name="@app.name@.tar.gz"
+ARG app_archive_name="@app.name@.tar.gz"
 # 设置工作目录
 ARG workdir="/opt/app"
 # 项目端口号
@@ -21,14 +21,14 @@ LABEL cn.mimiknight.developer.image.maintainer=${maintainer}
 LABEL cn.mimiknight.developer.image.app_name=${app_name}
 LABEL cn.mimiknight.developer.image.build_version=${build_version}
 # 拷贝
-COPY ./${archive_file_name} ./
+COPY ./${app_archive_name} ./
 #
 RUN useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "WebServiceUser" ${user} \
     && echo "${timezone}" > /etc/timezone \
     && mkdir -p "${workdir}/${app_name}" \
     && mkdir -p "${workdir}/${app_name}/logs" \
-    && tar -xf "./${archive_file_name}" -C "${workdir}/${app_name}" \
-    && rm -rf "./${archive_file_name}" \
+    && tar -xf "./${app_archive_name}" -C "${workdir}/${app_name}" \
+    && rm -rf "./${app_archive_name}" \
     && find "${workdir}/${app_name}" -type f -print0 | xargs -0 dos2unix -k -s \
     && chown -R ${user}:${user} "${workdir}/${app_name}" \
     && chmod 755 "${workdir}/${app_name}"

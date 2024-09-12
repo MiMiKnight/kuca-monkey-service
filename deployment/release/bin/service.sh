@@ -56,7 +56,6 @@ Error() {
 #####################################
 TraceError(){
   Error "script: $0 ,error on line: $1 command: '$2'"
-  exit 0
 }
 
 #####################################
@@ -64,7 +63,7 @@ TraceError(){
 #####################################
 TrapSignal(){
   # 捕捉错误发生位置
-  trap 'TraceError $LINENO $BASH_COMMAND' ERR
+  trap 'TraceError $LINENO $BASH_COMMAND;exit 1' ERR
 }
 
 ##################################

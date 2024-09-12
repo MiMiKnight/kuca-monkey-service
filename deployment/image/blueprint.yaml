@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "@app.name@"    #必填，Pod名称
+  name: @app.name@    #必填，Pod名称
   namespace: unknown  #必填，Pod所属的命名空间
   labels:   #自定义标签
     app: unknown
@@ -23,8 +23,11 @@ spec:
     spec:
       containers:   #必填，定义容器列表
         - name: @app.name@            #必填，容器名称
-          image: image_coordinate   #必填，容器的镜像坐标
-          imagePullPolicy: IfNotPresent # 获取镜像的策略 Alawys表示下载镜像；IfnotPresent表示优先使用本地镜像，否则下载镜像；Nerver表示仅使用本地镜像
+          image: unknown   #必填，
+          # 获取镜像的策略 Alawys表示下载镜像；IfnotPresent表示优先使用本地镜像，否则下载镜像；Nerver表示仅使用本地镜像
+          imagePullPolicy: IfNotPresent
+          # Pod的重启策略，Always表示一旦不管以何种方式终止运行，kubelet都将重启，OnFailure表示只有Pod以非0退出码退出才重启，Never表示不再重启该Pod
+          restartPolicy: OnFailure
           ports: #需要暴露的端口库号列表
             - name: HTTPS          #选填，端口号名称
               containerPort: 8443    #容器需要监听的端口号
@@ -45,8 +48,6 @@ spec:
             periodSeconds: 10       #对容器监控检查的定期探测时间设置，单位秒，默认10秒一次
             successThreshold: 0
             failureThreshold: 1
-          # Pod的重启策略，Always表示一旦不管以何种方式终止运行，kubelet都将重启，OnFailure表示只有Pod以非0退出码退出才重启，Never表示不再重启该Pod
-          restartPolicy: OnFailure
           env: #容器运行前需设置的环境变量列表
             - name: string     #环境变量名称
               value: string    #环境变量的值

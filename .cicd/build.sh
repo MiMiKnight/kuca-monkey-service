@@ -5,33 +5,42 @@ set -euE
 ## build.sh
 ## 描述：项目打包构建脚本
 ## $1: 镜像仓库域名
-## $2: 镜像命名空间
-## $3: 构建产物的存放目录
+## $2: 镜像仓库命名空间
+## $3: 产物生成的目标目录
+## $4: 项目源码根目录
 #################################
 # sudo apt-get install -y jq
 # sudo apt-get install pwgen
 
 ##############全局变量##############
-# 脚本当前所在目录
-script_current_dir=$(cd "$(dirname "$0")" && pwd)
-# 程序锁文件路径
-lock_file_location="${script_current_dir}/build-bohpdqmvyxoflyqt310u.lock"
-# 项目目录
-app_dir=$(dirname "$script_current_dir")
-# 构建产物 deployment.tar.gz
-build_product_deployment_file_location="${app_dir}/.build/deployment.tar.gz"
 # 镜像仓库域名
 image_domain=$1
-# 镜像命名空间
+# 镜像仓库命名空间
 image_namespace=$2
 # 构建产物的存放目录
 product_dir=$3
+# 项目源码根目录
+project_dir=$4
+# 脚本当前所在目录
+script_current_dir=$(cd "$(dirname "$0")" && pwd)
+# 包生成目录
+package_dir="${project_dir}/.build"
+#  deployment.tar.gz 包文件名
+deployment_package_file_name="deployment.tar.gz"
+#  deployment.tar.gz 包文件位置
+deployment_package_file_location="${package_dir}/${deployment_package_file_name}"
 # 项目名称
 app_name=""
 # 项目构建版本
 app_build_version=""
 # 项目镜像坐标
 image_coordinate=""
+# 归档文件产物名称规则
+product_archive_name_regular="deploy-{{name}}.tar.gz"
+# JSON产物文件名
+product_json_file_name="deploy.json"
+# JSON产物文件内容格式
+product_json_file_content_regular="{\"DEPLOY_PACKAGE_NAME\":\"{{content}}\"}"
 
 
 
@@ -60,47 +69,24 @@ Error() {
 }
 
 #####################################
-## trace error 函数
-## 显示错误位置，打印错误内容
+## Check Arg 函数
 #####################################
-TraceError(){
-  Error "script: $0 ,error on line: $1 command: '$2'"
-  exit 0
-}
-
-#####################################
-## trap signal 函数
-#####################################
-TrapSignal(){
-  # 捕捉信号，清理任务;脚本解锁
-  trap 'Clean;Unlock;exit 0;' EXIT SIGINT
-  # 捕捉错误发生位置
-  trap 'TraceError $LINENO $BASH_COMMAND' ERR
-}
-
-#####################################
-## lock 函数
-#####################################
-Lock(){
-  if [ -f "${lock_file_location}" ]; then
-     Warn "there are already running build task. please try again later !!!"
-     # 脚本退出执行
-     exit 0
-  else
-     # 创建锁文件
-     touch "${lock_file_location}"
-     chattr +i "${lock_file_location}"
+CheckArg(){
+  if [ -z "${image_domain}" ]; then
+      Error "Arg: 'image_domain' value invalid !!!"
+      exit 1
   fi
-}
-
-#####################################
-## unlock 函数
-#####################################
-Unlock(){
-  if [ -f "${lock_file_location}" ]; then
-     chattr -i "${lock_file_location}"
-     rm -rf "${lock_file_location}"
-     exit 0
+  if [ -z "${image_namespace}" ]; then
+      Error "Arg: 'image_namespace' value invalid !!!"
+      exit 1
+  fi
+  if [ -z "${product_dir}" ]; then
+      Error "Arg: 'product_dir' value invalid !!!"
+      exit 1
+  fi
+  if [ -z "${project_dir}" ] && [ -d "${project_dir}" ]; then
+      Error "Arg: 'project_dir' value invalid !!!"
+      exit 1
   fi
 }
 
@@ -134,15 +120,12 @@ MavenPackage(){
   # 检查Maven
   CheckMaven
   # 构建打包命令
-  local project_dir="" current_dir=""
-  project_dir=${app_dir}
-  # 记录当前目录
-  current_dir=$(pwd)
+  local project_dir=${project_dir} current_dir=$(pwd)
   # 切换到项目目录
   cd "${project_dir}" || exit  1
 
   local cmd="${JAVA_HOME}/bin/java \
-  -Dmaven.multiModuleProjectDirectory=${app_dir} \
+  -Dmaven.multiModuleProjectDirectory=${project_dir} \
   -Dmaven.home=${MAVEN_HOME} \
   -Dclassworlds.conf=${MAVEN_HOME}/bin/m2.conf \
   -Dfile.encoding=UTF-8 \
@@ -165,8 +148,8 @@ MavenPackage(){
   start_time=$(date --date="${now}" +%s);
   end_time=${start_time}
   duration=0 # 持续时间
-  # 构建产物不存在时则等待构建，执行循环体；构建产物存在，则跳出循环；
-  while [ ! -f "${build_product_deployment_file_location}" ];
+  # 构建包不存在时则等待构建，执行循环体；构建包存在，则跳出循环；
+  while [ ! -f "${deployment_package_file_location}" ];
   do
     Info "maven is packaging project now ...."
     now=$(date +'%Y-%m-%d %H:%M:%S')
@@ -186,24 +169,56 @@ MavenPackage(){
 ## dos2unix 函数
 #####################################
 FileDos2Unix(){
-  if [ ! -d "${app_dir}/.build" ]; then
-    Error "${app_dir}/.build not exist !!!"
+  local dir=$1
+  if [ ! -d "${dir}" ]; then
+    Error "${dir} not exist !!!"
     exit 1
   fi
-  find "${app_dir}/.build" -type f -print0 | xargs -0 dos2unix -k -s
+  find "${dir}" -type f -print0 | xargs -0 dos2unix -k -s
 }
 
 #####################################
-## 处理产物文件 函数
+## 检查生成包文件 函数
 #####################################
-HandleProductFile(){
-  if [ ! -f "${build_product_deployment_file_location}" ];then
-    Error "${build_product_deployment_file_location} not exist !!!"
+CheckPackageFile(){
+  Info "start check package file !!!"
+  # 检查deployment.tar.gz包是否存在
+  if [ ! -f "${deployment_package_file_location}" ];then
+    Error "${deployment_package_file_location} not exist !!!"
     exit 1
   fi
-  tar -xf "${build_product_deployment_file_location}" -C "${app_dir}/.build"
-  sudo rm -rf "${build_product_deployment_file_location}"
-  FileDos2Unix
+  # 解压
+  tar -xf "${deployment_package_file_location}" -C "${package_dir}"
+  sudo rm -rf "${deployment_package_file_location}"
+  # 文本文件dos转unix操作
+  FileDos2Unix "${package_dir}"
+
+  # 检查blueprint.yaml文件是否存在
+  if [ ! -f "${package_dir}/blueprint.yaml" ]; then
+      Error "${package_dir}/blueprint.yaml file not exit !!!"
+      exit 1
+  fi
+  # 检查blueprint.yaml文件的yaml文件格式是否正确（若格式有误，则此语句会报错）
+  yq -P -oj "${package_dir}/blueprint.yaml" >> "${package_dir}/blueprint.json"
+
+  # 检查metadata.yaml文件是否存在
+  if [ ! -f "${package_dir}/metadata.yaml" ]; then
+       Error "${package_dir}/metadata.yaml file not exit !!!"
+       exit 1
+  fi
+  # 检查metadata.yaml文件的yaml文件格式是否正确（若格式有误，则此语句会报错）
+  yq -P -oj "${package_dir}/metadata.yaml" >> "${package_dir}/metadata.json"
+
+  # 读取项目归档文件名称
+  local app_archive_name="" app_archive_location=""
+  app_archive_name=$(yq '.APP_ARCHIVE_NAME' "${package_dir}/metadata.yaml")
+  # 检查项目归档文件是否存在
+  app_archive_location="${package_dir}/${app_archive_name}"
+  if [ ! -f "${app_archive_location}" ]; then
+    Error "${app_archive_name} not exist !!!"
+    exit 1
+  fi
+  Info "check package file finished !!!"
 }
 
 #####################################
@@ -214,49 +229,48 @@ WriteBuildVersion(){
   local build_version="" cmd="";
   build_version="$(date +%Y%m%d%H%M%S)$(pwgen -ABns0 8 1 | tr a-z A-Z)"
   # 写入项目构建版本信息
-  echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${app_dir}/.build/metadata.json)" > ${app_dir}/.build/metadata.json
+  #echo "$(jq --arg value ${build_version} '.APP_BUILD_VERSION = $value' ${project_dir}/.build/metadata.json)" > ${project_dir}/.build/metadata.json
+  yq -i ".APP_BUILD_VERSION=\"${build_version}\"" "${package_dir}/metadata.yaml"
   Info "build version = '${build_version}'"
 }
 
 #####################################
-## BuildInfo 函数
+## ReadMetadata 函数
 #####################################
-BuildInfo(){
- # 项目名称
- app_name="$(jq -r '.APP_NAME' ${app_dir}/.build/metadata.json)"
- # 项目构建版本
- app_build_version="$(jq -r '.APP_BUILD_VERSION' ${app_dir}/.build/metadata.json)"
- # 项目镜像坐标
- image_coordinate="${image_domain}/${image_namespace}/${app_name}:${app_build_version}"
+ReadMetadata(){
+  # 项目名称
+  app_name=$(yq '.APP_NAME' "${package_dir}/metadata.yaml")
+  # 项目构建版本
+  app_build_version=$(yq '.APP_BUILD_VERSION' "${package_dir}/metadata.yaml")
+  # 项目镜像坐标
+  image_coordinate="${image_domain}/${image_namespace}/${app_name}:${app_build_version}"
 }
 
 #####################################
-## 写入元数据 函数
+## WriteMetadata 函数
 #####################################
 WriteMetadata(){
-  local metadata_file_location=""
-  metadata_file_location="${app_dir}/.build/metadata.json"
-  # 写入项目镜像坐标信息
-  echo "$(jq --arg value ${image_coordinate} '.IMAGE_COORDINATE = $value' ${metadata_file_location})" > ${metadata_file_location}
-  # 写入镜像仓库域名信息
-  echo "$(jq --arg value ${image_domain} '.IMAGE_DOMAIN = $value' ${metadata_file_location})" > ${metadata_file_location}
+  # 写入项目镜像坐标
+  yq -i ".IMAGE_COORDINATE=\"${image_coordinate}\"" "${package_dir}/metadata.yaml"
+  # 写入项目镜像域名
+  yq -i ".IMAGE_DOMAIN=\"${image_domain}\"" "${package_dir}/metadata.yaml"
 }
 
 #####################################
-## 构建镜像函数
+## 构建镜像 函数
 #####################################
 BuildImage(){
-  Info "start build app image !!!"
-  # 进入Dockerfile文件所在的同级目录
-  cd "${app_dir}/.build" || exit 1
+  Info "start build application image !!!"
+  local current_dir=$(pwd)
+  # 切换到构建包生成目录下
+  cd "${package_dir}" || exit 1
   # 构建docker镜像
   sudo docker build \
-   --file "${app_dir}/.build/Dockerfile" \
+   --file "${package_dir}/Dockerfile" \
    --build-arg build_version="${app_build_version}" \
    --build-arg timezone="Asia/Shanghai" \
    --tag "${image_coordinate}" .
-  # 回到父级目录
-  cd "${app_dir}" || exit 1
+  cd "${current_dir}" || exit 1
   # 上传docker镜像
   sudo docker push "${image_coordinate}"
   Info "push image success ,coordinate = '${image_coordinate}'"
@@ -266,35 +280,25 @@ BuildImage(){
 }
 
 #####################################
-## 构建K8S部署 函数
-#####################################
-BuildBlueprint(){
-  Info "start build blueprint !!!"
-  # 替换镜像坐标
-  sed -i "s@image_coordinate@${image_coordinate}@g" "${app_dir}/.build/blueprint.yaml"
-}
-
-#####################################
 ## 生成部署包 函数
 #####################################
 BuildDeployPackage(){
-  local current_dir="" archive_name="";
-  # 记录当前目录
-  current_dir=$(pwd)
-  # 切换到.build目录
-  cd "${app_dir}/.build" || exit 1
-  # 压缩包名
-  archive_name="deploy-${app_name}-${app_build_version}.tar.gz"
-  # 生成部署压缩包
-  tar czf "${archive_name}" blueprint.yaml metadata.json
-  # 将部署包拷贝到"产物目录"
-  cp -f "${app_dir}/.build/${archive_name}" "${product_dir}"
-  # 在"产物目录"下生成deploy.json
-  local json_info="{\"DEPLOY_PACKAGE_NAME\":\"${archive_name}\",\"IMAGE_DOMAIN\":\"${image_domain}\"}"
-  echo "${json_info}" >> "${product_dir}/deploy.json"
+  Info "start build deploy package !!!"
+  local current_dir=$(pwd) product_archive_name="";
+  # 产物归档文件名称
+  # See if you can use ${variable//search/replace} instead.
+  product_archive_name=${product_archive_name_regular//"{{name}}"/"${app_name}-${app_build_version}"}
+  # 切换到构建包生成目录下
+  cd "${package_dir}" || exit 1
+  # 生成产物归档文件
+  tar czf "${product_archive_name}" blueprint.yaml metadata.yaml
   # 切换到回原有的目录下
   cd "${current_dir}" || exit 1
-  Info "the project has been built completed and success !!!"
+  # 将部署包拷贝到"产物目录"
+  cp -f "${package_dir}/${product_archive_name}" "${product_dir}"
+  # 在"产物目录"下生成deploy.json
+  echo "${product_json_file_content_regular//"{{content}}"/"${product_archive_name}"}" >> "${product_dir}/${product_json_file_name}"
+  Info "build deploy package finished and success !!!"
 }
 
 #####################################
@@ -302,7 +306,7 @@ BuildDeployPackage(){
 #####################################
 Clean(){
   # 删除构建文件夹
-  local dir="${app_dir}/.build"
+  local dir="${package_dir}"
   if [ -d "${dir}" ]; then
       rm -rf "${dir}"
   fi
@@ -313,17 +317,15 @@ Clean(){
 ## Run 函数
 #####################################
 Run(){
-  TrapSignal
-  Lock
+  CheckArg
   CheckJava
   CheckMaven
   MavenPackage
-  HandleProductFile
+  CheckPackageFile
   WriteBuildVersion
-  BuildInfo
+  ReadMetadata
   WriteMetadata
   BuildImage
-  BuildBlueprint
   BuildDeployPackage
 }
 Run
