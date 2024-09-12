@@ -7,10 +7,12 @@ APP_MAIN_CLASS: "@app.main.class@"
 # 项目jar包名称
 APP_JAR_NAME: "@app.jar.name@.jar"
 # 项目构建版本
-APP_BUILD_VERSION: ""
+APP_BUILD_VERSION: unknown
+# 镜像仓库域名
+IMAGE_DOMAIN: unknown
 # 项目镜像坐标
-APP_IMAGE_COORDINATE: ""
+IMAGE_COORDINATE: unknown
 # 项目POD名称
 POD_NAME: "@app.name@"
 # 集群命名空间
-CLUSTER_NAMESPACE: "backend"
+CLUSTER_NAMESPACE: unknown

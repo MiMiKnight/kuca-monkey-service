@@ -5,9 +5,8 @@ set -euE
 ## build.sh
 ## 描述：项目打包构建脚本
 ## $1: 镜像仓库域名
-## $2: 镜像仓库用户名
-## $3: 镜像仓库用户密码
-## $4: 镜像仓库指定库名
+## $2: 镜像命名空间
+## $3: 构建产物的存放目录
 #################################
 # sudo apt-get install -y jq
 # sudo apt-get install pwgen
@@ -23,8 +22,8 @@ app_dir=$(dirname "$script_current_dir")
 build_product_deployment_file_location="${app_dir}/.build/deployment.tar.gz"
 # 镜像仓库域名
 image_domain=$1
-# 镜像仓库名
-image_library=$2
+# 镜像命名空间
+image_namespace=$2
 # 构建产物的存放目录
 product_dir=$3
 # 项目名称
@@ -228,15 +227,19 @@ BuildInfo(){
  # 项目构建版本
  app_build_version="$(jq -r '.APP_BUILD_VERSION' ${app_dir}/.build/metadata.json)"
  # 项目镜像坐标
- image_coordinate="${image_domain}/${image_library}/${app_name}:${app_build_version}"
+ image_coordinate="${image_domain}/${image_namespace}/${app_name}:${app_build_version}"
 }
 
 #####################################
 ## 写入元数据 函数
 #####################################
 WriteMetadata(){
+  local metadata_file_location=""
+  metadata_file_location="${app_dir}/.build/metadata.json"
   # 写入项目镜像坐标信息
-  echo "$(jq --arg value ${image_coordinate} '.APP_IMAGE_COORDINATE = $value' ${app_dir}/.build/metadata.json)" > ${app_dir}/.build/metadata.json
+  echo "$(jq --arg value ${image_coordinate} '.IMAGE_COORDINATE = $value' ${metadata_file_location})" > ${metadata_file_location}
+  # 写入镜像仓库域名信息
+  echo "$(jq --arg value ${image_domain} '.IMAGE_DOMAIN = $value' ${metadata_file_location})" > ${metadata_file_location}
 }
 
 #####################################
@@ -258,7 +261,7 @@ BuildImage(){
   sudo docker push "${image_coordinate}"
   Info "push image success ,coordinate = '${image_coordinate}'"
   # 删除本地产物镜像
-  sudo docker rmi "$(sudo docker images | grep "${app_build_version}" | grep "${image_domain}/${image_library}/${app_name}" | awk '{print $3}')"
+  sudo docker rmi "$(sudo docker images | grep "${app_build_version}" | grep "${image_domain}/${image_namespace}/${app_name}" | awk '{print $3}')"
   Info "build app images finished and success !!!"
 }
 
@@ -268,7 +271,7 @@ BuildImage(){
 BuildBlueprint(){
   Info "start build blueprint !!!"
   # 替换镜像坐标
-  sed -i "s@image_coordinate:tag@${image_coordinate}@g" "${app_dir}/.build/blueprint.yaml"
+  sed -i "s@image_coordinate@${image_coordinate}@g" "${app_dir}/.build/blueprint.yaml"
 }
 
 #####################################
@@ -287,7 +290,7 @@ BuildDeployPackage(){
   # 将部署包拷贝到"产物目录"
   cp -f "${app_dir}/.build/${archive_name}" "${product_dir}"
   # 在"产物目录"下生成deploy.json
-  local json_info="{\"DEPLOY_PACKAGE_NAME\":\"${archive_name}\"}"
+  local json_info="{\"DEPLOY_PACKAGE_NAME\":\"${archive_name}\",\"IMAGE_DOMAIN\":\"${image_domain}\"}"
   echo "${json_info}" >> "${product_dir}/deploy.json"
   # 切换到回原有的目录下
   cd "${current_dir}" || exit 1

@@ -23,7 +23,7 @@ LABEL cn.mimiknight.developer.image.build_version=${build_version}
 # 拷贝
 COPY ./${archive_file_name} ./
 #
-RUN cp useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "WebServiceUser" ${user} \
+RUN useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "WebServiceUser" ${user} \
     && echo "${timezone}" > /etc/timezone \
     && mkdir -p "${workdir}/${app_name}" \
     && mkdir -p "${workdir}/${app_name}/logs" \
@@ -31,7 +31,7 @@ RUN cp useradd --create-home --user-group --home-dir /home/${user} --shell /usr/
     && rm -rf "./${archive_file_name}" \
     && find "${workdir}/${app_name}" -type f -print0 | xargs -0 dos2unix -k -s \
     && chown -R ${user}:${user} "${workdir}/${app_name}" \
-    && chmod 755 "${workdir}/${app_name}
+    && chmod 755 "${workdir}/${app_name}"
 # 定义匿名数据卷
 VOLUME ["${workdir}/${app_name}/logs"]
 # 环境变量

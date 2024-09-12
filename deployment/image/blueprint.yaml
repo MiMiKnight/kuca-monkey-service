@@ -2,14 +2,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: @app.name@    #必填，Pod名称
-  namespace: {{backend}}  #必填，Pod所属的命名空间
+  name: "@app.name@"    #必填，Pod名称
+  namespace: unknown  #必填，Pod所属的命名空间
   labels:   #自定义标签
-    app: @app.name@
+    app: unknown
 spec:
   selector:
     matchLabels:    #必填，通过此标签匹配对应pod<key: value>
-      app: @app.name@
+      app: unknown
   replicas: 2   #必填，副本数量
   strategy:
     type: RollingUpdate
@@ -19,11 +19,11 @@ spec:
   template:   #必填，应用容器模版定义
     metadata:
       labels:   #必填，与上面matchLabels的标签相同
-        app: @app.name@
+        app: unknown
     spec:
       containers:   #必填，定义容器列表
         - name: @app.name@            #必填，容器名称
-          image: image_coordinate:tag   #必填，容器的镜像坐标
+          image: image_coordinate   #必填，容器的镜像坐标
           imagePullPolicy: IfNotPresent # 获取镜像的策略 Alawys表示下载镜像；IfnotPresent表示优先使用本地镜像，否则下载镜像；Nerver表示仅使用本地镜像
           ports: #需要暴露的端口库号列表
             - name: HTTPS          #选填，端口号名称

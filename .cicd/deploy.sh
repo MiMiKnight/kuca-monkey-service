@@ -8,9 +8,9 @@ set -euE
 ## $2: 代码仓库地址
 ## $3: 代码分支名称
 ## $4: 镜像仓库域名
-## $5: 镜像仓库用户名
-## $6: 镜像仓库用户密码
-## $7: 镜像仓库指定库名
+## $5: 镜像仓库命名空间
+## $6: 镜像仓库用户名
+## $7: 镜像仓库用户密码
 #################################
 # sudo apt-get install pwgen
 # sudo apt-get install sshpass
@@ -28,12 +28,12 @@ code_repository_url=$2
 code_branch=$3
 # 镜像仓库域名
 image_domain=$4
+# 镜像命名空间
+image_namespace=$5
 # 镜像仓库用户名
-image_user=$5
+image_user=$6
 # 镜像仓库密码
-image_password=$6
-# 镜像仓库名
-image_library=$7
+image_password=$7
 # deploy.json 文件名
 deploy_json_file_name="deploy.json"
 # 临时构建目录
@@ -147,8 +147,8 @@ CheckArg(){
       Error "Arg: 'image_password' value invalid !!!"
       exit 1
   fi
-  if [ -z "${image_library}" ]; then
-      Error "Arg: 'image_library' value invalid !!!"
+  if [ -z "${image_namespace}" ]; then
+      Error "Arg: 'image_namespace' value invalid !!!"
       exit 1
   fi
 }
@@ -193,20 +193,6 @@ GitClone(){
 }
 
 #####################################
-## 传包 函数
-## $1 deploy.json 文件路径
-## $2 deploy-xxx.tar.gz 包文件路径
-#####################################
-UploadPackage(){
-  Info "start upload deploy package !!!"
-  local deploy_json_location="$1" deploy_package_location="$2";
-  #sshpass -p "vagrant" scp -c "${build_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${build_dir}/${deploy_archive_name}
-  #cp -f ${deploy_json_location} ${script_current_dir}
-  #cp -f ${deploy_package_location} ${script_current_dir}
-  Info "the upload deploy package finished and success !!!"
-}
-
-#####################################
 ## logout docker 函数
 #####################################
 LogoutDocker(){
@@ -248,6 +234,20 @@ CreateBuildDir(){
 }
 
 #####################################
+## 传包 函数
+## $1 deploy.json 文件路径
+## $2 deploy-xxx.tar.gz 包文件路径
+#####################################
+UploadPackage(){
+  Info "start upload deploy package !!!"
+  local deploy_json_location="$1" deploy_package_location="$2";
+  #sshpass -p "vagrant" scp -c "${build_dir}/${deploy_archive_name}" root@redis.dev.vm.mimiknight.cn:/home/root/${build_dir}/${deploy_archive_name}
+  cp -f "${deploy_json_location}" "${script_current_dir}"
+  cp -f "${deploy_package_location}" "${script_current_dir}"
+  Info "the upload deploy package finished and success !!!"
+}
+
+#####################################
 ## Deploy 函数
 #####################################
 Deploy(){
@@ -273,7 +273,7 @@ Deploy(){
   # 登录docker
   LoginDocker
   # 执行构建打包
-  /bin/bash "${build_script_location}" "${image_domain}" "${image_library}" "${build_dir}"
+  /bin/bash "${build_script_location}" "${image_domain}" "${image_namespace}" "${build_dir}"
 
   local deploy_json_location="" deploy_package_name="" deploy_package_location=""
   # deploy.json文件路径
