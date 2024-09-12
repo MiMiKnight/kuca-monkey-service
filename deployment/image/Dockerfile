@@ -41,7 +41,7 @@ ENV PATH=$APP_HOME/bin:$PATH
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
   CMD /bin/bash ${workdir}/${app_name}/bin/service.sh healthcheck
 # 暴露应用程序的端口
-EXPOSE ${app_port}
+EXPOSE ${app_port}/tcp
 # 设置工作目录
 WORKDIR "${workdir}/${app_name}"
 # 指定后续指令的用户上下文
