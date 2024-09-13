@@ -3,25 +3,43 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: @app.name@    #必填，Pod名称
-  namespace: unknown  #必填，Pod所属的命名空间
-  labels:   #自定义标签
-    app: unknown
+  namespace: backend  #必填，Pod所属的命名空间
+  labels: #自定义标签
+    app: @app.name@
 spec:
   selector:
-    matchLabels:    #必填，通过此标签匹配对应pod<key: value>
-      app: unknown
+    matchLabels: #必填，通过此标签匹配对应pod<key: value>
+      app: @app.name@
   replicas: 2   #必填，副本数量
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 25%
-  template:   #必填，应用容器模版定义
+  template: #必填，应用容器模版定义
     metadata:
-      labels:   #必填，与上面matchLabels的标签相同
-        app: unknown
+      labels: #必填，与上面matchLabels的标签相同
+        app: @app.name@
     spec:
-      containers:   #必填，定义容器列表
+      affinity: # 亲和性
+        nodeAffinity: # node亲和性，描述的是：pod与node之间的亲和关系
+          requiredDuringSchedulingIgnoredDuringExecution: # 硬性条件
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: namespace
+                    operator: In
+                    values:
+                      - backend  #给node打上命名空间的标签，pod只调度至指定标签下的node
+        podAntiAffinity: #pod反亲和性，描述的是pod与pod之间的反亲和关系
+          requiredDuringSchedulingIgnoredDuringExecution: # 硬性条件
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - @app.name@  # 不允许同名pod重复部署在相同节点上
+              topologyKey: kubernetes.io/hostname
+      containers: #必填，定义容器列表
         - name: @app.name@            #必填，容器名称
           image: unknown   #必填，
           # 获取镜像的策略 Alawys表示下载镜像；IfnotPresent表示优先使用本地镜像，否则下载镜像；Nerver表示仅使用本地镜像
@@ -33,11 +51,11 @@ spec:
               containerPort: 8443    #容器需要监听的端口号
               hostPort: 8443         #选填，容器所在主机需要监听的端口号，默认与Container相同
               protocol: TCP        #选填，端口协议，支持TCP和UDP，默认TCP
-          resources:     #资源限制和请求的设置
-            limits:      #资源限制的设置
+          resources: #资源限制和请求的设置
+            limits: #资源限制的设置
               cpu: "2"   #cpu的限制，单位为core数
               memory: 1024Mib     #内存限制，单位可以为Mib/Gib
-            requests:               #资源请求的设置
+            requests: #资源请求的设置
               cpu: "1"              #cpu请求，容器启动的初始可用数量
               memory: 512Mib      #内存清楚，容器启动的初始可用数量
           livenessProbe:
@@ -51,7 +69,7 @@ spec:
           env: #容器运行前需设置的环境变量列表
             - name: string     #环境变量名称
               value: string    #环境变量的值
-          volumeMounts:        #挂载到容器内部的存储卷配置
+          volumeMounts: #挂载到容器内部的存储卷配置
             - name: log-volume # 日志数据卷
               mountPath: /opt/app/@app.name@/logs
               readOnly: false  #是否为只读模式
@@ -60,20 +78,8 @@ spec:
               readOnly: false
       volumes: #在该pod上定义共享存储卷列表
         - name: log-volume   #共享存储卷名称 （volumes类型有很多种）
-          hostPath:     #类型为hostPath的存储卷，表示挂载Pod所在宿主机的目录
+          hostPath: #类型为hostPath的存储卷，表示挂载Pod所在宿主机的目录
             type: DirectoryOrCreate
             path: /opt/workspace/@app.name@/logs #Pod所在宿主机的目录，将被用于同期中mount的目录
         - name: tmp-volume
-          emptyDir: {}
-        - name: string     #共享存储卷名称
-          secret: #类型为secret的存储卷，挂载集群与定义的secret对象到容器内部
-            secretName: string
-            items:
-              - key: string     #选择secrets定义的某个key
-                path: string    #文件内容路径
-        - name: string     #共享存储卷名称
-          configMap: #类型为configMap的存储卷，挂载预定义的configMap对象到容器内部
-            name: string
-            items:
-              - key: string      #选择configmap定义的某个key
-                path: string     #文件内容路径
+          emptyDir: { }
