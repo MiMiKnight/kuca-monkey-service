@@ -43,8 +43,8 @@
             <includes>
                 <include>**/*.sh</include>
             </includes>
-            <fileMode>0750</fileMode>
-            <directoryMode>0750</directoryMode>
+            <fileMode>0755</fileMode>
+            <directoryMode>755</directoryMode>
         </fileSet>
         <!--生成项目日志文件夹-->
         <fileSet>
