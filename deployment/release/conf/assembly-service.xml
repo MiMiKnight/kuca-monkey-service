@@ -19,7 +19,7 @@
             <useProjectArtifact>false</useProjectArtifact>
             <scope>runtime</scope>
             <unpack>false</unpack>
-            <fileMode>0640</fileMode>
+            <fileMode>0540</fileMode>
             <directoryMode>0750</directoryMode>
         </dependencySet>
     </dependencySets>
@@ -31,6 +31,8 @@
             <outputDirectory>/lib</outputDirectory>
             <!--filtering标签 true:表示开启变量替换；false：表示关闭变量替换；非文本文件应该设置为false-->
             <filtered>false</filtered>
+            <fileMode>0540</fileMode>
+            <directoryMode>0750</directoryMode>
             <includes>
                 <include>${app.jar.name}.jar</include>
             </includes>
@@ -43,8 +45,8 @@
             <includes>
                 <include>**/*.sh</include>
             </includes>
-            <fileMode>0755</fileMode>
-            <directoryMode>755</directoryMode>
+            <fileMode>0540</fileMode>
+            <directoryMode>0750</directoryMode>
         </fileSet>
         <!--生成项目日志文件夹-->
         <fileSet>
@@ -53,14 +55,14 @@
             <excludes>
                 <exclude>/**/*</exclude>
             </excludes>
-            <fileMode>0750</fileMode>
+            <fileMode>0440</fileMode>
             <directoryMode>0750</directoryMode>
         </fileSet>
         <fileSet>
             <directory>${project.parent.basedir}/deployment/release/conf</directory>
             <outputDirectory>/conf</outputDirectory>
             <filtered>false</filtered>
-            <fileMode>0640</fileMode>
+            <fileMode>0440</fileMode>
             <directoryMode>0750</directoryMode>
             <includes>
                 <include>https.keystore</include>
@@ -70,7 +72,7 @@
             <directory>${project.parent.basedir}/deployment/release/conf</directory>
             <outputDirectory>/conf</outputDirectory>
             <filtered>true</filtered>
-            <fileMode>0640</fileMode>
+            <fileMode>0440</fileMode>
             <directoryMode>0750</directoryMode>
             <includes>
                 <include>application-custom.properties</include>
@@ -88,7 +90,7 @@
                 <include>mybatis/mapper/**/*Mapper.xml</include>
                 <include>mybatis/mybatis-config.xml</include>
             </includes>
-            <fileMode>0640</fileMode>
+            <fileMode>0440</fileMode>
             <directoryMode>0750</directoryMode>
         </fileSet>
         <!--打包db升级脚本至外部classpath-->
@@ -96,12 +98,12 @@
             <directory>${project.parent.basedir}/deployment/release/db</directory>
             <outputDirectory>/conf/db-migration</outputDirectory>
             <filtered>false</filtered>
+            <fileMode>0440</fileMode>
+            <directoryMode>0750</directoryMode>
             <includes>
                 <include>**/*.sql</include>
                 <include>**/*.json</include>
             </includes>
-            <fileMode>0640</fileMode>
-            <directoryMode>0750</directoryMode>
         </fileSet>
     </fileSets>
 </assembly>

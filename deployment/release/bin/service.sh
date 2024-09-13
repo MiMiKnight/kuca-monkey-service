@@ -103,7 +103,7 @@ IsAlive(){
   local pid=$(GetJavaPID "${app_jar_location}")
   # pid = 0，表示程序未启动
   if [ ${pid} -eq "0" ]; then
-    echo "false"
+    echo false
     return
   fi
   local port=${app_port}
@@ -113,9 +113,9 @@ IsAlive(){
   p_name="${pid}/java"
   result=$(netstat -ntlp | awk -v p_name="${p_name}" '{ if($6=="LISTEN" && $7==p_name) print $4}' | grep "${port}")
   if [ -z "${result}" ]; then
-     echo "false"
+     echo false
   else
-     echo "true"
+     echo true
   fi
 }
 
@@ -137,8 +137,8 @@ Status(){
 Start() {
   # 检测程序是否已启动
   local pid=$(GetJavaPID "${app_jar_location}")
-  # pid 不等于0，表示程序已启动
-  if [ ${pid} -ne "0" ]; then
+  # 检测程序是否已启动
+  if [ $(IsAlive) == true ]; then
     Info "the application has started and pid = ${pid} !!!"
     return
   fi
@@ -153,7 +153,7 @@ Start() {
 Stop() {
   local pid=$(GetJavaPID "${app_jar_location}")
   # 检测程序是否已启动
-  if [ $(IsAlive) -eq "true" ]; then
+  if [ $(IsAlive) == true ]; then
     kill -9 "${pid}"
     Info "the application stopped success and pid = ${pid} !!!"
   else
