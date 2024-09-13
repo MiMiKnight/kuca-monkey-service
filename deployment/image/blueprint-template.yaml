@@ -44,9 +44,9 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
         - name: kuca-monkey-service
-          image: registry.cn-hangzhou.aliyuncs.com/mimiknight/kuca-monkey-service:20240913200708CSDXBMQM
+          image: registry.cn-hangzhou.aliyuncs.com/mimiknight/kuca-monkey-service:20240913223300EPHQOKJR
           imagePullPolicy: IfNotPresent
-          #securityContext:
+            #securityContext:
             #runAsNonRoot: true
             #runAsUser: 1100
             #runAsGroup: 1100
@@ -55,13 +55,29 @@ spec:
               containerPort: 8443
               hostPort: 8443
               protocol: TCP
-          resources: {}
+          resources:
+            limits:
+              cpu: "2"
+              memory: "1024Mi"
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+          livenessProbe:
+            exec:
+              command:
+                - ./bin/service.sh
+                - healthcheck
+            initialDelaySeconds: 5
+            timeoutSeconds: 30
+            periodSeconds: 10
+            successThreshold: 0
+            failureThreshold: 1
+          env: []
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
             - name: volume-log-dir
               mountPath: /opt/app/kuca-monkey-service/logs
-              readOnly: false
             - name: volume-tmp-dir
               mountPath: /tmp
       volumes:

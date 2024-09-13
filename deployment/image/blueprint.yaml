@@ -1,89 +1,94 @@
-# https://www.cnblogs.com/wzs5800/p/13534942.html
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: @app.name@    #必填，Pod名称
-  namespace: backend  #必填，Pod所属的命名空间
   annotations:
     deployment.kubernetes.io/revision: "1"
-  labels: #自定义标签
-    app: KucaMonkeyService
+  labels:
+    app: @app.name@
+  name: @app.name@
+  namespace: backend
 spec:
+  progressDeadlineSeconds: 600
+  replicas: 3
+  revisionHistoryLimit: 10
   selector:
-    matchLabels: #必填，通过此标签匹配对应pod<key: value>
+    matchLabels:
       app: @app.name@
-  replicas: 2   #必填，副本数量
   strategy:
-    type: RollingUpdate
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 25%
-  template: #必填，应用容器模版定义
+    type: RollingUpdate
+  template:
     metadata:
-      labels: #必填，与上面matchLabels的标签相同
+      labels:
         app: @app.name@
     spec:
-      affinity: # 亲和性
-        nodeAffinity: # node亲和性，描述的是：pod与node之间的亲和关系
-          requiredDuringSchedulingIgnoredDuringExecution: # 硬性条件
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
                   - key: namespace
                     operator: In
                     values:
-                      - backend  #给node打上命名空间的标签，pod只调度至指定标签下的node
-        podAntiAffinity: #pod反亲和性，描述的是pod与pod之间的反亲和关系
-          requiredDuringSchedulingIgnoredDuringExecution: # 硬性条件
+                      - backend
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
                   - key: app
                     operator: In
                     values:
-                      - @app.name@  # 不允许同名pod重复部署在相同节点上
+                      - @app.name@
               topologyKey: kubernetes.io/hostname
-      containers: #必填，定义容器列表
-        - name: @app.name@            #必填，容器名称
-          image: unknown   #必填，
-          # 获取镜像的策略 Alawys表示下载镜像；IfnotPresent表示优先使用本地镜像，否则下载镜像；Nerver表示仅使用本地镜像
+      containers:
+        - name: @app.name@
+          image: registry.cn-hangzhou.aliyuncs.com/mimiknight/kuca-monkey-service:20240913223300EPHQOKJR
           imagePullPolicy: IfNotPresent
-          # Pod的重启策略，Always表示一旦不管以何种方式终止运行，kubelet都将重启，OnFailure表示只有Pod以非0退出码退出才重启，Never表示不再重启该Pod
-          restartPolicy: OnFailure
-          ports: #需要暴露的端口库号列表
-            - name: https            #选填，端口号名称
-              containerPort: 8443    #容器需要监听的端口号
-              hostPort: 8443         #选填，容器所在主机需要监听的端口号，默认与Container相同
-              protocol: TCP          #选填，端口协议，支持TCP和UDP，默认TCP
-          resources: #资源限制和请求的设置
-            limits: #资源限制的设置
-              cpu: 2c   #cpu的限制，单位为core数
-              memory: 1024Mib     #内存限制，单位可以为Mib/Gib
-            requests: #资源请求的设置
-              cpu: 1c              #cpu请求，容器启动的初始可用数量
-              memory: 512Mib      #内存清楚，容器启动的初始可用数量
+            #securityContext:
+            #runAsNonRoot: true
+            #runAsUser: 1100
+            #runAsGroup: 1100
+          ports:
+            - name: https
+              containerPort: 8443
+              hostPort: 8443
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "2"
+              memory: "1024Mi"
+            requests:
+              cpu: "1"
+              memory: "512Mi"
           livenessProbe:
             exec:
-              command: #exec方式需要制定的命令或脚本
-              - ./bin/service.sh
-              - healthcheck
-            initialDelaySeconds: 5  #容器启动完成后首次探测的时间，单位为秒
-            timeoutSeconds: 30      #对容器健康检查探测等待响应的超时时间，单位秒，默认1秒
-            periodSeconds: 10       #对容器监控检查的定期探测时间设置，单位秒，默认10秒一次
+              command:
+                - ./bin/service.sh
+                - healthcheck
+            initialDelaySeconds: 5
+            timeoutSeconds: 30
+            periodSeconds: 10
             successThreshold: 0
             failureThreshold: 1
-          env: #容器运行前需设置的环境变量列表
-            - name: string     #环境变量名称
-              value: string    #环境变量的值
-          volumeMounts: #挂载到容器内部的存储卷配置
-            - name: log-volume # 日志数据卷
+          env: []
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - name: volume-log-dir
               mountPath: /opt/app/@app.name@/logs
-              readOnly: false  #是否为只读模式
-            - name: tmp-volume
-              mountPath: /tmp  # 临时目录数据卷
-              readOnly: false
-      volumes: #在该pod上定义共享存储卷列表
-        - name: log-volume   #共享存储卷名称 （volumes类型有很多种）
-          hostPath: #类型为hostPath的存储卷，表示挂载Pod所在宿主机的目录
+            - name: volume-tmp-dir
+              mountPath: /tmp
+      volumes:
+        - name: volume-log-dir
+          hostPath:
             type: DirectoryOrCreate
-            path: /opt/workspace/@app.name@/logs #Pod所在宿主机的目录，将被用于同期中mount的目录
-        - name: tmp-volume
-          emptyDir: { }
+            path: /opt/workspace/logs/@app.name@
+        - name: volume-tmp-dir
+          emptyDir: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
