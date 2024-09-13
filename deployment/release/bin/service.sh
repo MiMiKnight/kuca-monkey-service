@@ -10,12 +10,12 @@ app_dir="$(dirname "${script_current_dir}")"
 app_jar_location="${app_dir}/lib/@app.jar.name@.jar"
 # 启动日志文件路径
 app_startup_log_location="${app_dir}/logs/startup.log"
-# 健康检查接口URL
-health_check_url="https://127.0.0.1:8443/rest/developer/monkey-service/health/servlet/v1/check";
 # 项目业务端口
 app_port=8443
+# 健康检查接口URL
+health_check_url="https://127.0.0.1:${app_port}/rest/developer/monkey-service/health/servlet/v1/check";
 # JAVA_OPTS
-java_opts="-Xms512m \
+run_opts="-Xms512m \
   -Xmx1024m \
   -XX:MetaspaceSize=512m \
   -XX:MaxMetaspaceSize=1024m \
@@ -23,8 +23,7 @@ java_opts="-Xms512m \
   -Duser.language=en \
   -Duser.timezone=GMT+00:00 \
   -Dfile.encoding=utf-8 \
-  -Dspring.profiles.name=application \
-  -Dspring.profiles.active=debug"
+  -Dspring.profiles.name=application"
 
 ##################################
 # 友好提示函数
@@ -130,9 +129,13 @@ Start() {
     Info "the application has started and pid = ${pid} !!!"
     return
   fi
+  # 从环境变量中读取额外的JAVA_OPTS信息
+  if [ ! -z "${JAVA_OPTS}" ]; then
+      run_opts="${run_opts} ${JAVA_OPTS}"
+  fi
   # 启动应用
-  #nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1
-  nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}"
+  #nohup "${JAVA_HOME}/bin/java" ${run_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1
+  nohup "${JAVA_HOME}/bin/java" ${run_opts} -jar "${app_jar_location}"
 }
 
 ##################################

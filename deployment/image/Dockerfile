@@ -37,6 +37,7 @@ VOLUME ["${workdir}/${app_name}/logs"]
 # 环境变量
 ENV APP_HOME=${workdir}/${app_name}
 ENV PATH=$APP_HOME/bin:$PATH
+ENV JAVA_OPTS=""
 # 设置工作目录
 WORKDIR "${workdir}/${app_name}"
 # 健康检查
