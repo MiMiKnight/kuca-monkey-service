@@ -156,7 +156,7 @@ HealthCheck(){
   local check_url="" http_code=0 success_response_http_status=200
   check_url="${health_check_url}"
   http_code=$(curl -s -k -X GET -w %{http_code} -o /dev/null "${check_url}");
- return [[ ${http_code} -eq ${success_response_http_status} ]] || return 1
+  [[ ${http_code} -eq ${success_response_http_status} ]] || exit 1
 }
 
 ##################################
@@ -175,7 +175,7 @@ usage() {
     CheckAlive
     ;;
   'healthcheck')
-    return HealthCheck
+    HealthCheck
     ;;
   *)
     echo "usage: service [start|stop|healthcheck]"
