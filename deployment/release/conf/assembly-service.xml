@@ -55,7 +55,7 @@
             <excludes>
                 <exclude>/**/*</exclude>
             </excludes>
-            <fileMode>0440</fileMode>
+            <fileMode>640</fileMode>
             <directoryMode>0750</directoryMode>
         </fileSet>
         <fileSet>
