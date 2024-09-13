@@ -54,12 +54,18 @@ spec:
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+          volumeMounts:
+            - name: volume-log-dir
+              mountPath: /opt/app/kuca-monkey-service/logs
+              readOnly: false
+            - name: volume-tmp-dir
+              mountPath: /tmp
       volumes:
-        - name: log-volume
+        - name: volume-log-dir
           hostPath:
             type: DirectoryOrCreate
-            path: /opt/workspace/kuca-monkey-service/logs
-        - name: tmp-volume
+            path: /opt/workspace/logs/kuca-monkey-service
+        - name: volume-tmp-dir
           emptyDir: {}
       dnsPolicy: ClusterFirst
       restartPolicy: Always

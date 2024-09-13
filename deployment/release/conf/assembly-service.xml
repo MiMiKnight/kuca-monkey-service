@@ -55,8 +55,8 @@
             <excludes>
                 <exclude>/**/*</exclude>
             </excludes>
-            <fileMode>640</fileMode>
-            <directoryMode>0750</directoryMode>
+            <fileMode>0666</fileMode>
+            <directoryMode>0777</directoryMode>
         </fileSet>
         <fileSet>
             <directory>${project.parent.basedir}/deployment/release/conf</directory>
