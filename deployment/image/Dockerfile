@@ -23,7 +23,7 @@ LABEL cn.mimiknight.developer.image.build_version=${build_version}
 # 拷贝
 COPY ./${app_archive_name} ./
 #
-RUN useradd --create-home --user-group --home-dir /home/${user} --shell /usr/sbin/nologin --comment "WebServiceUser" ${user} \
+RUN useradd -u 1000 -g 1000 -m -U -s /usr/sbin/nologin -c "WebServiceUser" ${user} \
     && echo "${timezone}" > /etc/timezone \
     && mkdir -p "${workdir}/${app_name}" \
     && mkdir -p "${workdir}/${app_name}/logs" \

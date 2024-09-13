@@ -44,8 +44,12 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
         - name: kuca-monkey-service
-          image: registry.cn-hangzhou.aliyuncs.com/mimiknight/kuca-monkey-service:20240913170146JPFDJQAX
+          image: registry.cn-hangzhou.aliyuncs.com/mimiknight/kuca-monkey-service:20240913200708CSDXBMQM
           imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
           ports:
             - name: https
               containerPort: 8443
