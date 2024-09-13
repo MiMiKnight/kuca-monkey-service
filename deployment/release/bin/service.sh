@@ -139,7 +139,7 @@ Start() {
 # stop函数
 ##################################
 Stop() {
-  local pid=$(GetAppPID "${app_jar_location}")
+  local pid=$(GetJavaPID "${app_jar_location}")
   # 检测程序是否已启动
   if [ ${pid} -ne "0" ]; then
     kill -9 "${pid}"
