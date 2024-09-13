@@ -63,7 +63,7 @@ TraceError(){
 #####################################
 TrapSignal(){
   # 捕捉错误发生位置
-  trap 'TraceError $LINENO $BASH_COMMAND;exit 1' ERR
+  trap '$(TraceError $LINENO $BASH_COMMAND);exit 1' ERR
 }
 
 ##################################
@@ -109,8 +109,8 @@ CheckEnv(){
 # $1 Java进程名
 ##################################
 GetJavaPID(){
-  local pid=-1 p_name=$1;
-  jps_info=$("${JAVA_HOME}"/bin/jps -l | grep "${p_name}")
+  local pid=-1 p_name=$1 jps_info="";
+  jps_info=$(${JAVA_HOME}/bin/jps -l | grep "${p_name}")
   if [ -z "${jps_info}" ]; then
     echo "${pid}"
   else
