@@ -13,7 +13,7 @@ service-core/src/main/resources/application-*.properties
 *.orig
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
