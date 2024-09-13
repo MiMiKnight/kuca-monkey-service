@@ -4,8 +4,10 @@ kind: Deployment
 metadata:
   name: @app.name@    #必填，Pod名称
   namespace: backend  #必填，Pod所属的命名空间
+  annotations:
+    deployment.kubernetes.io/revision: "1"
   labels: #自定义标签
-    app: @app.name@
+    app: KucaMonkeyService
 spec:
   selector:
     matchLabels: #必填，通过此标签匹配对应pod<key: value>
@@ -47,20 +49,22 @@ spec:
           # Pod的重启策略，Always表示一旦不管以何种方式终止运行，kubelet都将重启，OnFailure表示只有Pod以非0退出码退出才重启，Never表示不再重启该Pod
           restartPolicy: OnFailure
           ports: #需要暴露的端口库号列表
-            - name: HTTPS          #选填，端口号名称
+            - name: https            #选填，端口号名称
               containerPort: 8443    #容器需要监听的端口号
               hostPort: 8443         #选填，容器所在主机需要监听的端口号，默认与Container相同
-              protocol: TCP        #选填，端口协议，支持TCP和UDP，默认TCP
+              protocol: TCP          #选填，端口协议，支持TCP和UDP，默认TCP
           resources: #资源限制和请求的设置
             limits: #资源限制的设置
-              cpu: "2"   #cpu的限制，单位为core数
+              cpu: 2c   #cpu的限制，单位为core数
               memory: 1024Mib     #内存限制，单位可以为Mib/Gib
             requests: #资源请求的设置
-              cpu: "1"              #cpu请求，容器启动的初始可用数量
+              cpu: 1c              #cpu请求，容器启动的初始可用数量
               memory: 512Mib      #内存清楚，容器启动的初始可用数量
           livenessProbe:
             exec:
-              command: [ string ]   #exec方式需要制定的命令或脚本
+              command: #exec方式需要制定的命令或脚本
+              - ./bin/service.sh
+              - healthcheck
             initialDelaySeconds: 5  #容器启动完成后首次探测的时间，单位为秒
             timeoutSeconds: 30      #对容器健康检查探测等待响应的超时时间，单位秒，默认1秒
             periodSeconds: 10       #对容器监控检查的定期探测时间设置，单位秒，默认10秒一次
