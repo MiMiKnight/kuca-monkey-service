@@ -131,7 +131,8 @@ Start() {
     return
   fi
   # 启动应用
-  nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1
+  #nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1
+  nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}"
 }
 
 ##################################
