@@ -56,18 +56,27 @@
             <fileMode>0750</fileMode>
             <directoryMode>0750</directoryMode>
         </fileSet>
-        <!--打包项目构建配置文件-->
+        <fileSet>
+            <directory>${project.parent.basedir}/deployment/release/conf</directory>
+            <outputDirectory>/conf</outputDirectory>
+            <filtered>false</filtered>
+            <fileMode>0640</fileMode>
+            <directoryMode>0750</directoryMode>
+            <includes>
+                <include>https.keystore</include>
+            </includes>
+        </fileSet>
         <fileSet>
             <directory>${project.parent.basedir}/deployment/release/conf</directory>
             <outputDirectory>/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>0640</fileMode>
             <directoryMode>0750</directoryMode>
-            <excludes>
-                <exclude>assembly-*.xml</exclude>
-            </excludes>
+            <includes>
+                <include>application-debug.properties</include>
+            </includes>
         </fileSet>
-        <!--添加项目配置文件至外部classpath-->
+        <!--打包项目配置文件至外部classpath-->
         <fileSet>
             <directory>${project.parent.basedir}/service-core/src/main/resources</directory>
             <outputDirectory>/conf</outputDirectory>
