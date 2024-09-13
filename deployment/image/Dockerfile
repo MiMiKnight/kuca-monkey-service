@@ -38,7 +38,7 @@ VOLUME ["${workdir}/${app_name}/logs"]
 ENV APP_HOME=${workdir}/${app_name}
 ENV PATH=$APP_HOME/bin:$PATH
 # 健康检查
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
   CMD /bin/bash ${workdir}/${app_name}/bin/service.sh healthcheck
 # 暴露应用程序的端口
 EXPOSE ${app_port}/tcp

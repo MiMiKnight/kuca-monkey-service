@@ -186,10 +186,10 @@ Stop() {
 # 健康检查函数
 ##################################
 HealthCheck(){
-  local check_url="" http_code=0
+  local check_url="" http_code=0 success_response_http_status=200
   check_url="${health_check_url}"
   http_code=$(curl -s -k -X GET -w %{http_code} -o /dev/null "${check_url}");
-  [[ ${http_code} -ne 200 ]] || exit 1
+  [[ ${http_code} -eq ${success_response_http_status} ]] || exit 1
 }
 
 ##################################
