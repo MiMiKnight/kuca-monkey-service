@@ -23,7 +23,7 @@ LABEL cn.mimiknight.developer.image.build_version=${build_version}
 # 拷贝
 COPY ./${app_archive_name} ./
 #
-RUN useradd -m -u 1100 -s /usr/sbin/nologin -c "WebServiceUser" ${user} \
+RUN useradd --uid 1100 --create-home --user-group --shell /usr/sbin/nologin --comment "WebServiceUser" ${user} \
     && echo "${timezone}" > /etc/timezone \
     && mkdir -p "${workdir}/${app_name}" \
     && mkdir -p "${workdir}/${app_name}/logs" \
@@ -46,6 +46,6 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
 # 暴露应用程序的端口
 EXPOSE ${app_port}/tcp
 # 指定后续指令的用户上下文
-USER ${user}:${user}
+#USER ${user}:${user}
 # 运行应用程序
 ENTRYPOINT ["/bin/bash","./bin/service.sh","start"]
