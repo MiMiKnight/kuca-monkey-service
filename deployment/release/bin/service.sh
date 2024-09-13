@@ -89,16 +89,16 @@ GetJavaPID(){
   if [ -z "${jps_info}" ]; then
      echo "0"
   else
-    echo $(echo "${jps_info}" | awk '{print $1}')
+     echo $(echo "${jps_info}" | awk '{print $1}')
   fi
 }
 
 ##################################
-# CheckAlive 函数
+# IsAlive 函数
 # 描述：根据端口号和进程PID双重检测应用是否存活
 # false：失活  true：存活
 ##################################
-CheckAlive(){
+IsAlive(){
   # 获取进程PID
   local pid=$(GetJavaPID "${app_jar_location}")
   # pid = 0，表示程序未启动
@@ -117,6 +117,18 @@ CheckAlive(){
   else
      echo "true"
   fi
+}
+
+##################################
+# Status 函数
+##################################
+Status(){
+  local pid=$(GetJavaPID "${app_jar_location}")
+  local alive=$(IsAlive)
+  Info "#################################"
+  Info "alive status = ${alive}"
+  Info "application pid = ${pid}"
+  Info "#################################"
 }
 
 ##################################
@@ -141,7 +153,7 @@ Start() {
 Stop() {
   local pid=$(GetJavaPID "${app_jar_location}")
   # 检测程序是否已启动
-  if [ ${pid} -ne "0" ]; then
+  if [ $(IsAlive) -eq "true" ]; then
     kill -9 "${pid}"
     Info "the application stopped success and pid = ${pid} !!!"
   else
@@ -171,14 +183,14 @@ usage() {
   'stop')
     Stop
     ;;
-  'alive')
-    CheckAlive
+  'status')
+    Status
     ;;
   'healthcheck')
     HealthCheck
     ;;
   *)
-    echo "usage: service [start|stop|healthcheck]"
+    echo "usage: service [start|stop|status|healthcheck]"
     ;;
   esac
 }
