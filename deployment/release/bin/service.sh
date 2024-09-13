@@ -14,7 +14,7 @@ app_startup_log_location="${app_dir}/logs/startup.log"
 app_port=8443
 # 健康检查接口URL
 health_check_url="https://127.0.0.1:${app_port}/rest/developer/monkey-service/health/servlet/v1/check";
-# JAVA_OPTS
+# 运行配置 从环境变量${JAVA_OPTS}中读取额外的运行时配置信息
 run_opts="-Xms512m \
   -Xmx1024m \
   -XX:MetaspaceSize=512m \
@@ -23,7 +23,8 @@ run_opts="-Xms512m \
   -Duser.language=en \
   -Duser.timezone=GMT+00:00 \
   -Dfile.encoding=utf-8 \
-  -Dspring.profiles.name=application"
+  -Dspring.profiles.name=application \
+  ${JAVA_OPTS}"
 
 ##################################
 # 友好提示函数
@@ -128,10 +129,6 @@ Start() {
   if [ ${pid} -ne "0" ]; then
     Info "the application has started and pid = ${pid} !!!"
     return
-  fi
-  # 从环境变量中读取额外的JAVA_OPTS信息
-  if [ ! -z "${JAVA_OPTS}" ]; then
-      run_opts="${run_opts} ${JAVA_OPTS}"
   fi
   # 启动应用
   #nohup "${JAVA_HOME}/bin/java" ${run_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1

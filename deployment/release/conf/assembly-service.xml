@@ -73,7 +73,7 @@
             <fileMode>0640</fileMode>
             <directoryMode>0750</directoryMode>
             <includes>
-                <include>application-debug.properties</include>
+                <include>application-custom.properties</include>
             </includes>
         </fileSet>
         <!--打包项目配置文件至外部classpath-->
