@@ -50,72 +50,46 @@ Error() {
   echo -e "\e[1;90;49m[${now}] \e[1;31;49m[ERROR] \e[1;39;49m$1\e[0m";
 }
 
-#####################################
-## trace error 函数
-## 显示错误位置，打印错误内容
-#####################################
-TraceError(){
-  Error "script: $0 ,error on line: $1 command: '$2'"
-}
-
-#####################################
-## trap signal 函数
-#####################################
-TrapSignal(){
-  # 捕捉错误发生位置
-  trap '$(TraceError $LINENO $BASH_COMMAND);exit 1' ERR
-}
-
 ##################################
-# 设置JAVA环境变量函数
+# 检查JAVA环境变量 函数
 # $1 参数1：JAVA安装目录（非必填参数）
 ##################################
-GetJavaHome() {
+CheckJavaHome() {
   # java安装目录
-  local java_install_dir=$1 java_program_location="";
+  local java_location="";
 
-  [ -e "${java_install_dir}/bin/java" ] && JAVA_HOME=${java_install_dir}
-  [ ! -e "${JAVA_HOME}/bin/java" ] && JAVA_HOME=$HOME/jdk/java
-  [ ! -e "${JAVA_HOME}/bin/java" ] && JAVA_HOME=/usr/java
-  [ ! -e "${JAVA_HOME}/bin/java" ] && unset JAVA_HOME
+  [ ! -x "${JAVA_HOME}/bin/java" ] && JAVA_HOME=$HOME/jdk/java
+  [ ! -x "${JAVA_HOME}/bin/java" ] && JAVA_HOME=/usr/java
+  [ ! -x "${JAVA_HOME}/bin/java" ] && JAVA_HOME=/opt/app/jdk
+  [ ! -x "${JAVA_HOME}/bin/java" ] && unset JAVA_HOME && JAVA_HOME=""
+
+  if [ -x "${JAVA_HOME}/bin/java"  ]; then
+     return
+  fi
 
   # 查找java执行程序路径
-  java_program_location=$(which java)
-  if [ -z "${java_program_location}" ] || [ ! -e "${java_program_location}" ]; then
-    # 返回输出空字符串
-    echo ""
-  else
-    java_install_dir=$(dirname "$java_program_location")
-    java_install_dir=$(cd "$(dirname "${java_install_dir}")" && pwd)
-    # 生成JAVA_HOME环境变量
-    export JAVA_HOME=${java_install_dir}
-    # 返回输出Java安装目录
-    echo "${java_install_dir}"
-  fi
-}
-
-##################################
-# CheckEnv函数
-##################################
-CheckEnv(){
-  if [ -z "$(GetJavaHome '')" ]; then
-    Error "Please install Java and set environment variables, We need java(x64) and jdk8 or later is better !!!"
+  java_location=$(which java)
+  if [ -z "${java_location}" ] || [ ! -x "${java_location}" ]; then
+    Error "please install Java or check environment variables !!!"
     exit 1
+  else
+    JAVA_HOME=$(dirname "${java_location}")
+    JAVA_HOME=$(cd "$(dirname "${JAVA_HOME}")" && pwd)
+    # 导出JAVA_HOME环境变量
+    export JAVA_HOME=${JAVA_HOME}
   fi
 }
 
 ##################################
-# GetJavaPid 函数
-# $1 Java进程名
+# GetJavaPID 函数
 ##################################
 GetJavaPID(){
-  local pid=-1 p_name=$1 jps_info="";
+  local p_name=$1 jps_info="";
   jps_info=$(${JAVA_HOME}/bin/jps -l | grep "${p_name}")
   if [ -z "${jps_info}" ]; then
-    echo "${pid}"
+     echo "0"
   else
-    pid=$(echo "${jps_info}" | awk '{print $1}')
-    echo "${pid}"
+    echo $(echo "${jps_info}" | awk '{print $1}')
   fi
 }
 
@@ -126,11 +100,10 @@ GetJavaPID(){
 ##################################
 CheckAlive(){
   # 获取进程PID
-  local pid=-1
-  pid=$(GetJavaPID "${app_jar_location}")
+  local pid=$(GetJavaPID "${app_jar_location}")
   # pid = 0，表示程序未启动
-  if [[ ${pid} -le -1 ]]; then
-    echo false
+  if [ ${pid} -eq "0" ]; then
+    echo "false"
     return
   fi
   local port=${app_port}
@@ -140,9 +113,9 @@ CheckAlive(){
   p_name="${pid}/java"
   result=$(netstat -ntlp | awk -v p_name="${p_name}" '{ if($6=="LISTEN" && $7==p_name) print $4}' | grep "${port}")
   if [ -z "${result}" ]; then
-     echo false
+     echo "false"
   else
-     echo true
+     echo "true"
   fi
 }
 
@@ -150,16 +123,12 @@ CheckAlive(){
 # start函数
 ##################################
 Start() {
-  # 捕捉脚本退出信号，杀死指定的后台Java进程
-  #trap 'kill -9 $(GetJavaPID "${app_jar_location}")' exit
-  CheckEnv
   # 检测程序是否已启动
-  local pid=-1;
-  pid=$(GetJavaPID "${app_jar_location}")
-  # pid 大于0，表示程序已启动
-  if [[ ${pid} -gt 0 ]]; then
+  local pid=$(GetJavaPID "${app_jar_location}")
+  # pid 不等于0，表示程序已启动
+  if [ ${pid} -ne "0" ]; then
     Info "the application has started and pid = ${pid} !!!"
-    return 0
+    return
   fi
   # 启动应用
   nohup "${JAVA_HOME}/bin/java" ${java_opts} -jar "${app_jar_location}" > "${app_startup_log_location}" 2>&1
@@ -169,12 +138,9 @@ Start() {
 # stop函数
 ##################################
 Stop() {
-  CheckEnv
-  local pid=0;
+  local pid=$(GetAppPID "${app_jar_location}")
   # 检测程序是否已启动
-  pid=$(GetJavaPID "${app_jar_location}")
-  # pid 大于0，表示程序已启动
-  if [[ ${pid} -gt 0 ]]; then
+  if [ ${pid} -ne "0" ]; then
     kill -9 "${pid}"
     Info "the application stopped success and pid = ${pid} !!!"
   else
@@ -196,7 +162,7 @@ HealthCheck(){
 # usage函数
 ##################################
 usage() {
-  TrapSignal
+  CheckJavaHome ""
   case "$1" in
   'start')
     Start
