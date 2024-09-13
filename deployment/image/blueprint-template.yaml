@@ -48,8 +48,8 @@ spec:
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
+            runAsUser: 1100
+            runAsGroup: 1100
           ports:
             - name: https
               containerPort: 8443
