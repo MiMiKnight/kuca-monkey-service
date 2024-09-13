@@ -46,10 +46,10 @@ spec:
         - name: kuca-monkey-service
           image: registry.cn-hangzhou.aliyuncs.com/mimiknight/kuca-monkey-service:20240913200708CSDXBMQM
           imagePullPolicy: IfNotPresent
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1100
-            runAsGroup: 1100
+          #securityContext:
+            #runAsNonRoot: true
+            #runAsUser: 1100
+            #runAsGroup: 1100
           ports:
             - name: https
               containerPort: 8443
