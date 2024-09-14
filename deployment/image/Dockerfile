@@ -46,6 +46,6 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
 # 暴露应用程序的端口
 EXPOSE ${app_port}/tcp
 # 指定后续指令的用户上下文
-USER ${user}:${user}
+#USER ${user}:${user}
 # 运行应用程序
 ENTRYPOINT ["/bin/bash","./bin/service.sh","start"]

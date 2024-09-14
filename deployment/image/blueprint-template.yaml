@@ -84,6 +84,7 @@ spec:
           volumeMounts:
             - name: volume-log-dir
               mountPath: /opt/app/kuca-monkey-service/logs
+              subPath: /opt/app/kuca-monkey-service/logs
             - name: volume-tmp-dir
               mountPath: /tmp
       volumes:
