@@ -24,6 +24,7 @@ spec:
       labels:
         app: kuca-monkey-service
     spec:
+      automountServiceAccountToken: false
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -42,14 +43,19 @@ spec:
                     values:
                       - kuca-monkey-service
               topologyKey: kubernetes.io/hostname
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1100
+        runAsGroup: 1100
+        fsGroup: 1100
       containers:
         - name: kuca-monkey-service
           image: registry.cn-hangzhou.aliyuncs.com/mimiknight/kuca-monkey-service:20240913223300EPHQOKJR
           imagePullPolicy: IfNotPresent
-            #securityContext:
-            #runAsNonRoot: true
-            #runAsUser: 1100
-            #runAsGroup: 1100
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1100
+            runAsGroup: 1100
           ports:
             - name: https
               containerPort: 8443
@@ -62,6 +68,7 @@ spec:
             requests:
               cpu: "1"
               memory: "512Mi"
+          startupProbe: {}
           livenessProbe:
             exec:
               command:
@@ -90,5 +97,4 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
-      securityContext: {}
       terminationGracePeriodSeconds: 30
