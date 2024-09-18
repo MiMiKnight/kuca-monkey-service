@@ -45,6 +45,12 @@ public interface AppApiPath {
          */
         String HEALTH = TOP_PREFIX + "/health";
 
+        /**
+         * 文章模块
+         */
+        String ARTICLE = TOP_PREFIX + "/article";
+
     }
+
 
 }
