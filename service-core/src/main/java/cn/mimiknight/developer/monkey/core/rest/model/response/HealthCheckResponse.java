@@ -16,4 +16,16 @@ public class HealthCheckResponse {
 
     @JsonProperty(value = "service_name", index = 1)
     private String serviceName;
+
+    /**
+     * 数据库状态
+     */
+    @JsonProperty(value = "database_status", index = 2)
+    private boolean databaseStatus = false;
+
+    /**
+     * redis状态
+     */
+    @JsonProperty(value = "redis_status", index = 3)
+    private boolean redisStatus = false;
 }

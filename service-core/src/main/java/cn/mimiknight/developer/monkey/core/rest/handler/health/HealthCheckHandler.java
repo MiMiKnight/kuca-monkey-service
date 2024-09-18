@@ -12,6 +12,8 @@ public class HealthCheckHandler implements EcologyRequestHandler<HealthCheckRequ
     public HealthCheckResponse handle(HealthCheckRequest request) {
         HealthCheckResponse response = new HealthCheckResponse();
         response.setServiceName("kuca-monkey-service");
+        response.setRedisStatus(true);
+        response.setDatabaseStatus(true);
         return response;
     }
 }
