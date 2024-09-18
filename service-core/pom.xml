@@ -107,7 +107,7 @@
                 <includes>
                     <include>bootstrap.properties</include>
                     <include>application.properties</include>
-                    <include>application-debug.properties</include>
+                    <include>application-custom.properties</include>
                     <include>logback-spring.xml</include>
                     <include>mybatis/mapper/**/*Mapper.xml</include>
                     <include>mybatis/mybatis-config.xml</include>
