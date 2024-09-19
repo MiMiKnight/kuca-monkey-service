@@ -1,9 +1,11 @@
 package cn.mimiknight.developer.monkey.core.rest.model.request;
 
-
 import cn.mimiknight.developer.kuca.spring.ecology.model.request.EcologyRequest;
+import cn.mimiknight.developer.kuca.spring.validation.annotation.KucaValidated;
 import cn.mimiknight.developer.kuca.spring.validation.annotation.validation.KucaLength;
 import cn.mimiknight.developer.kuca.spring.validation.annotation.validation.KucaNotBlank;
+import cn.mimiknight.developer.kuca.spring.validation.annotation.validation.KucaNotNull;
+import cn.mimiknight.developer.monkey.core.rest.model.request.reqvo.ArticleInfoReqVO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +18,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@KucaValidated
 public class PublishArticleRequest implements EcologyRequest {
 
     /**
@@ -41,5 +44,13 @@ public class PublishArticleRequest implements EcologyRequest {
     @KucaLength(min = 5, max = 2048)
     @JsonProperty(value = "content")
     private String content;
+
+    /**
+     * 文章信息
+     */
+    @KucaNotNull
+    @KucaValidated
+    @JsonProperty(value = "info")
+    private ArticleInfoReqVO info;
 
 }
