@@ -43,6 +43,10 @@
             <artifactId>kuca-ecology-boot-starter</artifactId>
         </dependency>
         <dependency>
+            <groupId>cn.mimiknight.developer.kuca</groupId>
+            <artifactId>kuca-validation-spring</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-json</artifactId>
         </dependency>

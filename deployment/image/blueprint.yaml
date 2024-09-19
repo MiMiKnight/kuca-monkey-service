@@ -42,14 +42,15 @@ spec:
                     values:
                       - @app.name@
               topologyKey: kubernetes.io/hostname
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1100
+        runAsGroup: 1100
       containers:
         - name: @app.name@
           image: registry.cn-hangzhou.aliyuncs.com/mimiknight/kuca-monkey-service:20240913223300EPHQOKJR
           imagePullPolicy: IfNotPresent
-            #securityContext:
-            #runAsNonRoot: true
-            #runAsUser: 1100
-            #runAsGroup: 1100
+          securityContext: {}
           ports:
             - name: https
               containerPort: 8443
@@ -90,5 +91,4 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
-      securityContext: {}
       terminationGracePeriodSeconds: 30
