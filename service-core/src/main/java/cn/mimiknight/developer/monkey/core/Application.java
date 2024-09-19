@@ -1,5 +1,6 @@
 package cn.mimiknight.developer.monkey.core;
 
+import cn.mimiknight.developer.kuca.spring.validation.annotation.EnableKucaValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @since 2023-08-18 22:37:20
  */
 @Slf4j
+@EnableKucaValidation
 @EnableTransactionManagement // 开启事务管理
 @MapperScan(basePackages = {"cn.mimiknight.developer.monkey.core.repository.mapper"}) // MyBatis Mapper包位置扫描
 @SpringBootApplication(scanBasePackages = {"cn.mimiknight.developer.monkey"})
