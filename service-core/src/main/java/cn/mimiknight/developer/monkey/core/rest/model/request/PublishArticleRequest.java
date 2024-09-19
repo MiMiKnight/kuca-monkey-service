@@ -2,6 +2,7 @@ package cn.mimiknight.developer.monkey.core.rest.model.request;
 
 
 import cn.mimiknight.developer.kuca.spring.ecology.model.request.EcologyRequest;
+import cn.mimiknight.developer.kuca.spring.validation.annotation.validation.KucaLength;
 import cn.mimiknight.developer.kuca.spring.validation.annotation.validation.KucaNotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class PublishArticleRequest implements EcologyRequest {
      * 文章标题
      */
     @KucaNotBlank
+    @KucaLength(min = 5, max = 64)
     @JsonProperty(value = "title")
     private String title;
 
@@ -28,6 +30,7 @@ public class PublishArticleRequest implements EcologyRequest {
      * 文章作者
      */
     @KucaNotBlank
+    @KucaLength(min = 2, max = 32)
     @JsonProperty(value = "author")
     private String author;
 
@@ -35,6 +38,7 @@ public class PublishArticleRequest implements EcologyRequest {
      * 文章内容
      */
     @KucaNotBlank
+    @KucaLength(min = 5, max = 2048)
     @JsonProperty(value = "content")
     private String content;
 
