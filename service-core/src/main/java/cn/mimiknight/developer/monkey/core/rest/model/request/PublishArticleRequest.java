@@ -4,6 +4,8 @@ package cn.mimiknight.developer.monkey.core.rest.model.request;
 import cn.mimiknight.developer.kuca.spring.ecology.model.request.EcologyRequest;
 import cn.mimiknight.developer.kuca.spring.validation.annotation.validation.KucaNotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 发表文章请求参数
@@ -11,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author MiMiKnight victor2015yhm@gmail.com
  * @since 2023-08-18 22:39:13
  */
+@Getter
+@Setter
 public class PublishArticleRequest implements EcologyRequest {
 
     /**

@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class PublishArticleHandler implements EcologyRequestHandler<PublishArticleRequest, PublishArticleResponse> {
+
     @Override
     public PublishArticleResponse handle(PublishArticleRequest request) {
         log.info("request = {}", request);
         return new PublishArticleResponse();
     }
 }
+

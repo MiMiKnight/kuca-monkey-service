@@ -2,6 +2,7 @@ package cn.mimiknight.developer.monkey.core.rest.controller;
 
 import cn.mimiknight.developer.kuca.spring.ecology.AbstractEcologyRequestController;
 import cn.mimiknight.developer.kuca.spring.validation.annotation.KucaValidated;
+import cn.mimiknight.developer.kuca.spring.validation.annotation.validation.KucaNotNull;
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.AppApiPath;
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.ArticleStandard;
 import cn.mimiknight.developer.monkey.core.rest.model.request.PublishArticleRequest;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = AppApiPath.Module.ARTICLE)
 public class ArticleController extends AbstractEcologyRequestController implements ArticleStandard {
 
-    @PostMapping(path = "/user/v1/publish-article", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/user/v1/publish-article",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public PublishArticleResponse publish(@KucaValidated PublishArticleRequest request) throws Exception {
+    public PublishArticleResponse publish(@RequestBody @KucaValidated @KucaNotNull PublishArticleRequest request) throws Exception {
         return handle(request, PublishArticleResponse.class);
     }
 }
