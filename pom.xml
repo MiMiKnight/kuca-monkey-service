@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>cn.mimiknight.developer</groupId>
-        <artifactId>mmk-developer-bom</artifactId>
+        <artifactId>mmk-developer-parent</artifactId>
         <version>2.0.0-SNAPSHOT</version>
         <relativePath/>
     </parent>
@@ -38,8 +38,6 @@
         <!--项目启动类包路径-->
         <app.main.class>cn.mimiknight.developer.monkey.core.Application</app.main.class>
 
-        <!--kuca-->
-        <kuca.version>2.0.0-SNAPSHOT</kuca.version>
         <!--velocity-->
         <velocity.version>2.3</velocity.version>
         <!--mockito-->
@@ -50,13 +48,6 @@
     <!--依赖管理-->
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>cn.mimiknight.developer.kuca</groupId>
-                <artifactId>kuca-dependencies</artifactId>
-                <version>${kuca.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <dependency>
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity-engine-core</artifactId>
