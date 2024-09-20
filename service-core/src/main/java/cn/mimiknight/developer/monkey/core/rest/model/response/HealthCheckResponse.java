@@ -16,6 +16,9 @@ import lombok.Setter;
 @KucaValidated
 public class HealthCheckResponse {
 
+    /**
+     * 服务名称
+     */
     @JsonProperty(value = "service_name", index = 1)
     private String serviceName;
 
