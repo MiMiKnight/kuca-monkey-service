@@ -12,7 +12,7 @@
     <!--项目名称-->
     <property name="log.app.name" value="@app.name@"/>
     <!--日志输出文件夹-->
-    <property name="log.path" value="@app.log.path@"/>
+    <property name="log.dir" value="@app.log.dir@"/>
     <!--项目日志跟踪ID键名-->
     <property name="app.log.trace-id-key" value="@app.log.trace-id-key@"/>
     <!--默认编码-->
@@ -52,7 +52,7 @@
 
     <!--Debug-->
     <appender name="DebugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/debug.log</file>
+        <file>${log.dir}/debug.log</file>
         <encoder>
             <charset>${log.charset}</charset>
             <pattern>${log.pattern}</pattern>
@@ -65,7 +65,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/debug/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.debug.%i.log.zip
+                ${log.dir}/archive/debug/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.debug.%i.log.zip
             </fileNamePattern>
             <maxFileSize>${log.max-file-size}</maxFileSize>
             <maxHistory>${log.max-history}</maxHistory>
@@ -82,7 +82,7 @@
 
     <!--Info-->
     <appender name="InfoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/info.log</file>
+        <file>${log.dir}/info.log</file>
         <encoder>
             <charset>${log.charset}</charset>
             <pattern>${log.pattern}</pattern>
@@ -95,7 +95,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/info/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.info.%i.log.zip
+                ${log.dir}/archive/info/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.info.%i.log.zip
             </fileNamePattern>
             <maxFileSize>${log.max-file-size}</maxFileSize>
             <maxHistory>${log.max-history}</maxHistory>
@@ -112,7 +112,7 @@
 
     <!--Warn-->
     <appender name="WarnFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/warn.log</file>
+        <file>${log.dir}/warn.log</file>
         <encoder>
             <charset>${log.charset}</charset>
             <pattern>${log.pattern}</pattern>
@@ -125,7 +125,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/warn/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.warn.%i.log.zip
+                ${log.dir}/archive/warn/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.warn.%i.log.zip
             </fileNamePattern>
             <maxFileSize>${log.max-file-size}</maxFileSize>
             <maxHistory>${log.max-history}</maxHistory>
@@ -142,7 +142,7 @@
 
     <!--Error-->
     <appender name="ErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/error.log</file>
+        <file>${log.dir}/error.log</file>
         <encoder>
             <charset>${log.charset}</charset>
             <pattern>${log.pattern}</pattern>
@@ -155,7 +155,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/error/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.error.%i.log.zip
+                ${log.dir}/archive/error/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.error.%i.log.zip
             </fileNamePattern>
             <maxFileSize>${log.max-file-size}</maxFileSize>
             <maxHistory>${log.max-history}</maxHistory>
@@ -172,7 +172,7 @@
 
     <!--Api项目接口日志-->
     <appender name="ApiFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/api.log</file>
+        <file>${log.dir}/api.log</file>
         <encoder>
             <charset>${log.charset}</charset>
             <pattern>${log.pattern.api}</pattern>
@@ -185,7 +185,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/api/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.api.%i.log.zip
+                ${log.dir}/archive/api/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.api.%i.log.zip
             </fileNamePattern>
             <maxFileSize>${log.max-file-size}</maxFileSize>
             <maxHistory>${log.max-history}</maxHistory>
@@ -202,7 +202,7 @@
 
     <!--调用第三方接口日志-->
     <appender name="ThirdPartyApiFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/3rdp-api.log</file>
+        <file>${log.dir}/3rdp-api.log</file>
         <encoder>
             <charset>${log.charset}</charset>
             <pattern>${log.pattern.api}</pattern>
@@ -215,7 +215,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/3rdpApi/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.3rdp-api.%i.log.zip
+                ${log.dir}/archive/3rdpApi/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.3rdp-api.%i.log.zip
             </fileNamePattern>
             <maxFileSize>${log.max-file-size}</maxFileSize>
             <maxHistory>${log.max-history}</maxHistory>
@@ -232,7 +232,7 @@
 
     <!--SQL日志-->
     <appender name="SqlFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/sql.log</file>
+        <file>${log.dir}/sql.log</file>
         <encoder>
             <charset>${log.charset}</charset>
             <pattern>${log.pattern.sql}</pattern>
@@ -245,7 +245,7 @@
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>
-                ${log.path}/archive/sql/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.sql.%i.log.zip
+                ${log.dir}/archive/sql/${log.app.name}.%d{yyyy-MM-dd,${log.timezone}}.sql.%i.log.zip
             </fileNamePattern>
             <maxFileSize>${log.max-file-size}</maxFileSize>
             <maxHistory>${log.max-history}</maxHistory>
