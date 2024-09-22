@@ -1,6 +1,5 @@
 package cn.mimiknight.developer.monkey.core.rest.model.response;
 
-import cn.mimiknight.developer.kuca.spring.validation.annotation.KucaValidated;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,9 +12,8 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-@KucaValidated
 public class PublishArticleResponse {
 
     @JsonProperty(value = "result", index = 1)
-    private String result="success";
+    private String result = "success";
 }

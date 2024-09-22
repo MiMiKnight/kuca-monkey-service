@@ -1,8 +1,6 @@
 package cn.mimiknight.developer.monkey.core.rest.controller;
 
 import cn.mimiknight.developer.kuca.spring.ecology.AbstractEcologyRequestController;
-import cn.mimiknight.developer.kuca.spring.validation.annotation.KucaValidated;
-import cn.mimiknight.developer.kuca.spring.validation.annotation.validation.KucaNotNull;
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.AppApiPath;
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.ArticleStandard;
 import cn.mimiknight.developer.monkey.core.rest.model.request.PublishArticleRequest;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2023-08-18 22:39:13
  */
 @Slf4j
-@KucaValidated
 @RestController
 @ResponseStatus(HttpStatus.OK)
 @RequestMapping(path = AppApiPath.Module.ARTICLE)
@@ -33,7 +30,7 @@ public class ArticleController extends AbstractEcologyRequestController implemen
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public PublishArticleResponse publish(@RequestBody @KucaValidated @KucaNotNull PublishArticleRequest request) throws Exception {
+    public PublishArticleResponse publish(@RequestBody PublishArticleRequest request) throws Exception {
         return handle(request, PublishArticleResponse.class);
     }
 }

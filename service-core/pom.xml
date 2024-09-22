@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>cn.mimiknight.developer.kuca</groupId>
-            <artifactId>kuca-validation-spring</artifactId>
+            <artifactId>kuca-appeasy-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -115,6 +115,7 @@
                     <include>logback-spring.xml</include>
                     <include>mybatis/mapper/**/*Mapper.xml</include>
                     <include>mybatis/mybatis-config.xml</include>
+                    <include>error-code-config.xml</include>
                 </includes>
             </resource>
         </resources>
