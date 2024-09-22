@@ -4,32 +4,41 @@
                xsi:schemaLocation="https://kuca.mimiknight.cn/xml/schema/error-code error-code-config-1.0.xsd">
 
     <types>
-        <type id="type01" status="200">OK</type>
-        <type id="type02" status="500">System Exception</type>
-        <type id="type03" status="404">Resource Not Found</type>
-        <type id="type04" status="500">Business Exception</type>
-        <type id="type05" status="500">Database Exception</type>
-        <type id="type06" status="400">Param Valid Exception</type>
+        <type id="200" status="200">OK</type>
+        <type id="500" status="500">Service Exception</type>
+        <type id="400" status="400">Client Bad Request</type>
+        <type id="400_RPI" status="400">Request Param Invalid</type>
+        <type id="401" status="401">Unauthorized</type>
+        <type id="404" status="404">Not Found</type>
+        <type id="405" status="405">Method Not Allowed</type>
+        <type id="500_BE" status="500">Business Exception</type>
+        <type id="500_DE" status="500">Database Exception</type>
     </types>
 
     <modules>
         <!--system-->
         <module id="system">
             <!--默认OK响应错误码-->
-            <error id="000000" type="type01">Ok response</error>
+            <error id="000000" type="200">Ok response</error>
             <!--默认Bad响应错误码-->
-            <error id="999999" type="type02">Bad response</error>
-            <error id="999998" type="type03">The api path not found</error>
-            <error id="999997" type="type02">Null point</error>
-            <error id="999996" type="type04">Http Message Not Readable</error>
-            <error id="999995" type="type04">Media Type Not Supported</error>
-            <error id="999994" type="type04">HTTP Request Method Not Supported</error>
-            <error id="999993" type="type04">The SQL syntax error</error>
+            <error id="999999" type="500">Bad response</error>
+            <!--接口不存在-->
+            <error id="999998" type="404">The api path not found</error>
+            <!--空指针-->
+            <error id="999997" type="500">Null point</error>
+            <!--消息不可读-->
+            <error id="999996" type="400">Http Message Not Readable</error>
+            <!--媒体类型不支持-->
+            <error id="999995" type="400">Media Type Not Supported</error>
+            <!--HTTP请求方法不支持-->
+            <error id="999994" type="405">HTTP Request Method Not Supported</error>
+            <!--SQL语法错误-->
+            <error id="999993" type="500_DE">The SQL syntax error</error>
         </module>
         <!--biz-->
         <module id="biz">
-            <error id="110000" type="type01">user password invalid</error>
-            <error id="110001" type="type01">user not exist</error>
+            <error id="110000" type="500_BE">user password invalid</error>
+            <error id="110001" type="500_BE">user not exist</error>
         </module>
     </modules>
 
