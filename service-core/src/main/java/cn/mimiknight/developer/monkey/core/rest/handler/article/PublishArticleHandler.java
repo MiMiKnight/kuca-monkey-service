@@ -1,19 +1,19 @@
 package cn.mimiknight.developer.monkey.core.rest.handler.article;
 
+import cn.mimiknight.developer.kuca.spring.appeasy.model.response.VoidResponse;
 import cn.mimiknight.developer.kuca.spring.ecology.handler.KucaEcologyRequestHandler;
 import cn.mimiknight.developer.monkey.core.rest.model.request.PublishArticleRequest;
-import cn.mimiknight.developer.monkey.core.rest.model.response.PublishArticleResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PublishArticleHandler implements KucaEcologyRequestHandler<PublishArticleRequest, PublishArticleResponse> {
+public class PublishArticleHandler implements KucaEcologyRequestHandler<PublishArticleRequest, VoidResponse> {
 
     @Override
-    public PublishArticleResponse handle(PublishArticleRequest request) {
+    public VoidResponse handle(PublishArticleRequest request) {
         log.info("request = {}", request);
-        return new PublishArticleResponse();
+        return VoidResponse.create();
     }
 }
 

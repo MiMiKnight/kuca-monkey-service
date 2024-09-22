@@ -1,7 +1,7 @@
 package cn.mimiknight.developer.monkey.core.rest.controller.standard;
 
+import cn.mimiknight.developer.kuca.spring.appeasy.model.response.VoidResponse;
 import cn.mimiknight.developer.monkey.core.rest.model.request.PublishArticleRequest;
-import cn.mimiknight.developer.monkey.core.rest.model.response.PublishArticleResponse;
 
 /**
  * Health模块Controller接口
@@ -11,5 +11,5 @@ import cn.mimiknight.developer.monkey.core.rest.model.response.PublishArticleRes
  */
 public interface ArticleStandard {
 
-    PublishArticleResponse publish(PublishArticleRequest request) throws Exception;
+    VoidResponse publish(PublishArticleRequest request) throws Exception;
 }

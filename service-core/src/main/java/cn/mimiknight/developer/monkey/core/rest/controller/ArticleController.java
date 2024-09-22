@@ -1,10 +1,10 @@
 package cn.mimiknight.developer.monkey.core.rest.controller;
 
+import cn.mimiknight.developer.kuca.spring.appeasy.model.response.VoidResponse;
 import cn.mimiknight.developer.kuca.spring.ecology.AbstractEcologyRequestController;
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.AppApiPath;
 import cn.mimiknight.developer.monkey.core.rest.controller.standard.ArticleStandard;
 import cn.mimiknight.developer.monkey.core.rest.model.request.PublishArticleRequest;
-import cn.mimiknight.developer.monkey.core.rest.model.response.PublishArticleResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,7 +30,7 @@ public class ArticleController extends AbstractEcologyRequestController implemen
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Override
-    public PublishArticleResponse publish(@RequestBody PublishArticleRequest request) throws Exception {
-        return handle(request, PublishArticleResponse.class);
+    public VoidResponse publish(@RequestBody PublishArticleRequest request) throws Exception {
+        return handle(request, VoidResponse.class);
     }
 }
