@@ -25,15 +25,17 @@
             <!--接口不存在-->
             <error id="999998" type="404">The api path not found</error>
             <!--空指针-->
-            <error id="999997" type="500">Null point</error>
+            <error id="999997" type="500">Null Point</error>
             <!--消息不可读-->
             <error id="999996" type="400">Http Message Not Readable</error>
             <!--媒体类型不支持-->
             <error id="999995" type="400">Media Type Not Supported</error>
             <!--HTTP请求方法不支持-->
             <error id="999994" type="405">HTTP Request Method Not Supported</error>
+            <!--错误码未找到-->
+            <error id="999993" type="500">The error code not found ,code = %1$s</error>
             <!--SQL语法错误-->
-            <error id="999993" type="500_DE">The SQL syntax error</error>
+            <error id="999992" type="500_DE">The SQL syntax error</error>
         </module>
         <!--biz-->
         <module id="biz">
