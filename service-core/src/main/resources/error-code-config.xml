@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xmlns="https://kuca.mimiknight.cn/xml/schema/error-code"
                xsi:schemaLocation="https://kuca.mimiknight.cn/xml/schema/error-code error-code-config-1.0.xsd">
@@ -27,8 +27,8 @@
         </module>
         <!--biz-->
         <module id="biz">
-            <error id="110000" type="type01">111</error>
-            <error id="110001" type="type01">111</error>
+            <error id="110000" type="type01">user password invalid</error>
+            <error id="110001" type="type01">user not exist</error>
         </module>
     </modules>
 
