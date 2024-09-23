@@ -34,9 +34,11 @@
             <!--HTTP请求方法不支持-->
             <error id="999994" type="405">HTTP Request Method Not Supported</error>
             <!--错误码未找到-->
-            <error id="999993" type="500">The error code not found ,code = %1$s</error>
+            <error id="999993" type="500">The Error Code Not Found</error>
+            <!--错误码重复使用-->
+            <error id="999992" type="500">The Error Code Reuse Error</error>
             <!--SQL语法错误-->
-            <error id="999992" type="500_DE">The SQL syntax error</error>
+            <error id="999991" type="500_DE">The SQL Syntax Error</error>
         </module>
         <!--biz-->
         <module id="biz">
