@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xmlns="https://kuca.mimiknight.cn/xml/schema/error-code"
-               xsi:schemaLocation="https://kuca.mimiknight.cn/xml/schema/error-code error-code-config-1.0.xsd">
+               xmlns="https://kuca.mimiknight.cn/schema/xsd/error-code"
+               xsi:schemaLocation="https://kuca.mimiknight.cn/schema/xsd/error-code
+               https://kuca.mimiknight.cn/schema/xsd/error-code/error-code-config-1.0.xsd">
 
     <types>
         <type id="200" status="200">OK</type>
